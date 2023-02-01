@@ -1,10 +1,10 @@
 포트폴리용 Next.js 웹사이트
 
-## Getting Started
+## 시작하기
 
-First, run the development server:
+개발 서버 시작하기 :
 
-```bash
+```배쉬 쉘
 npm run dev
 # or
 yarn dev
@@ -12,9 +12,9 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000을 웹 브라우저 url에 입력후 표시되는 페이지를 확인하세요. 
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+프로젝트의  `pages/index.tsx`.파일을 편집하면 웹사이트에 표시되는 페이지가 자동으로 수정됩니다.
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
