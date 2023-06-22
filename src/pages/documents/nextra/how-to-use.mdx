@@ -1,0 +1,135 @@
+import { Callout, FileTree, Steps } from "nextra-theme-docs";
+
+# 사용법
+
+## Link
+
+```mdx
+[Home](/)
+```
+
+[Home](/)
+
+Click [Home](/) to Home.
+
+## Image
+
+public/images/nextra.webp 파일을 삽입할 경우
+
+```mdx
+![](/images/nextra.webp)
+```
+
+![](/images/nextra.webp)
+
+## Step 컴포넌트
+
+문서 상단에 Steps 컴포넌트를 임포트 한다.
+
+```js
+import { Steps } from "nextra-theme-docs";
+```
+
+Step 컴포넌트 사용법
+
+```mdx
+<Steps>
+
+### 설치
+
+이런 저런 설치를 한다.
+
+### 설정
+
+이런 저런 설정을 한다.
+
+</Steps>
+```
+
+<Steps>
+
+### 설치
+
+이런 저런 설치를 한다.
+
+### 설정
+
+이런 저런 설정을 한다.
+
+</Steps>
+
+## Callout 컴포넌트
+
+문서 상단에 Callout 컴포넌트를 임포트 한다.
+
+```js
+import { Callout } from "nextra-theme-docs";
+```
+
+### default
+
+```js
+<Callout type="default">
+  default 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+```
+
+<Callout type="default">
+  default 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+
+### info
+
+```js
+<Callout type="info">info 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.</Callout>
+```
+
+<Callout type="info">info 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.</Callout>
+
+### warning
+
+```js
+<Callout type="warning">
+  warning 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+```
+
+<Callout type="warning">
+  warning 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+
+### error
+
+```js
+<Callout type="error">
+  error 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+```
+
+<Callout type="error">
+  error 타입의 콜아웃 컴포넌트의 모양은 이렇습니다.
+</Callout>
+
+## FileTree 컴포넌트
+
+```mdx
+import { FileTree } from "nextra-theme-docs";
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="contact.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>
+```
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="contact.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>

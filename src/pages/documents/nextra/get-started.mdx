@@ -1,0 +1,84 @@
+import { Steps } from "nextra-theme-docs";
+
+# 설치 및 설정
+
+<Steps>
+
+### Next 프로젝트 생성
+
+```sh
+yarn create next-app nextra-starter
+```
+
+```sh
+✔ Would you like to use TypeScript with this project? … No / Yes
+✔ Would you like to use ESLint with this project? … No / Yes
+✔ Would you like to use Tailwind CSS with this project? … No / Yes
+✔ Would you like to use `src/` directory with this project? … No / Yes
+✔ Use App Router (recommended)? … No / Yes
+✔ Would you like to customize the default import alias? … No / Yes
+```
+
+- `Use App Router` 항목을 `No`로 설정: Nextra는 현재 App Router를 지원하지 않음
+
+### Nextra 패키지 추가
+
+```sh
+yarn add nextra nextra-theme-docs
+```
+
+### Next 설정
+
+```js filename="next.config.js"
+/** @type {import('nextra').NextraConfig} */
+const withNextra = require("nextra")({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.jsx",
+  defaultShowCopyCode: true,
+});
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+};
+
+module.exports = withNextra(nextConfig);
+```
+
+- defaultShowCopyCode: 코드 블럭에 copy 버튼 추가
+
+### Nextra 테마 설정
+
+```jsx filename="theme.config.jsx"
+/** @type {import('nextra-theme-docs').DocsThemeConfig} */
+export default {
+  editLink: { text: "" },
+  feedback: { content: "" },
+  logo: <strong>LMH</strong>,
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s – LMH",
+    };
+  },
+  sidebar: {
+    toggleButton: true,
+  },
+};
+```
+
+### 불필요한 파일 정리
+
+src/pages에 자동으로 생성된 모든 tsx 파일과 api 폴더 삭제
+
+### globals.css 파일 설정
+
+globals.css 파일에 설정되어 있는 내용을 아래와 같이 정리
+
+```ts filename="./src/styles/globals.css"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+</Steps>

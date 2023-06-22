@@ -31,10 +31,10 @@ export default function Header() {
             <Link href="/projects" className="mr-5 hover:text-gray-900">
               프로젝트
             </Link>
-            <Link href="/projects" className="mr-5 hover:text-gray-900">
+            <Link href="/aboutMe" className="mr-5 hover:text-gray-900">
               연락하기
             </Link>
-            <Link href="/projects" className="mr-5 hover:text-gray-900">
+            <Link href="/documents" className="mr-5 hover:text-gray-900">
               기타등등
             </Link>
           </nav>
