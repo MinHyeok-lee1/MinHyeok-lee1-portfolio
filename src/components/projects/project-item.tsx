@@ -28,7 +28,7 @@ export default function ProjectItem({ data }) {
     const diffInMs = Math.abs(Number(endDate) - Number(startDate));
     const result = diffInMs / (1000 * 60 * 60 * 24);
 
-    console.log(`기간 : ${result}`);
+    // console.log(`기간 : ${result}`);
     return result;
   };
 
@@ -36,7 +36,7 @@ export default function ProjectItem({ data }) {
     <div className="project-card">
       <div
         style={{
-          width: "100%", 
+          width: "100%",
           height: "60%",
           position: "relative",
           paddingBottom: "20%",
