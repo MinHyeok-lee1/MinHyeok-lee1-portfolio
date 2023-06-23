@@ -1,0 +1,18 @@
+{
+  "docs": {
+    "title": "Docs",
+    "type": "page"
+  },
+  "project": {
+    "title": "Project",
+    "type": "page"
+  },
+  "study": {
+    "title": "Study",
+    "type": "page"
+  },
+  "etc": {
+    "title": "Etc",
+    "type": "page"
+  }
+}

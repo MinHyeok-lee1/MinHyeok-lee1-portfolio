@@ -1,0 +1,10 @@
+{
+  "index": "소개",
+  "docker": "Docker",
+  "k8s": "K8S",
+  "nextjs": "Next.js",
+  "nestjs": "NestJS",
+  "flutter": "Flutter",
+  "nextra": "Nextra",
+  "mongodb": "MongoDB"
+}
