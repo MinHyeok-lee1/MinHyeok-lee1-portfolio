@@ -52,6 +52,52 @@ Z --> F;
 Z --> G;
 ```
 
+<br />
+
+## Mermaid 예제 1
+
+```mermaid
+graph LR
+subgraph AA [Front-end]
+A[Client]
+B((Cache))
+end
+A-- Request --> B
+B -.->|DataExist| A
+B --  DataIsNone & Request --> C(Back-end)
+C -- DataRead --> D[(Database)]
+D -- Response --> C
+C -- Response --> B
+B -- Save & Response --> A
+```
+
+<br />
+
+## Mermaid 예제 2
+
+```mermaid
+graph TD;
+subgraph AA [Consumers]
+A[Mobile app];
+B[Web app];
+end
+subgraph BB [Cloud Server]
+E[Front-end];
+F[Back-end];
+G[(Database)];
+end
+Z[LoadBalancer];
+A --> Z;
+B --> Z;
+F --> G;
+Z --> E;
+Z --> F;
+```
+
+<br />
+
+## Mermaid 예제 3
+
 ```mermaid
 graph TD;
 subgraph AA [Front-end]
@@ -63,20 +109,20 @@ E[NestJS];
 end
 Z[Proxy Server];
 I[(Database)];
-A -->  |데이터 요청| Z;
-B --> |데이터 요청| Z;
-Z --> |데이터 요청| E;
-E --> |데이터 요청| I;
-I --> |데이터 반환| E;
-E --> |데이터 반환|Z;
-Z --> |데이터 반환|A;
-Z --> |데이터 반환|B;
-```
+S(Third Party);
 
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D[(Database)]
-C --> D
+A -->  |Request| Z;
+B --> |Request| Z;
+Z --> |Request| E;
+E --> |Request| I;
+I --> |Response| E;
+E --> |Response|Z;
+Z --> |Response|A;
+Z --> |Response|B;
+A --> |Request|S;
+B --> |Request|S;
+E --> |Request|S;
+S --> |Response|A;
+S --> |Response|B;
+S --> |Response|E;
 ```

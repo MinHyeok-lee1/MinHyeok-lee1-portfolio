@@ -1,7 +1,6 @@
 {
-  "index": "Nextra 문서정리",
   "settings": "개발환경 설정",
   "cookBook": "학습문서 정리",
-  "issue": "발생이슈 정리",
-  "deploy": "배포"
+  "deploy": "배포",
+  "issue": "발생이슈 정리"
 }

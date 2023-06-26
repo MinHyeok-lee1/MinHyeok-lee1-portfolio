@@ -8,6 +8,8 @@ Nextra는 Next.js를 기반으로 하는 프레임워크로 컨텐츠 중심의 
 
 Next.js의 모든 기능과 Markdown 기반 컨텐츠를 쉽게 생성할 수 있는 추가 기능이 있다.
 
+<br />
+
 ### 1. Next 프로젝트 설치
 
 Next.js, React, Nextra 및 Nextra Docs Theme를 설치해야 한다.  
@@ -37,6 +39,8 @@ yarn create next-app "프로젝트 이름"
 
 - 이때 Nextra는 현재 App Router를 지원하지 않기 때문에 Use App Router항목을 No로 설정한다.
 
+<br />
+
 ### 2. Nextra 패키지 추가
 
 생성된 프로젝트 폴더로 들어가고 아래 명령어를 실행하여 Nextra Docs Theme를 설치한다.
@@ -51,6 +55,8 @@ pnpm i nextra nextra-theme-docs
 # yarn 사용
 yarn add nextra nextra-theme-docs
 ```
+
+<br />
 
 ### 3. Next.config.js 설정
 
@@ -82,6 +88,8 @@ const nextConfig = {
 module.exports = withNextra(nextConfig)
 ```
 
+<br />
+
 ### 4. Nextra 테마 설정
 
 루트디렉토리에 theme.config.jsx파일을 생성하고 아래와 같이 설정한다.
@@ -99,6 +107,8 @@ export default {
 이 파일은 Nextra Docs테마를 구성하는 데 사용된다.
 
 자세한 테마 구성요소는 [이곳에서](https://nextra.site/docs/docs-theme/theme-configuration) 확인할 수 있다.
+
+<br />
 
 ### 5. Nextra 시작
 
