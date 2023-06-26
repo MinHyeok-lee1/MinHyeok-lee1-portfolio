@@ -18,7 +18,7 @@ export default function Projects({ projects }) {
             <link rel="icon" href="/favicon.ico" />
           </Head>
 
-          <h1 className="text-4xl font-bold sm:text-6xl">
+          <h1 className="text-2xl font-bold sm:text-4xl">
             총 프로젝트:
             <span className="pl-4 text-red-500">{projects.results.length}</span>
           </h1>
