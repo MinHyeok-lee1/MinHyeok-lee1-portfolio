@@ -1,0 +1,449 @@
+import { Callout, FileTree } from "nextra-theme-docs";
+
+# 폴더 및 페이지 구성
+
+## 페이지 구성
+
+- Nextra는 먼저 페이지 디렉토리에서 \_meta.json 파일을 포함한 모든 Markdown 파일 및 구성을 수집한 다음 전체 사이트의 "페이지 맵 정보"를 생성하여 아래의 탐색 모음 및 사이드바와 같은 항목을 렌더링한다.
+- 문서 테마에는 추가로 사용자 지정할 수 있는 몇 가지 추가 옵션이 있으며 이러한 구성은 테마의 전체 레이아웃, 특히 탐색 모음 및 사이드바에 영향을 미친다.
+
+## 기본 동작
+
+- 기본적으로 페이지 맵에는 모든 .md 및 .mdx 파일 이름과 디렉토리 구조가 알파벳 순으로 정렬되어 있다.
+- 그런 다음 Nextra는 제목 패키지를 사용하여 파일 이름에서 형식이 지정된 페이지 이름을 가져온다.
+
+예를 들어 다음과 같은 구조를 가진 경우
+
+```
+pages/
+  contact.md
+  index.mdx
+  about/
+    legal.md
+    index.mdx
+```
+
+페이지 맵은 다음과 같다. (모든 이름이 알파벳 순으로 정렬된다.)
+
+```json
+[
+  {
+    name: "About",
+    children: [{ name: "Index" }, { name: "Legal" }],
+  },
+  { name: "Contact" },
+  { name: "Index" },
+];
+```
+
+- 글로벌 페이지 맵은 Nextra에 의해 각 페이지에 번들로 제공돤다.
+- 이후, 구성된 테마는 해당 페이지 맵으로 실제 UI를 렌더링한다.
+
+## 페이지
+
+사이드바에 표시되는 페이지의 제모고가 순서는 `_meta.json`파일에서 키-값쌍으로 구성해야 한다.  
+예를 들어 다음과 같은 파일 구조가 있는 경우:
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="contact.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>
+
+아래와 같이 `_meta.json`파일을 통해 페이지가 사이드바에 표시되는 방식을 정의할 수 있다.
+
+```json filename="_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "about": "About Us"
+}
+```
+
+<Callout type="default">
+  Nextra의 `_meta.json` 에 대하여 확인하려면 [여기를](#_metajson) 클릭해주세요.
+</Callout>
+
+## 폴더
+
+폴더는 페이지와 같은 방식으로 구성이 된다.
+예를 들어:
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.Folder name="fruits" defaultOpen>
+      <FileTree.File name="_meta.json" />
+      <FileTree.File name="apple.mdx" />
+      <FileTree.File name="banana.mdx" />
+    </FileTree.Folder>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="contact.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>
+
+최상위 \_meta.json파일에는 최상위 페이지 및 폴더에 대한 메타 정보가 포함되어 있다.
+
+```json filename="pages/_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "fruits": "Delicious Fruits",
+  "about": "About Us"
+}
+```
+
+fruits폴더 안에 중첩된 `_meta.json`파일에는 동일한 폴더의 페이지에 대한 메타 정보가 포함되어 있다.
+
+```json filename="pages/fruits/_meta.json"
+{
+  "apple": "Apple",
+  "banana": "Banana"
+}
+```
+
+이렇게 하면 페이지에 대한 정보가 디렉토리에 함께 그룹화된다.  
+\_meta.json 파일을 변경하지 않고도 디렉터리를 이동할 수 있다.
+
+## 인덱스 페이지가 있는 폴더
+
+index 페이지가 있는 폴더를 사용하려면 폴더와 동일한 디렉토리에 동일한 이름의 MDX 페이지를 추가할 수 있다.  
+위의 예제에서 /fruits 경로를 추가하려고 하면 다음 페이지에 frutes.mdx 파일을 만들 수 있다:
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.Folder name="fruits" defaultOpen>
+      <FileTree.File name="_meta.json" />
+      <FileTree.File name="apple.mdx" />
+      <FileTree.File name="banana.mdx" />
+    </FileTree.Folder>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="contact.mdx" />
+    <FileTree.File name="fruits.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>
+
+그러면 Nextra는 \_meta.json의 fruits 키가 인덱스 페이지가 있는 폴더를 정의한다는 것을 알게 된다.  
+사이드바에서 해당 폴더를 클릭하면 폴더가 열리고 frutes.mdx 페이지가 동시에 표시된다.
+
+## \_meta.json
+
+- 파일 이름을 사용하는 대신 각 페이지의 제목을 사용자 정의하는 것이 매우 일반적이다.
+- 예를 들어, "Index"라는 제목의 페이지가 있는 대신 "Home"이라는 제목의 페이지가 있는 것은 의미가 없다.
+- 여기서 \_meta.json이 등장한다.
+- Nextra에서 사이트와 페이지 구조는 함께 위치한 \_meta.json 파일을 통해 구성할 수 있다.
+
+각 디렉토리에 \_meta.json 파일을 둘 수 있으며, 이 파일은 아래와 같이 각 페이지의 기본 구성을 재정의하는 데 사용된다.
+
+```
+pages/
+  _meta.json
+  contact.md
+  index.mdx
+  about/
+    _meta.json
+    legal.md
+    index.mdx
+```
+
+아래와 같이 pages/\_meta.json 파일에 저장할 수 있다.
+
+```json filename="_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "about": "About Us"
+}
+```
+
+위 파일은 Nextra에게 각 페이지의 순서와 올바른 제목을 알려준다.  
+추가로 제목을 사용하여 이 작업을 수행하고 다른 구성도 포함할 수 있다.
+
+```json filename="_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "about": {
+    "title": "About Us",
+    "...extra configurations...": "..."
+  }
+}
+```
+
+추가 구성은 추가 정보로 테마에 전달된다.
+
+## 추가 구성
+
+### 외부 링크
+
+\_meta.json에 href가 있는 항목을 추가하여 사이드바에 외부 링크를 추가할 수 있습니다:
+
+```json {6-9} filename="pages/_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "fruits": "Delicious Fruits",
+  "about": "About Us",
+  "github_link": {
+    "title": "Nextra",
+    "href": "https://github.com/shuding/nextra"
+  }
+}
+```
+
+항상 새 탭에서 링크를 열려면 아래와 같이 "newWindow": true 옵션을 활성화합니다.
+
+```json {9} filename="pages/_meta.json"
+{
+  "index": "My Homepage",
+  "contact": "Contact Us",
+  "fruits": "Delicious Fruits",
+  "about": "About Us",
+  "github_link": {
+    "title": "Nextra",
+    "href": "https://github.com/shuding/nextra",
+    "newWindow": true
+  }
+}
+```
+
+<Callout type="default">
+  이 옵션을 사용하여 상대적 내부 링크에도 연결할 수 있다.
+</Callout>
+
+### 경로 숨기기
+
+기본적으로 파일 시스템의 모든 MDX 경로는 사이드바에 표시된다.  
+그러나 "display": "hidden" 구성을 사용하여 특정 페이지나 폴더를 숨길 수 있다.
+
+```json filename="pages/_meta.json"
+{
+  "index": "My Homepage",
+  "contact": {
+    "display": "hidden"
+  },
+  "about": "About Us"
+}
+```
+
+- 이 페이지는 /contact URL을 통해 액세스할 수 있지만 사이드바에는 표시되지 않는다.
+
+### Navbar 항목
+
+#### Sub Docs
+
+최상위 페이지 또는 폴더를 `"type": "page" `로 정의하면 사이드바 대신 탐색 모음에 특수 페이지로 표시된다.  
+이 기능을 사용하면 여러 개의 "Sub Docs"와 "Contact Us"와 같은 특수 페이지 또는 연결을 항상 볼 수 있다.
+
+예를 들어 프로젝트에 두 개의 문서 `폴더` `프레임워크`와 과일을 포함할 수 있다:
+
+<FileTree>
+  <FileTree.Folder name="pages" defaultOpen>
+    <FileTree.Folder name="fruits" defaultOpen>
+      <FileTree.File name="_meta.json" />
+      <FileTree.File name="apple.mdx" />
+      <FileTree.File name="banana.mdx" />
+    </FileTree.Folder>
+    <FileTree.Folder name="frameworks" defaultOpen>
+      <FileTree.File name="react.mdx" />
+      <FileTree.File name="vue.mdx" />
+      <FileTree.File name="next.mdx" />
+    </FileTree.Folder>
+    <FileTree.File name="_meta.json" />
+    <FileTree.File name="about.mdx" />
+    <FileTree.File name="index.mdx" />
+  </FileTree.Folder>
+</FileTree>
+
+최상위 \_meta.json 파일에서 일반 사이드바 항목 대신 모든 항목을 페이지로 설정할 수 있다.
+
+```json filename="pages/_meta.json"
+{
+  "index": {
+    "title": "Home",
+    "type": "page"
+  },
+  "frameworks": {
+    "title": "Frameworks",
+    "type": "page"
+  },
+  "fruits": {
+    "title": "Fruits",
+    "type": "page"
+  },
+  "about": {
+    "title": "About",
+    "type": "page"
+  }
+}
+```
+
+- 위와 같이 설정한다면 상단바에 Sub Docs들이 표시되는 것을 확인할 수 있다.
+- "display": "hidden" 옵션을 사용하여 탐색 모음에서 홈과 같은 링크를 숨길 수도 있다.
+
+#### Menu
+
+아래와 같이 `"type": "menu"` 및 `"items"` 옵션을 사용하여 탐색 모음에 메뉴를 추가할 수도 있다.
+
+```json filename="pages/_meta.json"
+{
+  "company": {
+    "title": "Company",
+    "type": "menu",
+    "items": {
+      "about": {
+        "title": "About",
+        "href": "/about"
+      },
+      "contact": {
+        "title": "Contact Us",
+        "href": "mailto:hi@example.com"
+      }
+    }
+  }
+}
+```
+
+#### Links
+
+외부 링크 옵션과 동일하게 탐색 모음에 외부 링크도 있을 수 있다.
+
+```json filename="pages/_meta.json"
+{
+  "index": {
+    "title": "Home",
+    "type": "page"
+  },
+  "about": {
+    "title": "About",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "type": "page",
+    "href": "https://example.com/contact",
+    "newWindow": true
+  }
+}
+```
+
+### Fallbacks
+
+위의 [Sub Docs](#sub-docs) 예제에서는 모든 페이지에 대해 `"type": "page"` 옵션을 정의해야 한다.  
+아래와 같이 "\*" 키를 사용하여 이 폴더의 모든 항목에 대한 대체 구성을 정의할 수 있다.
+
+```json {2-4} filename="pages/_meta.json"
+{
+  "*": {
+    "type": "page"
+  },
+  "index": "Home",
+  "frameworks": "Frameworks",
+  "fruits": "Fruits",
+  "about": "About"
+}
+```
+
+모든 항목에 `"type": "page"`가 설정되어 있으면 동일하다.
+
+### Separators
+
+`"type": "separator"`와 함께 "자리 표시자" 항목을 사용하여 사이드바의 항목 사이에 구분선을 만들 수 있다.
+
+```json filename="_meta.json"
+{
+  "index": "My Homepage",
+  "---": {
+    "type": "separator"
+  },
+  "contact": "Contact Us"
+}
+```
+
+<Callout type="default">
+  sidebar.titleComponent 테마 옵션과 함께 사이드바에서 제목 및 구분선의 모양을
+  사용자 지정할 수 있다.
+</Callout>
+
+### Theme Components
+
+"테마" 옵션을 사용하여 각 페이지의 테마를 구성할 수 있다.  
+예를 들어 특정 페이지에 대한 특정 구성 요소를 비활성화하거나 활성화할 수 있다.
+
+```json filename="pages/_meta.json"
+{
+  "index": {
+    "title": "Home",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "sidebar": false,
+      "toc": true,
+      "pagination": false
+    }
+  }
+}
+```
+
+이 옵션은 폴더로 설정된 경우 모든 하위 페이지에 상속된다.
+
+### Layouts
+
+기본적으로 각 페이지에는 기본 동작인 테마 구성에 `"layout": "default"`가 있다.
+
+#### Raw Layout
+
+기본적으로 Nextra는 콘텐츠 컨테이너 내부의 테마 구성 요소와 함께 MDX 콘텐츠(예: h1, h2, h3 등)를 렌더링한다.  
+`"raw"` 레이아웃을 사용하여 Nextra가 콘텐츠에 스타일을 주입하지 않도록 할 수 있다.
+
+```json {5} filename="pages/_meta.json"
+{
+  "index": {
+    "title": "Home",
+    "theme": {
+      "layout": "raw"
+    }
+  }
+}
+```
+
+#### Full Layouy
+
+전체 컨테이너 너비와 높이로 일부 페이지를 렌더링하지만 다른 모든 스타일은 유지하고 싶을 수 있다.  
+이를 위해 `"full"` 레이아웃을 사용할 수 있다.
+
+```json {5} filename="pages/_meta.json"
+{
+  "index": {
+    "title": "Home",
+    "theme": {
+      "layout": "full"
+    }
+  }
+}
+```
+
+### Typesetting
+
+`"typesetting"` 옵션은 글꼴 기능, 제목 스타일 및 li 및 코드와 같은 구성 요소와 같은 조판 세부 정보를 제어한다.  
+문서 테마에서 사용할 수 있는 `"default"` 및 `"article"` typesettings이 존재한다.
+
+기본값은 문서와 같은 대부분의 경우에 적합하다.  
+기사처럼 보이도록 만들려고 한다면 아래와 같이 typesettings을 `"article"`로 설정하면 된다.
+
+```json {5} filename="pages/_meta.json"
+{
+  "about": {
+    "title": "About Us",
+    "theme": {
+      "typesetting": "article"
+    }
+  }
+}
+```
