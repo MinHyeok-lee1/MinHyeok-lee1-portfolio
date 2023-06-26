@@ -1,6 +1,7 @@
 {
   "index": "소개",
-  "project1": "프로젝트1",
-  "project2": "프로젝트2",
-  "Flutter project": "Flutter 프로젝트"
+  "settings": "개발환경 설정",
+  "cookBook": "학습문서 정리",
+  "issue": "발생이슈 정리",
+  "deploy": "배포"
 }

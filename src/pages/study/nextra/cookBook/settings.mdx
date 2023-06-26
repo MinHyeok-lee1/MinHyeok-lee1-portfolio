@@ -1,0 +1,111 @@
+import Image from "next/image";
+
+# 개발환경 설정
+
+Nextra는 Shiki를 사용하여 빌드 시 구문 강조를 수행한다.  
+따라서 매우 안정적이고 성능이 좋다.  
+아래와 같이 Markdown을 사용하여 구문을 추가할 수 있다.
+
+```js
+console.log("hello, world");
+```
+
+## 특징
+
+### 인라인 코드
+
+아래와 같이 인라인 구문 강조 표시는 ` `` ` 사이에 구문을 넣어 표시된다.  
+Inlined syntax highlighting is also supported `let x = 1{:jsx}` via:
+
+### 라인 강조
+
+아래와 같이 `{}` 사이에 특정 줄 혹은 -를 사용하여 줄의 범위를 강조 표시할 수 있다.
+
+```js {1,4-5}
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+### 하위 문자열 강조 표시
+
+아래와 같이 `//` 사이에 특정 문자열을 넣어 강조 표시를 할 수 있다.
+
+```js /useState/
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+### 복사 버튼 추가
+
+아래 코드는 전역적으로 설정된 본 프로젝트에 `copy=false` 속성을 적용시킨 결과이다.
+
+```js copy=false
+console.log("hello, world");
+```
+
+Nextra 구성(파일)에서 설정하여 `defaultShowCopyCode: true` 기능을 전역적으로 위와 같이 활성화할 수 있다.
+next.config.js에서 전역적으로 활성화되면 `copy=false` 속성을 통해 비활성화할 수 있다.
+
+### 줄 번호 추가
+
+아래 코드처럼 `showLineNumbers` 속성을 추가하여 코드 블록에 줄을 추가할 수 있다.
+
+```js showLineNumbers
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+### 파일 이름 및 제목
+
+아래 코드처럼 `filename` 속성 을 추가하여 코드 블록에 파일 이름이나 제목을 추가할 수 있다.
+
+```js filename="example.js"
+console.log("hello, world");
+```
+
+### ANSI 하이라이트
+
+ANSI 이스케이프 코드를 강조 표시할 수 있다.
+
+```ansi
+[0m [0;32m✓[0m [0;2msrc/[0mindex[0;2m.test.ts (1)[0m
+  [0;2m Test Files [0m [0;1;32m1 passed[0;98m (1)[0m
+  [0;2m      Tests [0m [0;1;32m1 passed[0;98m (1)[0m
+  [0;2m   Start at [0m 23:32:41
+  [0;2m   Duration [0m 11ms
+  [42;1;39;0m PASS [0;32m Waiting for file changes...[0m
+         [0;2mpress [0;1mh[0;2m to show help, press [0;1mq[0;2m to quit
+```
+
+### 이미지
+
+#### Next.js 이미지 태그
+
+Image태그를 사용하여 Next.js 이미지를 사용하는 표준 방법은 MDX 내부는 구성 요소를 직접 가져오는 것이다.
+
+<Image src="/example.jpeg" alt="ERROR" width={500} height={500} />
+
+#### Markdown 정적 이미지
+
+Nextra는 Markdown 구문을 사용하여 정적 이미지 가져오기를 자동으로 최적화한다.  
+이미지의 너비와 높이를 지정할 필요는 없으며\!\[\]\(\)Markdown 구문을 사용하면 된다.
+
+![Hello](/example.jpeg)
+
+- 이렇게 하면 공용 폴더 안에 demo.png 파일이 로드되고 Next.js \<Image>로 자동 래핑된다.
+
+- 공개를 통해 호스트하지 않으려면 \!\[](.../public/demo.png)를 사용하여 상대 경로에서 이미지를 로드할 수도 있다.
+
+- Next.js Image를 사용하면 레이아웃 이동이 없으며 영상을 로드할 때 기본적으로 흐릿한 자리 표시자가 표시된다.
