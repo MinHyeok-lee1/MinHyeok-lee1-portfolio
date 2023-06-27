@@ -1,0 +1,133 @@
+# NestJS 개발환경 설정
+
+## NestJS 개발환경 구축
+
+NestJS는 자바스크립트나 타입스크립트로 서버 애플리케이션을 개발할 수 있는 백앤드 웹 프레임워크이다.  
+코드를 Provider, Controller, Module로 분리하며 컴포넌트들끼리의 조합(DI)을 통해 전체 애플리케이션을 완성한다.
+
+<br />
+
+### 1. NestJS 프로젝트 설치
+
+Nest CLI를 사용하여 시작 프로젝트를 생성한다.
+프로젝트를 설치하고자 하는 디렉토리에서 아래 명령어를 NestJS 프로젝트 폴더를 설치한다.
+
+```console
+$ npm i -g @nestjs/cli
+$ nest new project-name
+```
+
+* TypeScript는 명령어에 `--strict`를 추가한다.
+
+```console
+$ nest new project-name --strict
+```
+
+<br />
+
+### 2. 설치가 잘 되었는 지 아래 명령어로 확인한다.
+
+```
+$ nest --version
+```
+
+- 설치가 잘 되었다면 nestjs의 버전이 출력된다.
+
+<br />
+
+### 3. 수동 설치
+
+npm (또는 yarn ) 으로 코어 및 지원 파일을 설치하여 처음부터 수동으로 새 프로젝트를 생성할 수도 있다.
+
+```console
+$ npm i --save @nestjs/core @nestjs/common rxjs reflect-metadata
+```
+
+ - 이 경우 프로젝트 상용구 파일을 직접 만들어야 하기 때문에 추천하지 않는다.
+
+<br />
+
+### 4. NestJS 시작
+
+프로젝트 폴더에서 아래와 같은 명령어를 통해 프로젝트 개발을 시작할 수 있다.
+
+#### 4-1. development mode
+```console
+# npm 사용
+npm run start
+
+# pnpm 사용
+pnpm start
+
+# yarn 사용
+yarn start
+```
+
+#### 4-2. watch mode
+```console
+# npm 사용
+npm run start:dev
+
+# pnpm 사용
+pnpm start:dev
+
+# yarn 사용
+yarn start:dev
+```
+
+#### 4-3. debug mode
+```console
+# npm 사용
+npm run start:debug
+
+# pnpm 사용
+pnpm start:debug
+
+# yarn 사용
+yarn start:debug
+```
+
+#### 4-4. production mode
+```console
+# npm 사용
+npm run start:prod
+
+# pnpm 사용
+pnpm start:prod
+
+# yarn 사용
+yarn start:prod
+```
+
+<br />
+
+### 5. 테스트 실행
+
+프로젝트 폴더에서 아래와 같은 명령어를 통해 프로젝트 테스트를 시작할 수 있다.
+
+#### 5-1. 유닛 테스트 ( unit tests ) 실행
+```
+$ npm run test
+```
+
+#### 5-2. End to eEnd tests ( e2e tests) 실행
+```
+$ npm run test:e2e
+```
+
+#### 5-3. 테스트 커버리지 ( test coverage ) 실행
+```
+$ npm run test:cov
+```
+
+
+
+ 
+
+
+
+
+ 
+
+
+

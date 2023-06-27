@@ -1,10 +1,7 @@
 {
   "index": "소개",
-  "nextra": "Nextra",
-  "nextjs": "Next.js",
-  "nestjs": "NestJS",
-  "mongodb": "MongoDB",
-  "flutter": "Flutter",
-  "docker": "Docker",
-  "k8s": "K8S"
+  "jsframeworks": "JS Frameworks",
+  "mobileframeworks": "Mobile",
+  "server": "Server",
+  "database": "Database"
 }
