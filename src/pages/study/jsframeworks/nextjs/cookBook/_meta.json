@@ -1,4 +1,6 @@
 {
-  "image": "Image 사용",
-  "link": "Link 사용"
+  "routing": "Routing 사용",
+  "slug": "Slug 사용",
+  "link": "Link 사용",
+  "image": "Image 사용"
 }
