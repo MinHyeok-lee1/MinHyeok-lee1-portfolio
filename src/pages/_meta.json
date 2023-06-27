@@ -1,18 +1,18 @@
 {
   "docs": {
-    "title": "Docs",
+    "title": "문서정리",
     "type": "page"
   },
   "project": {
-    "title": "Project",
+    "title": "개발문서",
     "type": "page"
   },
   "study": {
-    "title": "Study",
+    "title": "개인학습",
     "type": "page"
   },
   "etc": {
-    "title": "Etc",
+    "title": "생각중",
     "type": "page"
   }
 }

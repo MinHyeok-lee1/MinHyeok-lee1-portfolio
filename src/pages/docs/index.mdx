@@ -2,7 +2,16 @@ import { FileTree } from "nextra-theme-docs";
 
 # 전체 문서정리
 
-## 문서 구성
+## 전체 문서정리 내용
+  - 전체 문서정리의 컨텐츠는 문서정리, 개발문서, 개인학습 그리고 생각중 4가지 서브폴더 구조로 구성되어 있다.
+  - 문서정리는 해당 페이지로 전체 폴더에 대한 설명을 명시해놓은 폴더이다.
+  - 개발문서는 실제 프로젝트 결과물과 그로인해 나온 형상등을 정리한 폴더이다.
+  - 개인학습은 개인적으로 학습한 내용과 학습하며 기록이 필요하다고 느낀 것들을 정리한 폴더이다.
+  - 생각중은 현재 생각중인 폴더로 아직 구상중에 있으며 미구현상태이다. 
+  - 서브폴더 내부는 각각 서브폴더 명에 해당하는 컨텐츠로 구성되어있고 세부 정보는 서브폴더 아래 소개에 정리되어있다.
+  - 첫 화면으로 돌아가려면 좌측위에 `개발새발`을 클릭하면 홈화면으로 넘어갈 수 있다.
+
+## 폴더 및 파일 구조
 
 <FileTree.Folder name="Docs" defaultOpen>
   <FileTree.File name="Introduction" />
@@ -39,8 +48,22 @@ import { FileTree } from "nextra-theme-docs";
   <FileTree.Folder name="NestJS" defaultOpen></FileTree.Folder>
   <FileTree.Folder name="Flutter" defaultOpen></FileTree.Folder>
   <FileTree.Folder name="Nextra" defaultOpen>
-    <FileTree.Folder name="사용방법" />
-    <FileTree.Folder name="구문강조" />
+    <FileTree.File name="소개" />
+    <FileTree.File name="개발환경 설정" />
+    <FileTree.Folder name="학습문서 정리" defaultOpen>
+      <FileTree.File name="폴더 및 페이지 구성" />
+      <FileTree.File name="구문 강조" />
+      <FileTree.File name="Steps Component" />
+      <FileTree.File name="Callout Component" />
+      <FileTree.File name="File Tree" />
+      <FileTree.File name="Mermaid" />
+      <FileTree.File name="Image 사용" />
+      <FileTree.File name="Link 사용" />
+    </FileTree.Folder>
+    <FileTree.Folder name="발생이슈 정리" defaultOpen>
+    <FileTree.File name="에러" />
+    </FileTree.Folder>
+    <FileTree.File name="배포" />
   </FileTree.Folder>
   <FileTree.Folder name="Docs" defaultOpen />
 </FileTree.Folder>

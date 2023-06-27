@@ -1,0 +1,93 @@
+# Next.js 개발환경 설정
+
+## Next.js 개발환경 구축 및 Next.js 13으로 업데이트
+
+Next.js는 자바스크립트나 타입스크립트로 개발 및 Node.js 위에서 빌드된 오픈 소스 웹 개발 프레임워크이다.  
+서버 사이트 렌더링, 정적 웹 페이지 생성 등 리액트 기반 웹 애플리케이션 기능들을 가능하게 한다.
+
+<br />
+
+### 1. Next.js 프로젝트 설치
+
+Next.js, React를 설치해야 한다.  
+프로젝트를 설치하고자 하는 디렉토리에서 아래 명령어를 실행하여 Next.js 프로젝트 폴더를 설치한다.
+
+```console
+# npx 사용
+npx create-next-app@latest "프로젝트 이름"
+
+# pnpm 사용
+pnpm create next-app "프로젝트 이름"
+
+# yarn 사용
+yarn create next-app "프로젝트 이름"
+```
+
+이후 아래와 같이 프로젝트 생성을할 때 타입스크립트, ESLint등을 사용할지 말지 지정해준다.
+
+```
+✔ Would you like to use TypeScript with this project? … No / Yes
+✔ Would you like to use ESLint with this project? … No / Yes
+✔ Would you like to use Tailwind CSS with this project? … No / Yes
+✔ Would you like to use `src/` directory with this project? … No / Yes
+✔ Use App Router (recommended)? … No / Yes
+✔ Would you like to customize the default import alias? … No / Yes
+```
+
+* TypeScript는 명령어를 실행할 때 수동으로 추가할 수 있다.
+
+```console
+# npm 사용
+$ npx create-next-app@latest --typescript
+
+# pnpm 사용
+$ pnpm create next-app --typescript
+
+# yarn 사용
+$ yarn create next-app --typescript
+```
+
+<br />
+
+### 2. Nextra 패키지 추가
+
+생성된 프로젝트 폴더로 들어가고 아래 명령어를 실행하여 react 및 react-dom을 설치한다.
+
+```console
+# npm 사용
+$ npm install next react react-dom
+
+# pnpm 사용
+$ pnpm add next react react-dom
+
+
+# yarn 사용
+$ yarn add next react react-dom
+```
+
+<br />
+
+### 3. Next.js 시작
+
+프로젝트 폴더에서 아래와 같은 명령어를 통해 프로젝트 개발을 시작할 수 있다.
+
+```console
+# npm 사용
+npm run dev
+
+# pnpm 사용
+pnpm dev
+
+# yarn 사용
+yarn dev
+```
+
+<br />
+
+### 4. Next.js 13으로 업데이트
+
+버전을 13으로 업데이트하고 싶다면 프로젝트 폴더에서 아래 명령어를 실행하면 Next.js 13으로 업데이트 할 수 있다.
+
+```console
+$ npm i next@latest react@latest react-dom@latest eslint-config-next@latest
+```
