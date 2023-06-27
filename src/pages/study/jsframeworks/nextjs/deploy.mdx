@@ -1,0 +1,28 @@
+import { Steps, Callout } from "nextra-theme-docs";
+
+# Vercel을 통한 배포
+
+Next.js로 개발한 사이트를 Vercel을 통해 배포하는 방법에 대해 기술한다.
+
+## 요구사항
+
+- [Github에](https://github.com/) 계정
+- 배포할 프로젝트를 Github에 저장소에 연결
+- [Vercel](https://vercel.com/) 계정
+
+## 배포 준비
+
+1. Vercel에 로그인하여 새로운 프로젝트를 생성
+2. Github에 로그인하여 배포할 저장소 선택
+
+## 환경 변수 설정
+
+- Vercel의 배포 과정은 기본적으로 기존 배포에서 이용했던 빌드 캐시를 이용하여 배포 속도를 높인다.  
+
+## 배포
+
+상기 내용들이 모두 정상적으로 이루어졌다면 프로젝트를 push 할 때마다 자동으로 배포가 이루어진다.
+
+```console
+git push
+```
