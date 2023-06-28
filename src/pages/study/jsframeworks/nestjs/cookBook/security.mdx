@@ -1,0 +1,82 @@
+# NestJS Security(보안)
+
+## Nestjs에서 사용하는 보안 메커니즘 정의 및 인증 활성화(cookie, oAuth2 등)
+OpenAPI_Security(보안)  
+특정 작업에 사용해야 하는 보안 메커니즘을 정의하려면 @ApiSecurity() 데코레이터를 사용한다.
+```js
+@ApiSecurity('basic')
+@Controller('test')
+export class TestController {}
+```
+
+애플리케이션을 실행하기 전에 DocumentBuilder를 사용하여 기본 문서에 보안 정의를 추가해야 한다.
+```js
+const options = new DocumentBuilder().addSecurity('basic', {
+  type: 'http',
+  scheme: 'basic',
+});
+```
+가장 널리 사용되는 인증 기술 중 일부는 내장되어 있다. (예: Basic, Bearer)
+위와 같이 보안 메커니즘을 수동으로 정의할 필요가 없다.
+
+<br />
+
+## 보안관련 인증 종류
+
+### Basic authentication (기본 인증)
+
+기본 인증을 활성화하려면 아래와 같이 @ApiBasicAuth()를 사용해야 한다.
+```js
+@ApiBasicAuth()
+@Controller('tests')
+export class TestsController {}
+```
+애플리케이션을 실행하기 전에 DocumentBuilder를 사용하여 기본 문서에 보안 정의를 추가해야 한다.
+```js
+const options = new DocumentBuilder().addBasicAuth();
+```W
+
+<br />
+
+### Bearer authentication (무기명 인증)
+
+무기명 인증을 활성화하려면 아래와 같이 @ApiBearerAuth()를 사용해야 한다.
+```js
+@ApiBearerAuth()
+@Controller('tests')
+export class TestsController {}
+```
+애플리케이션을 실행하기 전에 DocumentBuilder를 사용하여 기본 문서에 보안 정의를 추가해야 한다.
+```js
+const options = new DocumentBuilder().addBearerAuth();
+```
+
+<br />
+
+### OAuth2 authentication (OAuth2 인증)
+
+OAuth2 인증을 활성화하려면 아래와 같이 @ApiOAuth2()를 사용해야 한다.
+```js
+@ApiOAuth2(['read'])
+@Controller('tests')
+export class TestsController {}
+```
+애플리케이션을 실행하기 전에 DocumentBuilder를 사용하여 기본 문서에 보안 정의를 추가해야 한다.
+```js
+const options = new DocumentBuilder().addOAuth2();
+```
+
+<br />
+
+### Cookie authentication (쿠키 인증)
+
+쿠키 인증을 활성화하려면 아래와 같이 @ApiCookieAuth()를 사용해야 한다.
+```js
+@ApiCookieAuth()
+@Controller('tests')
+export class TestsController {}
+```
+애플리케이션을 실행하기 전에 DocumentBuilder를 사용하여 기본 문서에 보안 정의를 추가해야 한다.
+```js
+const options = new DocumentBuilder().addCookieAuth('optional-session-id');
+```

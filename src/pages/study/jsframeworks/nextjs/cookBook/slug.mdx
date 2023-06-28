@@ -19,8 +19,8 @@ import { FileTree } from "nextra-theme-docs";
 [[...slug]]는 [...slug]와 3.의 명시한 차이를 제외하면 동일하게 동작한다.
 
 ```js
-pages / post / [slug].js; // http://www.~~~~.com/post/:slug 와 같다. (ex: http://URL/post/a)
-pages / post / [...slug].js; // http://www.~~~~.com/post/:slug/:slug/:slug...... 와 같다. (ex: http://URL/post/a/b/c/d/...)
+pages/post/[slug].js; // http://www.~~~~.com/post/:slug 와 같다. (ex: http://URL/post/a)
+pages/post/[...slug].js; // http://www.~~~~.com/post/:slug/:slug/:slug...... 와 같다. (ex: http://URL/post/a/b/c/d/...)
 ```
 
 - 정적으로 만들어져 있는 페이지를 제외한 페이지로 둘 다 Wild Card 처럼 아무 페이지나 동적으로 이동 가능하다.
@@ -92,8 +92,8 @@ export default ExampleSlug2;
 [...slug]와 [[...slug]]는 index.js 파일이 있어야 하느냐 없어도 되느냐의 차이가 있다.
 
 ```js
-pages / post / [...slug].js; // http://www.~~~~.com/post 로 접근하면 404에러가 발생한다.
-pages / post / [[...slug]].js; // post아래 index파일이 없더라도 http://URL/post 로 접근 가능하다.
+pages/post/[...slug].js; // http://www.~~~~.com/post 로 접근하면 404에러가 발생한다.
+pages/post/[[...slug]].js; // post아래 index파일이 없더라도 http://URL/post로 접근가능하다.
 ```
 
 <br />
