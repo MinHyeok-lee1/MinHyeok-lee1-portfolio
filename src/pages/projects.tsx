@@ -10,7 +10,7 @@ export default function Projects({ projects }) {
         <div className="flex flex-col items-center justify-center min-h-screen px-5 mb-10">
           <Head>
             <title>minhyeok.lee1 Portfolio</title>
-            <meta name="description" content="오늘도 코딩" />
+            <meta name="description" content="LMH_개발새발" />
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1"
@@ -22,7 +22,9 @@ export default function Projects({ projects }) {
             총 프로젝트:
             <span className="pl-4 text-red-500">{projects.results.length}</span>
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 m-6 py-10 w-full">
+          <p> * 개발문서 바로가기: Github가 Private면 개발문서로 이동</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 m-6 py-10 w-full">
             {projects.results.map((aProject) => (
               <ProjectItem key={aProject.id} data={aProject} />
             ))}

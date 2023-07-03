@@ -4,6 +4,7 @@ import { TypeFlags } from "typescript";
 export default function ProjectItem({ data }) {
   const projectTitle = data.properties.이름.title[0].plain_text;
   const githubLink = data.properties.깃허브.url;
+  const documentLink = data.properties.깃허브.url;
   const description = data.properties.설명.rich_text[0].plain_text;
   const imgSrc = data.cover.file?.url || data.cover.external.url;
   const tags = data.properties.태그.multi_select;
@@ -49,7 +50,7 @@ export default function ProjectItem({ data }) {
           alt="cover image"
           sizes="100vw"
           quality={100}
-          layout="fill"
+          // layout="fill"
           //   objectFit="contain" // Scale your image down to fit into the container
         />
       </div>
@@ -57,7 +58,7 @@ export default function ProjectItem({ data }) {
       <div className="p-4 flex flex-col">
         <h1 className="text-2xl font-bold"> {projectTitle}</h1>
         <h3 className="mt-4 text-xl">{description}</h3>
-        <a href={githubLink}>깃허브 바로가기</a>
+        <a href={githubLink ?? documentLink}>개발문서 바로가기</a>
         <p className="my-1">
           작업기간 : {start} ~ {end} ({calculatedPeriod(start, end)}일)
         </p>

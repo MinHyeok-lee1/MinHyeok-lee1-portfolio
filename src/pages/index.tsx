@@ -8,7 +8,7 @@ export default function Home() {
       <Layout>
         <Head>
           <title>minhyeok.lee1 Portfolio</title>
-          <meta name="description" content="오늘도 코딩" />
+          <meta name="description" content="LMH_개발새발" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
