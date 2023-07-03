@@ -1,133 +1,57 @@
-# NestJS 개발환경 설정
+# Flutter 개발환경 구축 및 설정
 
-## NestJS 개발환경 구축
+## Flutter 개발환경 구축
 
-NestJS는 자바스크립트나 타입스크립트로 서버 애플리케이션을 개발할 수 있는 백앤드 웹 프레임워크이다.  
-코드를 Provider, Controller, Module로 분리하며 컴포넌트들끼리의 조합(DI)을 통해 전체 애플리케이션을 완성한다.
-
-<br />
-
-### 1. NestJS 프로젝트 설치
-
-Nest CLI를 사용하여 시작 프로젝트를 생성한다.
-프로젝트를 설치하고자 하는 디렉토리에서 아래 명령어를 NestJS 프로젝트 폴더를 설치한다.
-
-```console
-$ npm i -g @nestjs/cli
-$ nest new project-name
-```
-
-* TypeScript는 명령어에 `--strict`를 추가한다.
-
-```console
-$ nest new project-name --strict
-```
+### 1. Flutter 프로젝트 설치
+- [이 링크](https://flutter-ko.dev/get-started/install)에서 본인의 os에 해당하는 운영체제를 선택한다.
+- Flutter zip을 다운받고 압축해제한다.
+- 검색 시작 표시줄에서 'env'를 입력하고 계정의 환경 변수 편집을 선택하고 flutter\bin이 위치한 파일경로를 저장한다.
 
 <br />
 
 ### 2. 설치가 잘 되었는 지 아래 명령어로 확인한다.
 
+```console
+$ flutter doctor
 ```
-$ nest --version
-```
-
-- 설치가 잘 되었다면 nestjs의 버전이 출력된다.
+- 설치가 잘 되었다면 flutter 관련 진단 명령창이 출력된다.
+- 체크가 되지 않고 X표시가 된 목록들을 설치하거나 설정을 해주어 해결해야 한다.
 
 <br />
 
-### 3. 수동 설치
+### 3. Android Studio 설치
 
-npm (또는 yarn ) 으로 코어 및 지원 파일을 설치하여 처음부터 수동으로 새 프로젝트를 생성할 수도 있다.
-
-```console
-$ npm i --save @nestjs/core @nestjs/common rxjs reflect-metadata
-```
-
- - 이 경우 프로젝트 상용구 파일을 직접 만들어야 하기 때문에 추천하지 않는다.
+- [이 링크](https://developer.android.com/studio)에서 Android Studio를 설치한다.
 
 <br />
 
-### 4. NestJS 시작
+### 4. cmdline-tools component is missing flutter 에러 해결방법
 
-프로젝트 폴더에서 아래와 같은 명령어를 통해 프로젝트 개발을 시작할 수 있다.
-
-#### 4-1. development mode
-```console
-# npm 사용
-npm run start
-
-# pnpm 사용
-pnpm start
-
-# yarn 사용
-yarn start
-```
-
-#### 4-2. watch mode
-```console
-# npm 사용
-npm run start:dev
-
-# pnpm 사용
-pnpm start:dev
-
-# yarn 사용
-yarn start:dev
-```
-
-#### 4-3. debug mode
-```console
-# npm 사용
-npm run start:debug
-
-# pnpm 사용
-pnpm start:debug
-
-# yarn 사용
-yarn start:debug
-```
-
-#### 4-4. production mode
-```console
-# npm 사용
-npm run start:prod
-
-# pnpm 사용
-pnpm start:prod
-
-# yarn 사용
-yarn start:prod
-```
+- AndroidStudio를 실행한다.
+- More Actions을 선택한다.
+- SDK Manager를 클릭한다.
+- SDK Tools 클릭 후 Android SDK Command-line Tools를 설치한다.
 
 <br />
 
-### 5. 테스트 실행
-
-프로젝트 폴더에서 아래와 같은 명령어를 통해 프로젝트 테스트를 시작할 수 있다.
-
-#### 5-1. 유닛 테스트 ( unit tests ) 실행
+### 5. Android license status unknown 해결방법
+```console
+$ flutter doctor --android-licenses
 ```
-$ npm run test
+- 위 명령어 실행 후 y를 계속 눌러 licenses에 동의하면 해결된다.
+
+<br />
+
+### 8. 위 3~5의 과정이 잘 되었는 지 아래 명령어로 확인한다.
+
+```console
+$ flutter doctor
 ```
+- 체크가 되지 않고 X표시가 된 목록들을 설치하거나 설정을 해주어 해결해야 한다.
+- Visual Studio를 제외한 모든 항목이 정삭적으로 체크되어 있어야 한다.
 
-#### 5-2. End to eEnd tests ( e2e tests) 실행
-```
-$ npm run test:e2e
-```
+<br />
 
-#### 5-3. 테스트 커버리지 ( test coverage ) 실행
-```
-$ npm run test:cov
-```
+### 9. 플러그인에서 Flutter 검색 후 설치한다.
 
-
-
- 
-
-
-
-
- 
-
-
-
+### 10. 안드로이드 스튜디오에서 Flutter Project를 실행할 수 있다.

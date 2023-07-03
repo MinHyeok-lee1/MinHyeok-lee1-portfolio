@@ -1,3 +1,5 @@
 {
-  "flutter": "Flutter"
+  "flutter": "Flutter",
+  "expo": "Expo",
+  "firebase": "Firebase"
 }
