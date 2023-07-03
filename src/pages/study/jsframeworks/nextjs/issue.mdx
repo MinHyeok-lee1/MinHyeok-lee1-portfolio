@@ -1,3 +1,135 @@
 # Next.js 이슈 정리
 
-## 아직 이슈 없음
+## Next.js with TailWind
+
+Tailwind UI를 프레임워크를 기반으로 하는 Next.js 프로젝트를 개발하는 방법에 관해 기술한다.
+
+## 프로젝트 생성
+
+### 새로운 Next.js 프로젝트 생성
+
+```
+npx create-next-app
+```
+
+### Tailwind CSS 설치
+
+```
+npm install -D tailwindcss@latest @tailwindcss/forms postcss autoprefixer && npx tailwindcss init -p
+```
+
+### 종속성 설치
+
+```
+npm install @headlessui/react @heroicons/react
+```
+
+- postcss: CSS에 문제가 없는지 확인하고 에러로그 제공. 발전중인 CSS의 현대기술을 브라우저에서 호환되도록 자동 변환
+- tailwind.config.js와 postcss.config.js 파일이 생성됨
+
+### 기본 폰트 설정
+
+tailwind의 기본 폰트 Inter의 경우 한글 가식성이 좋지 않기 때문에 구글의 Noto Sans KR 폰트를 이용하기 위한 설정이 필요하다.
+
+src/pages/\_document.tsx 파일의 Html과 Head 사이에 폰트 링크를 추가한다.
+
+```
+export default function Document() {
+  return (
+    <Html lang="ko" className="h-full">
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet"
+      />
+      <Head />
+      <body className="h-full">
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
+}
+```
+
+### 템플릿 경로 설정
+
+tailwind.config.js 파일의 content 항목에 템플릿 경로를 추가함
+
+- src 디렉토리를 사용하는 경우
+
+theme 항목에 기본 폰트를 앞서 설정한 Noto Sans KR 폰트로 설정한다.
+
+```
+/** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+module.exports = {
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["Noto Sans KR", ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms")],
+};
+
+```
+
+### Tailwind 지시어 추가
+
+src/styles/globals.css 파일의 내용을 다음과 같이 수정
+
+- 기존의 css 설정을 제거하고 tailwind의 내용으로 대체
+- 더 이상 Home.module.css 파일은 필요 없으므로 삭제
+
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### 설정 확인
+
+src/pages/index.tsx 파일을 다음과 같이 수정
+
+```
+export default function Home() {
+  return (
+    <h1 className="text-3xl font-bold underline">Hello world!</h1>
+  );
+}
+
+```
+
+수정사항을 확인하기 위해 프로젝트 실행
+
+```
+yarn dev
+```
+
+### 기타
+
+다음 사항들은 next.js를 사용하므로 해당사항 없음
+
+- 전처리 설정(https://tailwindcss.com/docs/using-with-preprocessors)
+- 최적화 설정(https://tailwindcss.com/docs/optimizing-for-production)
+
+## 프로젝트 설정
+
+### 빌드 설정
+
+```
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  output: "standalone",
+  poweredByHeader: false,
+};
+
+module.exports = nextConfig;
+```
+
+- standalone 모드: 빌드 결과물을 최적화
+- poweredByHeader: 응답 헤더에서 서버정보 제거

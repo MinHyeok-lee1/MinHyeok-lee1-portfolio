@@ -3,7 +3,14 @@ import { FileTree } from "nextra-theme-docs";
 # Expo 문서구조
 
 ## Expo
-Expo는 JavaScript나 TypeScript로 iOS,Android,Web 앱을 개발할 수 있는 프레임워크이자 플랫폼이다.
+1. Expo는 JavaScript나 TypeScript로 iOS,Android,Web 앱을 개발할 수 있는 프레임워크이자 플랫폼이다.
+2. Expo는 RN를 보다 쉽게 개발할 수 있도록 지원하는 개발환경으로 다음과 같은 특징을 가진다.
+- 네이티브 앱의 개발 환경 지원: Android나 iOS 에뮬레이터를 제공하고 빌드환경까지 제공한다.
+- 실제 단말기 없이도 에뮬레이터를 통해 개발이 가능하고, MAC 머신이 없어도 마켓에 등록할 실행파일을 빌드할 수 있다.
+- 원격 개발 지원: AWS 인스턴스에서 개발하고 로컬의 안드로이드 폰으로 테스트할 수 있다. (hot loading 지원)
+- OTA 지원: 마켓에 등록된 앱을 실시간으로 변경 가능하다. (유료서비스)
+3. 하지만 Expo에서 지원하는 라이브러리만 사용하는 것이 원칙으로 모든 npm을 사용할 순 없다는 단점도 존재한다.
+
 
 ## 요구사항
 

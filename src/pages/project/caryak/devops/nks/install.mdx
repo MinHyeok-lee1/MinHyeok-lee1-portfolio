@@ -1,0 +1,469 @@
+# NKS 기반 CARYAK 배포
+
+## k8s 관련 용어
+
+- `노드`: NKS 파드들을 실행할 서버 컴퓨터
+- `클러스터`: 노드들의 집합
+- `파드(pod)`:NKS 클러스터에서 실행중인 서버(front-end, back-end)
+- `인그래스(ingress)`: 외부로부터 카약 서비스 요청 트레픽을 수신하여 클러스터내 파드들에게 전달하는 서비스. 실제로는 nginx 기반의 로드밸런서에 해당
+
+NKS(k8s)를 통해 카약 서비스를 운영하려면 하나 이상의 노드들로 구성된 클러스터가 필요하고 이 클러스터에 최소 한쌍의 front-end 파드와 back-end 파드를 배포해야 한다.
+
+클러스터는 기본적으로 외부와 단절된 별도의 IP 주소 범위를 가진다. `caryak.net`과 같이 외부에서 카약 서비스로 접속하기 위해서는 클러스터 내부의 서비스를 외부로 노출시켜야 하며 이 때 사용되는 것이 인그래스다.
+
+인그래스의 기본 목적은 클러스터 내부의 서비스를 외부로 노출하는 것이며, 실제로는 nginx 기반의 로드밸러서로 생성된다.
+
+## 배포 및 서비스 구성
+
+nCloud의 콘솔을 통해 NKS 클러스터와 노드들을 생성한 후에는 로컬 머신에서 `kubectl` cli 명령어를 통해 클러스터에 접속하여 서비스의 운영관리가 가능해진다.
+`kubectl` 명령어를 통해 수동으로 관리할 수도 있지만 `yml` 형식의 명세서를 통해 관리를 하는 것이 더 효율 적이다.
+
+### front-end 배포 및 서비스 구성
+
+```yml filename="frontend.yaml"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  # minReadySeconds: 20
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      # Private Registry를 이용할 경우 이미지 pull에 사용할 시크릿 설정
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: frontend
+          image: container-registry.kr.ncr.ntruss.com/front-end:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+          # TimeZone 설정
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: tz-config
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Seoul
+      terminationGracePeriodSeconds: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30000
+  type: NodePort
+```
+
+문서를 살펴보면 Deployment와 Service에 대한 내용이 하나의 문서로 작성된 것을 확인할 수 있다.
+
+Deployment는 클러스터내에 배포할 파드의 갯수, 업데이트 전략, 리비전 수 등과 함께 파드의 스펙이 기술되어 있다. 특히 템플릿 항목을 보면 frontend의 도커이미지를 가져오기 위한 저장소의 위치가 기술되어 있으며 해당 이미지 실행에 사용할 cpu와 memory 자원, 그리고 port등을 할당하고 있다.
+
+Service는 Deployment로 구성된 클러스터내 파드를 외부에 노출하는 기능을 담당한다. NodePort 30000번으로 수신된 트래픽을 Deployment의 파드 포드 3000으로 전달하도록 설정되어 있다.
+
+아래의 명령어로 front-end의 배포 및 서비스의 생성이 가능하다.
+
+```sh
+kubectl apply -f backend.ymal
+```
+
+### back-end 배포 및 서비스 구성
+
+```yml filename="backend.yaml"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  # minReadySeconds: 20
+  selector:
+    matchLabels:
+      app: backend
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      # Private Registry를 이용할 경우 이미지 pull에 사용할 시크릿 설정
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: backend
+          image: container-registry.kr.ncr.ntruss.com/back-end:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          ports:
+            - containerPort: 3001
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3001"
+            - name: HOST
+              value: https://caryak.net
+            - name: DB_TYPE
+              value: ncloud
+            - name: DB_URI
+              value: mongodb://MKCARGLEDB:DPAZPDLZKRMFELQL0!@el9vp.vpc.mg.naverncp.com:17017,el9vt.vpc.mg.naverncp.com:17017
+            - name: DB_NAME
+              value: caryak
+            - name: DB_QUERY
+              value: "replicaSet=caryak001"
+          # TimeZone 설정
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: tz-config
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Seoul
+      terminationGracePeriodSeconds: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 30001
+  type: NodePort
+```
+
+back-end의 배포 및 서비스 구성은 front-end의 배포 및 서비스 구성과 유사하다. 환경변수가 추가된 부분과 NodePort 30001을 Deployment의 파드(back-end) 3001로 전달하라는 내용이 다르다.
+
+아래의 명령어로 back-end의 배포 및 서비스의 생성이 가능하다.
+
+```sh
+kubectl apply -f backend.ymal
+```
+
+## 서비스 노출
+
+상기한 방식으로 front-end와 back-end의 클러스터 배포된 후 외부로부터 카약 서비스 접속이 이루어지기 위해서는 배포한 서비스의 외부 노출 작업이 필요하다. 이 때 로드밸런서가 필요하다.
+
+클러스터 앞단에 로드밸런서를 배치하기 위해서는 인그래스 콘트롤러를 클러스터에 설치하고 인그래스 설정을 통해 외부로부터 유입되는 트래픽의 전달 방식을 설정해야한다.
+
+클러스터내의 서비스를 외부로 노출하기 위해서는 외부 요청을 클러스터 내부로 전달하는 인그래스가 필요한데 이 인그래스로 흔히 nginx가 사용된다. 다시말해 클러스터 내부의 서비스를 외부로 노출하기 위해서는 nginx 설치 및 설정이 필요한데 ingress controller의 설치가 nginx의 설치에 해당하고, ingress 설정이 nginx 설정에 해당한다.
+
+### Ingress Controller 설치
+
+Ingress controller의 설치에 사용되는 문서는 다음과 같다. nks에서 제공하는 템플릿을 그대로 이용한 것이다.
+
+```yml filename="alb.ingress.controllerr.yaml"
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: alb-ingress-controller
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: alb-ingress-controller
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - "extensions"
+      - "networking.k8s.io"
+    resources:
+      - ingresses
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+      - "networking.k8s.io"
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: alb-ingress-controller
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: alb-ingress-controller
+subjects:
+  - kind: ServiceAccount
+    name: alb-ingress-controller
+    namespace: kube-system
+
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: alb
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  controller: ncloud.com/alb
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alb-ingress-controller
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alb-ingress-controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: alb-ingress-controller
+    spec:
+      containers:
+        - command:
+            - /alb-ingress-controller
+          args:
+            - --api-url=nks.apigw.ntruss.com
+            - --base-path=/ncloud/v1
+            - --ingress-class=ncloud.com/alb
+          image: io.kr.ncr.ntruss.com/nks/alb-ingress-controller:0.6.0
+          name: alb-ingress-controller
+          resources:
+            limits:
+              cpu: 100m
+              memory: 180Mi
+            requests:
+              cpu: 100m
+              memory: 90Mi
+      serviceAccountName: alb-ingress-controller
+```
+
+### Ingress 설정
+
+클러스터에 Ingress controller를 설치한 후 ingress의 설정이 가능하다.
+
+```yml filename="ingress.yaml"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: caryak-ingress
+  annotations:
+    alb.ingress.kubernetes.io/description: "caryak"
+    alb.ingress.kubernetes.io/load-balancer-size: large
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-certificate-no: "14008"
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"type":"redirection","redirection":{"port": "443","protocol":"HTTPS","statusCode":301}}
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    alb.ingress.kubernetes.io/healthcheck-path: "/health"
+  labels:
+    app: caryak-ingress
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          # 80번으로 들어오는 모든 트래픽을 443으로 redirect 시킴
+          # - 본 path 설정이 최상단에 위치해야함
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: "frontend"
+                port:
+                  number: 3000
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: "backend"
+                port:
+                  number: 3001
+```
+
+설정한 내용을 요약하면 다음과 같다.
+
+- caryak-ingress란 이름으로 로드밸런서 생성
+- 로드밸런서의 처리 용량을 `large`로 설정
+- http 접속을 https 접속으로 리다이렉트
+- https 접속을 위한 ssl 인증서의 번호로 `14008` 설정
+- `/*`로 수신된 트래픽은 front-end 서비스의로 전달
+- `/api`로 수신된 트래픽은 back-end 서비스로 전달
+
+ssl 인증서는 별도로 발급 받은 후 nCloud에 등록해야 ingress 설정에서 인증서 번호로 ssh 인증서 설정이 가능하다.
+
+## 동작중인 파드 수 변경
+
+현재까지의 설정으로는 클러스터내에 1쌍의 front-end와 back-end 파드가 동작하게 된다. 만약 동작중인 파드의 수를 변경하고자 할 경우 배포 파일의 `replicas` 항목의 값을 변경한 후 다시 배포한다.
+
+## 동작중인 파드 업데이트
+
+파드의 도커 이미지가 업데이트 되어 파드의 업데이트가 필요한 경우에는 다음의 명령어를 수행한다.
+
+```sh
+kubectl rollout restart deployment frontend-deployment
+```
+
+```sh
+kubectl rollout restart deployment backend-deployment
+```
+
+## AutoScaling
+
+AutoScaling이란 클러스터내 파드의 cpu나 momory 사용량의 변화를 감지하여 자동으로 파드의 수를 증가 혹은 감소시키는 기술이다.
+
+### front-end 오토스케일링 설정
+
+```yml filename="hpa.frontend.yaml"
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-frontend-cpu
+spec:
+  maxReplicas: 20
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend-deployment
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+```
+
+상기한 내용으로 front-end의 오토스케일링을 설정하면 front-end의 최소 파드 수는 3개로 설정되며 파드에 할당된 cpu의 사용률이 50이 넘을 경우 최대 20까지 파드 수가 자동으로 증가된다. cpu 사용률이 50 이하로 떨어지면 다시 최소 파드 수인 3개로 줄어든다.
+
+이 때 다음과 같은 사항에 주의한다.
+
+- 노드의 사양과 파드의 사양에 따라 하나의 노드에서 동작할 수 있는 파드의 수가 결정됨
+- 노드의 수를 수동으로 설정한 경우 오토스케일링 정책에 따라 노드의 수를 자동으로 증가시릴 수 없는 문제 발생
+- 클러스터의 노드 수를 수동으로 설정하지 않고, 최대 노드 수를 `minReplicas`와 `maxReplicas`를 적용할 수 있도록 설정
+
+### back-end 오토스케일링 설정
+
+back-end의 오토스케일링 설정 방식은 front-end와 동일하다.
+
+```yml filename="hpa.backend.yaml"
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-backend-cpu
+spec:
+  maxReplicas: 20
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-deployment
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+```

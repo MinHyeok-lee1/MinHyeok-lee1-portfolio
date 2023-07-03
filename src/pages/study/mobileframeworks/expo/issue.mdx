@@ -1,0 +1,165 @@
+# Expo 이슈 정리
+
+### expo login
+
+expo에 로그인하면 개발중인 프로젝트를 실제 스마트폰에서 확인이 가능하다.
+
+```
+expo login
+```
+
+### expo whoami
+
+로그인된 정보를 확인
+
+```
+expo whoami
+```
+
+## 프로젝트 생성
+
+```
+expo init
+```
+
+- 프로젝트명 입력
+- typescript 템플릿 설정
+
+### nativewind 설정
+
+nativewind는 expo용 tailwind 컴포넌트다.
+
+```
+yarn add nativewind && yarn add --dev tailwindcss && npx tailwindcss init
+```
+
+### tailwind.config.js 수정
+
+nativewind를 적용할 디렉토리를 설정한다.
+
+- screens은 화면구성용 소스코드 디렉토리
+
+```
+module.exports = {
+  content: [
+    "./App.{js,jsx,ts,tsx}",
+    "./screens/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+### 바벨 플러그인 수정
+
+babel.config.js 파일을 수정한다.
+
+```
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["nativewind/babel"],
+  };
+};
+```
+
+### typescript 설정
+
+react-native의 컴포넌트에서 NativeWind의 className 속성을 사용하기 위해서 app.d.ts 파일을 생성하고 다음의 내용을 추가한다.
+
+```
+/// <reference types="nativewind/types" />
+```
+
+### 적용 여부 확인
+
+App.tsx 파일을 다음과 같이 수정한다.
+
+```
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { Text, View } from "react-native";
+
+export default function App() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+```
+
+적용여부를 확인하기 위해 expo를 실행한다.
+
+```
+export start
+```
+
+안드로이드폰에서 expo go 앱을 실행하면 앞서 실행한 expo 프로젝트가 표시되고 이를 선택하면 프로젝트 동작화면을 확인할 수 있다.
+
+## 절대경로 설정
+
+assets 디렉토리의 파일을 참조할 때 다음과 같이 절대경로로 사용하는 방법
+
+```
+const PlaceholderImage = require("@assets/background-image.png");
+```
+
+관련 패키지 설치
+
+```
+yarn add -D babel-plugin-module-resolver,
+```
+
+babel.config.js 파일 수정
+
+```
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [
+      "nativewind/babel",
+      [
+        "module-resolver",
+        {
+          root: ["."],
+          alias: {
+            "@": "./",
+            "@screens": "./screens",
+            "@components": "./components",
+            "@constants": "./constants",
+            "@types": "./types",
+            "@assets": "./assets",
+          },
+        },
+      ],
+    ],
+  };
+};
+```
+
+tsconfig.json 파일 수정
+
+```
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "typeRoots": ["./node_modules/@types", "@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@screens/*": ["./screens/*"],
+      "@components/*": ["./components/*"],
+      "@constants": ["./constants"],
+      "@types": ["./types"],
+      "@assets/*": ["./assets/*"]
+    }
+  }
+}
+```

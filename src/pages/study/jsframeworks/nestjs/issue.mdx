@@ -1,3 +1,65 @@
 # NestJS 이슈 정리
 
-## 아직 이슈 없음
+## NestJS 기반의 API 서버 개발
+
+cli 설치
+
+```
+sudo npm i -g @nestjs/cli
+```
+
+프로젝트 생성
+
+```
+nest new ApiServer
+```
+
+## path alias 설정
+
+src 디렉토리 하단에 있는 각 소스 구성들의 path alias 설정을 위해 tsconfig.json 파일에 아래의 내용을 추가한다.
+
+```
+{
+  "compilerOptions": {
+    ...
+    "paths": {
+      "@constants/*": ["./src/constants/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@models/*": ["./src/models/*"],
+      "@toolkit/*": ["./src/toolkit/*"]
+    }
+  }
+}
+
+```
+
+## MongoDB 연동
+
+API 서버에서 MongoDB를 이용하기 위해서는 kindagoose, typegoose, mongoose 패키지를 이용한다.
+
+```
+yarn add kindagoose @typegoose/typegoose mongoose
+```
+
+### typegoose
+
+- Entity 개발: prop 데코레이터를 통해 모델을 정의
+- Service 개발: 서비스에서 사용할 모델의 타입 선언에 활용
+
+### kindagoose
+
+- Module 개발: 모듈에 모델을 주입
+- Service: 모듈에서 주입한 모델에 대한 접근 권한 부여
+
+### mongoose
+
+- Service 개발: MongoDB 쿼리 처리에 활용
+
+### nCloud MongoDB용 hosts 파일 등록
+
+nCloud에서 제공하는 MongoDB 서비스의 경우 외부에서 접속하기 위해 /etc/hosts 파일에 아래의 내용을 추가한다.
+
+```
+223.130.128.225 e88j3.vpc.mg.naverncp.com
+223.130.129.18 e88j7.vpc.mg.naverncp.com
+```

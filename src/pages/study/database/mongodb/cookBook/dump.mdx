@@ -1,0 +1,41 @@
+# 몽고DB Dump & Restore(Backup)
+
+## Dump
+- 서비스할 웹사이트의 데이터베이스는 DBNAME이며 접근을 위한 uri와 password를 설정파일(.yaml)로 미리 작성한다.  
+- uri에는 엔드포인드와 username, db명이 포함된다. (mongoDB uri string Path)  
+- password의 경우 !로 끝날경우 uri에 포함될 시 파싱에러가 발생하여 별도로 분리해야한다.
+```sh
+uri: uri: "mongoDB주소(mongodb://id:pathword@ ~ / db명 ? replicaSet = ..)"
+password: "mongoDB비밀번호"
+```
+
+- 웹사이트의 db로부터 백업을 받을 때 아래 명령어를 이용한다.
+
+```sh
+mongodump --config="YAML파일 이름".yaml --forceTableScan
+```
+
+## Restore(Backup)
+- 복원할 데이터베이스가 원본 데이터와 다를 경우 별도의 설정파일이 필요하다.
+  * 설정파일 ("YAML파일 이름".yaml)
+- mongorestore 명령을 이용할 때 uri 옵션에는 db명이 포함될 수 없다.
+- "YAML파일 이름".yaml 파일의 uri와 달리 db명이 생략된 uri를 사용해야 한다.
+
+```sh
+uri: "mongoDB주소(mongodb://id:pathword@ ~ /? replicaSet = ..)"
+password: "mongoDB비밀번호"
+```
+
+* 웹사이트 db로부터 백업받은 데이터를 다른 db로 복원(Restore or Dump)할 경우 아래와 같은 명령어를 이용한다.
+    - nsFrom: source db.collection 명
+    - nsTo: destination db.collection 명
+- 아래 명령의 경우 dump 디렉토리의 "원래" db의 모든 collection을 복원 대상으로 한다.
+- "복원"db에 동일 collection명으로 복원을 시도한다는 것을 의미한다.
+- drop 옵션은 restore 전에 동일 collection이 있을 경우 drop한 후에 restore함을 의미한다.
+- 즉 "원래" db를 로컬머신의 dump 디렉토리로 백업했던 것을 "복원" db로 복원한 것이다.
+
+```sh
+mongorestore --drop --config="복원 DB".yaml --nsFrom="원래 DB".* --nsTo="복원 DB".*
+```
+
+<br />

@@ -1,0 +1,49 @@
+import { FileTree } from "nextra-theme-docs";
+
+# CARYAK
+
+## 프로젝트 구성
+
+<FileTree>
+  <FileTree.Folder name="servers" defaultOpen>
+    <FileTree.Folder name="front-end" />
+    <FileTree.Folder name="back-end" />
+    <FileTree.Folder name="model-builder" />
+    <FileTree.Folder name="proxy-server" />
+  </FileTree.Folder>
+  <FileTree.Folder name="devops" defaultOpen>
+    <FileTree.Folder name="nks" defaultOpen>
+      <FileTree.Folder name="qc" />
+      <FileTree.Folder name="caryak" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.Folder name="docs" defaultOpen />
+</FileTree>
+
+### servers
+
+카약 플랫폼을 구성하는 서버들과 서버 개발 및 운영에 활용되는 툴들로 구성
+
+#### front-end
+
+NextJS로 개발된 UI 제공용 서버
+
+#### back-end
+
+NestJS로 개발된 api 제공용 서버
+
+#### model-builder
+
+back-end의 ./src/models에 구현된 데이터 모델을 빌드하여 front-end로 공유할 수 있도록 하는 빌더
+
+#### proxy-server
+
+nginx 서버의 설정파일로 로컬 서버에서 dev.caryak.net을 구축하기 위해 활용
+
+### devops
+
+구현한 서버를 클라우드에 배포하고 관리하기 위한 툴과 자료들로 구성
+
+### docs
+
+프로젝트와 관련된 모든 자료들로 구성

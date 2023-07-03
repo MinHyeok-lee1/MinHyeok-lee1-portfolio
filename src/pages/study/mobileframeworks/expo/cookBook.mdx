@@ -1,0 +1,239 @@
+# Expo를 이용한 로컬 서버 기반의 React Native 개발 환경을 구축
+
+## 필수 조건
+
+- node
+- Android SDK
+- 타겟폼의 개발자 옵션 활성화
+
+<br />
+
+## 프로젝트 종류
+
+- RN을 개발하기 위해서는 RN-cli를 이용하거나 expo-cli를 이용한다.  
+- RN-cli는 로컬환경에 연결된 타겟장비(Android/iOS)를 이용해서 개발하는 방식이다.  
+- expo-cli는 실제 타겟장비외에 에뮬레이터와 웹브라우저를 통해서 앱을 실행할 수 있다.  
+- expo.dev에 회원가입을 통해 원격 개발도 가능하다.  
+- 만약 로컬서버를 통해 앱을 개발하려면, expo를 이용행서 로컬서버에서 앱을 개발하고 타겟장비를 통해 원격접속하여 실행화면을 확인할 수 있다.
+
+<br />
+
+## RN-cli 방식의 프로젝트
+
+**프로잭트 생성**
+
+- js버전
+
+```sh
+npx react-native init firstApp
+```
+
+- typescript버전
+
+```sh
+npx react-native init firstApp --template react-native-template-typescript
+```
+
+**Android SDK 경로 설정**
+```sh
+sdk.dir=C:\\Users\\User\\AppData\\Local\\Android\\sdk
+```
+firstApp/android/local.properties파일을 생성하고 SDK 경로를 추가한다.
+
+<br />
+
+## Android로 프로젝트 실행
+
+```sh
+npx react-native run-android
+```
+
+<br />
+
+## Expo-cli 방식의 프로젝트
+
+**expo-cli 설치**
+
+```sh
+npm install -g expo-cli
+```
+
+**sharp-cli**
+
+- sharp-cli는 node용 그래픽 처리 모듈이다.
+
+```sh
+npm install -g sharp-cli
+```
+
+- 윈도우 환경에서는 다음의 추가 패키지 설치가 필요하다.
+- 특히 windows-build-tools의 경우 관리자 권한으로 실행해야 한다.
+
+```sh
+npm install --global node-gyp
+npm install --global --production windows-build-tools
+```
+
+**Expo 계정연동**
+
+```sh
+expo login -u 아이디 -p 비밀번호
+```
+
+**프로젝트 생성**
+
+```sh
+expo init secoundApp
+```
+
+<br />
+
+## expo 개발서버 구축
+
+expo는 EC2와 같은 온라인 개발서버로 구축하여 사용할 수 있다.
+
+- 개발자 툴에서 커넥션 방식을 Tunnel로 변경
+
+```sh
+expo start --tunnel
+```
+
+<br />
+
+## Styled Components 관련
+
+**설치**
+
+```sh
+yarn add styled-components @types/styled-components @types/styled-components-react-native
+```
+
+**tsconfig.json 수정**
+
+```json
+"types": ["styled-components-react-native"],
+```
+
+<br />
+
+## Next 연동
+
+[Expo 개발자 문서](https://docs.expo.dev/guides/using-nextjs/)에서는 Expo를 Next와 함께 사용할 수 있는 방법에 대해서 기술하고 있다. with-nextjs 템플릿을 이용할 수도 있지만 typescript를 이용하기 위해서는 수동 설정이 필요하다.
+
+**프로젝트 생성**
+
+```sh
+expo init expo-next-app
+```
+
+**next-adapter 설치**
+
+```sh
+yarn add -D @expo/next-adapter
+```
+
+**next 주입**
+
+```sh
+yarn next-expo -f
+```
+
+**종속성 확인**
+
+```sh
+expo doctor --fix-dependencies
+```
+
+**babel.config.js수정**
+
+```js
+module.exports = {
+  presets: ["@expo/next-adapter/babel"],
+  plugins: [
+    ["@babel/plugin-proposal-private-methods", { loose: true }],
+    ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+  ],
+};
+```
+
+**next.config.js수정**
+
+```js
+const { withExpo } = require("@expo/next-adapter");
+const withPlugins = require("next-compose-plugins");
+
+const withTM = require("next-transpile-modules")(["react-native-web"]);
+
+module.exports = withPlugins(
+  [withTM, [withExpo, { projectRoot: __dirname }]],
+  {}
+);
+```
+
+- 패키지 설치
+
+```sh
+yarn add next-compose-plugins next-transpile-modules
+```
+
+**App.tsx수정**
+
+```sh
+export { default } from "./pages";
+```
+
+**.expo와 .next 삭제**
+
+```sh
+rm -rf .next/ .expo
+```
+
+**Next 실행**
+
+```sh
+yarn next dev
+```
+
+**expo 실행**
+
+```sh
+expo start --tunnel
+```
+
+<br />
+
+## with-nextjs
+
+**프로젝트 생성**
+
+```sh
+npx create-react-native-app -t with-nextjs
+```
+
+**syncyarnlock설치**
+
+- 패키지를 업데이트 하면서 package.json도 업데이트한다.
+
+```sh
+sudo yarn global add syncyarnlock
+yarn upgrade --latest
+syncyarnlock
+```
+
+**expo doctor**
+
+```sh
+expo doctor --fix-dependencies
+```
+
+**babel.config.js수정**
+
+```js
+module.exports = {
+  presets: ["@expo/next-adapter/babel"],
+  plugins: [
+    ["@babel/plugin-proposal-private-methods", { loose: true }],
+    ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
+  ],
+};
+```
