@@ -12,13 +12,20 @@ import { FileTree } from "nextra-theme-docs";
 
 ## 폴더 및 파일 구조
 
-<FileTree.Folder name="skill" defaultOpen>
-  <FileTree.File name="Introduction" />
+<FileTree.Folder name="기술문서" defaultOpen>
+  <FileTree.File name="소개" />
   <FileTree.Folder name="JS Frameworks" defaultOpen>
+    <FileTree.Folder name="개발언어" defaultOpen>
+      <FileTree.Folder name="JavaScript" defaultOpen></FileTree.Folder>
+      <FileTree.Folder name="TypeScript" defaultOpen></FileTree.Folder>
+      <FileTree.Folder name="Dart" defaultOpen></FileTree.Folder>
+      <FileTree.Folder name="Java" defaultOpen></FileTree.Folder>
+      <FileTree.Folder name="Python" defaultOpen></FileTree.Folder>
+    </FileTree.Folder>
     <FileTree.Folder name="Nextra" defaultOpen>
       <FileTree.File name="소개" />
       <FileTree.File name="개발환경 설정" />
-      <FileTree.Folder name="기술문서 정리" defaultOpen>
+      <FileTree.Folder name="기술문서 정리">
         <FileTree.File name="폴더 및 페이지 구성" />
         <FileTree.File name="구문 강조" />
         <FileTree.File name="Steps Component" />
@@ -31,21 +38,37 @@ import { FileTree } from "nextra-theme-docs";
       <FileTree.File name="발생이슈 정리" />
       <FileTree.File name="배포" />
     </FileTree.Folder>
-    <FileTree.Folder name="Next.js" defaultOpen></FileTree.Folder>
-    <FileTree.Folder name="NestJS" defaultOpen></FileTree.Folder>
-    <FileTree.Folder name="MongoDB" defaultOpen>
-      <FileTree.Folder name="AWS" />
-      <FileTree.Folder name="NKS" />
+    <FileTree.Folder name="Next.js" defaultOpen>
+      <FileTree.File name="소개" />
+      <FileTree.File name="개발환경 설정" />
+      <FileTree.Folder name="Routing 사용">
+        <FileTree.File name="Slug 사용" />
+        <FileTree.File name="Link 사용" />
+        <FileTree.File name="Image 사용" />
+      </FileTree.Folder>
+      <FileTree.File name="발생이슈 정리" />
+      <FileTree.File name="배포" />
+    </FileTree.Folder>
+    <FileTree.Folder name="NestJS" defaultOpen>
+      <FileTree.File name="소개" />
+      <FileTree.File name="개발환경 설정" />
+      <FileTree.Folder name="기술문서 정리">
+        <FileTree.File name="아키텍처" />
+        <FileTree.File name="형상관리" />
+        <FileTree.File name="유효성 검증" />
+        <FileTree.File name="보안" />
+      </FileTree.Folder>
+      <FileTree.File name="발생이슈 정리" />
+      <FileTree.File name="배포" />
     </FileTree.Folder>
   </FileTree.Folder>
+
   <FileTree.Folder name="Mobile Frameworks" defaultOpen>
     <FileTree.Folder name="Flutter" defaultOpen></FileTree.Folder>
   </FileTree.Folder>
   <FileTree.Folder name="Server" defaultOpen>
     <FileTree.Folder name="Docker" defaultOpen></FileTree.Folder>
     <FileTree.Folder name="K8S" defaultOpen>
-      <FileTree.Folder name="AWS" />
-      <FileTree.Folder name="NKS" />
     </FileTree.Folder>
   </FileTree.Folder>
   <FileTree.Folder name="Database" defaultOpen>
