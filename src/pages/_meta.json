@@ -2,16 +2,16 @@
   "*": {
     "type": "page"
   },
-  "docs": {
+  "home": {
     "title": "문서정리"
   },
   "project": {
     "title": "개발문서"
   },
-  "study": {
-    "title": "개인학습"
+  "skill": {
+    "title": "기술문서"
   },
   "terminology": {
-    "title": "개발용어"
+    "title": "용어문서"
   }
 }

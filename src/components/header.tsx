@@ -60,7 +60,7 @@ export default function Header() {
             >
               이력서
             </Link>
-            <Link href="/docs" className="mr-5 hover:text-gray-900">
+            <Link href="/home" className="mr-5 hover:text-gray-900">
               문서정리
             </Link>
           </nav>
