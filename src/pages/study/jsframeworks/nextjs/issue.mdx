@@ -8,32 +8,31 @@ Tailwind UI를 프레임워크를 기반으로 하는 Next.js 프로젝트를 �
 
 ### 새로운 Next.js 프로젝트 생성
 
-```
+```sh
 npx create-next-app
 ```
 
 ### Tailwind CSS 설치
 
-```
+```sh
 npm install -D tailwindcss@latest @tailwindcss/forms postcss autoprefixer && npx tailwindcss init -p
 ```
 
 ### 종속성 설치
 
-```
+```sh
 npm install @headlessui/react @heroicons/react
 ```
 
-- postcss: CSS에 문제가 없는지 확인하고 에러로그 제공. 발전중인 CSS의 현대기술을 브라우저에서 호환되도록 자동 변환
-- tailwind.config.js와 postcss.config.js 파일이 생성됨
+- postcss: CSS에 문제가 없는지 확인하고 에러로그 제공. 발전중인 CSS의 현대기술을 브라우저에서 호환되도록 자동 변환한다.
+- tailwind.config.js와 postcss.config.js 파일이 생성된다.
 
 ### 기본 폰트 설정
 
-tailwind의 기본 폰트 Inter의 경우 한글 가식성이 좋지 않기 때문에 구글의 Noto Sans KR 폰트를 이용하기 위한 설정이 필요하다.
-
+tailwind의 기본 폰트 Inter의 경우 한글 가식성이 좋지 않기 때문에 구글의 Noto Sans KR 폰트를 이용하기 위한 설정이 필요하다.  
 src/pages/\_document.tsx 파일의 Html과 Head 사이에 폰트 링크를 추가한다.
 
-```
+```js
 export default function Document() {
   return (
     <Html lang="ko" className="h-full">
@@ -53,13 +52,13 @@ export default function Document() {
 
 ### 템플릿 경로 설정
 
-tailwind.config.js 파일의 content 항목에 템플릿 경로를 추가함
+tailwind.config.js 파일의 content 항목에 템플릿 경로를 추가한다.
 
 - src 디렉토리를 사용하는 경우
 
 theme 항목에 기본 폰트를 앞서 설정한 Noto Sans KR 폰트로 설정한다.
 
-```
+```js
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require("tailwindcss/defaultTheme");
 
@@ -74,17 +73,16 @@ module.exports = {
   },
   plugins: [require("@tailwindcss/forms")],
 };
-
 ```
 
 ### Tailwind 지시어 추가
 
-src/styles/globals.css 파일의 내용을 다음과 같이 수정
+src/styles/globals.css 파일의 내용을 다음과 같이 수정한다.
 
-- 기존의 css 설정을 제거하고 tailwind의 내용으로 대체
-- 더 이상 Home.module.css 파일은 필요 없으므로 삭제
+- 기존의 css 설정을 제거하고 tailwind의 내용으로 대체한다.
+- 더 이상 Home.module.css 파일은 필요 없으므로 삭제한다.
 
-```
+```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,26 +90,23 @@ src/styles/globals.css 파일의 내용을 다음과 같이 수정
 
 ### 설정 확인
 
-src/pages/index.tsx 파일을 다음과 같이 수정
+src/pages/index.tsx 파일을 다음과 같이 수정한다.
 
-```
+```js
 export default function Home() {
-  return (
-    <h1 className="text-3xl font-bold underline">Hello world!</h1>
-  );
+  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 }
-
 ```
 
-수정사항을 확인하기 위해 프로젝트 실행
+수정사항을 확인하기 위해 프로젝트 실행한다.
 
-```
+```sh
 yarn dev
 ```
 
 ### 기타
 
-다음 사항들은 next.js를 사용하므로 해당사항 없음
+다음 사항들은 next.js를 사용하므로 해당사항 없다.
 
 - 전처리 설정(https://tailwindcss.com/docs/using-with-preprocessors)
 - 최적화 설정(https://tailwindcss.com/docs/optimizing-for-production)
@@ -120,7 +115,7 @@ yarn dev
 
 ### 빌드 설정
 
-```
+```js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -131,5 +126,5 @@ const nextConfig = {
 module.exports = nextConfig;
 ```
 
-- standalone 모드: 빌드 결과물을 최적화
-- poweredByHeader: 응답 헤더에서 서버정보 제거
+- standalone 모드: 빌드 결과물을 최적화한다.
+- poweredByHeader: 응답 헤더에서 서버정보 제거된다.
