@@ -87,7 +87,7 @@ export default function AboutMe() {
                           <br />
                           <strong>한남대학교</strong>
                           <br />
-                          컴퓨터통신무인기술학과 컴퓨터 트랙 학사
+                          컴퓨터통신무인기술학과(컴퓨터 트랙) 학사
                         </p>
                       </div>
                     </div>

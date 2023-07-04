@@ -1,5 +1,6 @@
 {
+  "flutter": "소개",
   "settings": "개발환경 설정",
-  "cookBook": "기술문서 정리",
+  "cookbook": "기술문서 정리",
   "issue": "발생이슈 정리"
 }
