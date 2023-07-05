@@ -1,0 +1,258 @@
+# var, let, const
+
+- javascript에서 변수를 선언하는 방법은 3가지 var, let, const가 있다.
+- var로 선언한 변수는 let으로 선언한 변수와 유사, 대부분의 경우에 let을 var로, var를 let으로 바꿔도 큰 문제 없이 동작한다.
+- 하지만 var는 초기 자바스크립트 구현 방식 때문에 let과 const로 선언한 변수와는 다른 방식으로 동작한다.
+- 그로 인해 생기는 문제점들은 아래와 같다.
+
+## var는 블록 스코프가 없다.
+
+- var로 선언한 변수의 스코프는 함수 스코프이거나 전역 스코프이다.
+- 블록 기준으로 스코프가 생기지 않기 때문에 블록 밖에서 접근 가능하다.
+
+```js
+if (true) {
+  var fact = true;
+}
+
+console.log(fact); // true 출력
+```
+
+- 이와 반대로 fact를 var대신 let과 const로 선언하면 에러 발생한다.
+- var는 코드 블록을 무시하기 때문에 fact는 전역 변수이다.
+- if라는 블록 스코프 안에서 선언되는 변수 fact를 if라는 블록 외에서 접근 가능하다는 것을 말도 안되는 걸 느낄 것이다.
+- 전역 스코프에서 이 변수에 접근 가능하다.
+
+<br />
+
+```js
+if (true) {
+  let fact = true;
+}
+
+console.log(fact); // ReferenceError: fact is not defined
+```
+
+<br />
+
+- 두 번째 행에서 var 가 아닌 let 혹은 const를 사용했다면, 변수 fact는 if문 안에서만 접근가능하다.
+- 반복문에서도 유사한 일이 일어난다.
+- var는 블록이나 루프 수준의 스코프를 형성하지 않는다.
+
+```js
+for (var i = 0; i < 10; i++) {
+  // ...
+}
+
+console.log(i); // 출력값: 10
+```
+
+- 반복문이 종료되었지만 'i'는 전역 변수이므로 여전히 접근 가능하다.
+
+<br />
+
+코드 블록이 함수 안에 있다면, var는 함수 레벨 변수가 된다.
+
+```js
+function sayHi() {
+  if (true) {
+    var sayHello = "Hello";
+  }
+  console.log(sayHello);
+}
+
+sayHi(); // 출력값: Hello
+alert(sayHello); // ReferenceError: sayHello is not defined
+```
+
+- var는 함수는 아니지만 if, for밖의 코드 블록에서도 접근 가능한 것이 문제다.
+
+<br />
+
+## var는 변수의 중복 선언을 허용한다.
+
+- let과 const를 사용하면 한 스코프에서 같은 변수를 let으로 두 번 선언하면 에러가 발생한다.
+
+```js
+let x;
+let x; // SyntaxError: Identifier 'x' has already been declared
+```
+
+<br />
+
+- var로 같은 변수를 여러 번 중복으로 선언 가능하다.
+- 하지만 이미 선언된 변수에 var를 사용하면 두 번째 선언문은 무시한다.
+
+```js
+var user = "홍길동";
+
+var user = "이순신"; // 이 "var"는 아무것도 하지 않음. (이전에 이미 선언되었는데 에러도 발생하지 않는다.)
+
+alert(user); // 출력값: 이순신
+```
+
+<br />
+
+## var는 선언하기 전에 사용할 수 있다.
+
+- var 선언은 함수가 시작될 때 처리한다.
+- 전역에서 선언한 변수라면 스크립트가 시작될 때 처리한다.
+- 함수 본문 내에서 var로 선언한 변수는 선언 위치와 상관없이 함수 본문이 시작되는 지점에서 정의한다. (단, 변수가 중첩 함수 내에서 정의되지 않아야 이 규칙이 적용)
+
+따라서 아래 두 예제는 동일하게 동작한다.
+
+```js
+function sayHi() {
+  sayHello = "Hello";
+
+  alert(sayHello);
+
+  var sayHello;
+}
+sayHi();
+```
+
+<br />
+
+- var sayHello의 위치가 어떻게 선언되는 위로 간 것처럼 동작한다.
+
+```js
+function sayHi() {
+  var sayHello;
+
+  sayHello = "Hello";
+
+  alert(sayHello);
+}
+sayHi();
+```
+
+<br />
+
+- 코드 블록은 무시되기 때문에, 아래 코드 역시 동일하게 동작한다.
+
+```js
+function sayHi() {
+  sayHello = "Hello";
+
+  if (false) {
+    var sayHello;
+  }
+
+  alert(sayHello);
+}
+sayHi();
+```
+
+- 위 예제에서 if(false) 블록 안 코드는 절대 실행되지 않지만, 이는 호이스팅에 전혀 영향을 주지 않는다.
+- if 내부의 var 는 함수 sayHi의 시작 부분에서 처리되므로 변수 sayHello는 이미 정의가 된 상태인 것이다.
+- 이렇게 변수가 끌어올려 지는 현상을 '호이스팅(hoisting)'이라고 한다.
+- var로 선언한 모든 변수는 함수의 최상위로 ‘끌어 올려지기(hoisted)' 때문이다. (hoist는 끌어올리다 라는 뜻)
+
+<br />
+
+선언은 호이스팅 되지만 할당은 호이스팅 되지 않는다.
+
+```js
+function sayHi() {
+  console.log(sayHello); // undefined 출력
+
+  var sayHello = "Hello";
+}
+
+sayHi();
+```
+
+- var sayHello= "Hello"에서 변수 선언과 변수에 값을 할당하는 초기화가 동시에 일어난다.
+- 변수 선언은 함수 실행이 시작될 때 처리되지만(호이스팅) 할당은 호이스팅 되지 않기 때문에 할당 관련 코드에서 처리된다.
+
+<br />
+
+따라서 위 예제는 아래 코드처럼 동작하게 된다.
+
+```js
+function sayHi() {
+  var sayHello; // 선언은 함수 시작 시 처리한다.
+
+  console.log(sayHello); // undefined 출력
+
+  sayHello = "Hello"; // 할당(초기화)은 실행 흐름이 해당 코드에 도달했을 때 처리한다.
+}
+
+sayHi();
+```
+
+- 이처럼 모든 var 선언은 함수 시작 시 처리되기 때문에, var로 선언한 변수는 어디서든 참조할 수 있다.
+- 하지만 변수에 무언가를 할당하기 전까진 값이 undefined이다.
+- 위의 두 예시에서 alert를 호출하기 전에 변수 sayHello는 선언이 끝난 상태이기 때문에 에러 없이 경고창이 출력된다.
+- 그러나 값이 할당되기 전이기 때문에 얼럿 창엔 undefined가 출력된다. (정상인지 비정상인지 구분이 불가능)
+
+<br />
+
+## 정리
+
+1. var로 선언한 변수는 블록 스코프가 아닌 함수 수준 스코프를 갖는다. (함수가 아닌 블록 스코프에서 전역)
+
+- 전역 변수와 지역 변수에서의 충돌에서 헷갈릴 수 있다.
+
+2. var 선언은 함수가 시작되는 시점(전역 공간에선 스크립트가 시작되는 시점)에서 처리된다.
+
+- 호이스팅 문제
+
+3. window, globalThis같은 전역 객체 에서 접근할 때 전역 객체의 프로퍼티로 접근할 수 있다.
+
+- 아래와 같은 문제 발생
+
+```js
+var x = 5;
+
+alert(window.x); // 5 (var로 선언한 변수는 전역 객체 window의 프로퍼티)
+```
+
+- window같은 브라우저 환경에서 전역 개체에서 접근한다.
+
+<br />
+
+```js
+let x = 5;
+
+alert(window.x); // 출력값: undefined (let으로 선언한 변수는 전역 객체의 프로퍼티가 되지 않음)
+```
+
+- 위와 같은 부작용 때문에 변수 var의 사용은 좋지 않다.
+- 변수는 블록 레벨 스코프를 갖는 게 좋으므로 이제는 let과 const를 이용해 변수를 선언하는 게 대세가 되었다.
+- var는 사용하는 것을 지양하고 let 혹은 const를 사용하자.
+
+<br />
+
+## 변수 선언방식 let과 const의 차이점
+
+### let
+
+```js
+let x;
+x = 1;
+console.log(x); // 출력값: 1
+x = 2;
+console.log(x); // 출력값: 2
+```
+
+- 위와 같이 x를 let으로 선언하였을 때는 값을 계속해서 변경할 수 있다.
+
+### const
+
+```js
+const x;  // 출력값: SyntaxError: Missing initializer in const declaration
+x = 2;
+console.log(x);
+```
+
+- 위와 같이 x를 const로 선언하였을 때는 값을 넣지 않고 초기화할 수 없다.
+
+## 정리
+
+- 선언, 초기화 이후 변수 값의 변경이 필요할 시 let 아닐 시, const로 선언한다.
+- var과 let은 초기화 및 선언 후 변경이 가능하다.
+- var는 사용을 지양한다.
+- const는 초기화 및 선언 후 변경이 불가능하다.
+- const는 마찬가지로 선언과 초기화를 동시에 이후 값 변경할 수 없다,

@@ -1,0 +1,168 @@
+# replace() 함수와 정규식을 이용한 문자열 공백 제거
+
+## 시작
+
+- let 변수 = " a b c ";
+- x라는 앞, 중간, 뒤에 " "공백이 2자리씩 총 6자리의 공백이 있는 문자열이 있다고 하자.
+
+```js
+let x = "  aa  aaaa  ";
+console.log(x, x.length);
+```
+
+출력값
+
+```console
+  aa  aaaa  12
+```
+
+- x는 길이는 6개의 a와 공백 6개로 이루어진 12자리로 이루어진 문자이다.
+- 참고로 변수.replace('바꾸고싶은 이전 값', '바뀌는 이후 값')로 사용한다.
+
+<br />
+
+## 첫 번째로 등장하는 공백전체 제거 = .replace(/^\s+/,'')
+
+```js
+/**
+ * 처음 등장 공백제거
+ * @param str
+ * @returns str
+ */
+const trimFirst = (str) => {
+  const trimStr = str.replace(/^\s+/, "");
+  return trimStr;
+};
+
+let x = "  aa  aaaa  ";
+console.log(trimFirst(x), trimFirst(x).length);
+```
+
+출력값
+
+```console
+aa aaaa   10
+```
+
+<br />
+
+## 마지막으로 등장하는 공백전체 제거 = .replace(/\s+$/, "")
+
+```js
+/**
+ * 마지막 등장 공백제거
+ * @param str
+ * @returns str
+ */
+const trimLast = (str) => {
+  const trimStr = str.replace(/\s+$/, "");
+  return trimStr;
+};
+
+let x = "  aa  aaaa  ";
+console.log(trimLast(x), trimLast(x).length);
+```
+
+출력값
+
+```console
+  aa  aaaa 10
+```
+
+<br />
+
+## 첫 번째로 등작하고 마지막으로 등장하는 공백전체 제거 = .replace(/^\s+|\s+$/g, "")
+
+```js
+/**
+ * 마지막 등장 공백제거
+ * @param str
+ * @returns str
+ */
+const trimLast = (str) => {
+  const trimStr = str.replace(/\s+$/, "");
+  return trimStr;
+};
+
+let x = "  aa  aaaa  ";
+console.log(trimLast(x), trimLast(x).length);
+```
+
+출력값
+
+```console
+aa  aaaa 8
+```
+
+<br />
+
+## 문자열 내의 모든 공백 제거 = .replace(/\s/g, ""), repalceAll(" ", "")
+
+```js
+/**
+ * 모든 공백제거
+ * @param str
+ * @returns str
+ */
+const trimAll = (str) => {
+  const trimStr = str.replace(/\s/g, "");
+  return trimStr;
+};
+
+let x = "  aa  aaaa  ";
+console.log(xtrimAll(x), trimAll(x).length);
+console.log(x.replaceAll(" ", ""), x.replaceAll(" ", "").length);
+```
+
+출력값
+
+```console
+aaaaaa 6
+aaaaaa 6
+```
+
+<br />
+
+## 주의
+
+.replace(/^\s+/, "") = 앞의 공백 제거
+.replace(/\s+$/, "") = 뒤의 공백 제거
+.replace(/^\s+|\s+$/g, "") = 앞뒤 공백 제거
+
+위 세가지는 첫번째 혹은 마지막으로 등장하는 문자열이 공백이 아니라면, 즉 중간에 공백이 있는 경우 제거되지 않는다.
+
+```js
+let x = "aa  aaaa";
+console.log(x.replace(/^\s+/, ""), x.replace(/^\s+/, "").length);
+console.log(x.replace(/\s+$/, ""), x.replace(/\s+$/, "").length);
+console.log(x.replace(/^\s+|\s+$/g, ""), x.replace(/^\s+|\s+$/g, "").length);
+console.log(x, x.length);
+
+console.log(x.replace(" ", ""), x.replace(" ", "").length);
+console.log(x.replace(/\s/g, ""), x.replace(/\s/g, "").length);
+console.log(x.replaceAll(" ", ""), x.replaceAll(" ", "").length);
+```
+
+출력값
+
+```console
+aa  aaaa 8
+aa  aaaa 8
+aa  aaaa 8
+aa aaaa 7
+aaaaaa 6
+aaaaaa 6
+```
+
+- replace()함수는 첫 번째 인수를 두 번째 인수로 바꾸는 영어대로 변경 함수이다.
+- ""로 변경해줘서 제거와 같은 기능을 할 수 있을 뿐 제거 함수가 아니라 교체 함수이다.
+
+<br />
+
+## 정리
+
+1. .replace(" ", "") = 첫번째 공백 제거
+2. .replace(/^\s+/, "") = 앞의 공백 제거
+3. .replace(/\s+$/, "") = 뒤의 공백 제거
+4. .replace(/^\s+|\s+$/g, "") = 앞뒤 공백 제거
+5. .replace(/\s/g, ""), repalceAll(" ", "") = 문자열 내의 모든 공백 제거

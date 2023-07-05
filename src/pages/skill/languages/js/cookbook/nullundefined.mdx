@@ -1,0 +1,32 @@
+# null과 undefined의 차이점
+
+## null vs undefined
+
+```js
+typeof null; // object
+typeof undefined; // undefined
+
+null === undefined; // false
+null == undefined; // true
+
+null === null; // true
+null == null; // true
+!null; // true
+!!null; // false
+
+undefined === undefined; // true
+undefined == undefined; // true
+!undefined; // true
+!!undefined; // false
+```
+
+- null의 타입은 object이다.
+- undefined의 타입은 undefined이다.
+- null과 undefined는 타입이 다르기때문에 '==='로 비교하면 false가 출려된다.
+- null과 undefined는 nullish 값이기때문에 true가 출력된다.
+- null과 undefined를 체크하기위해 체크하기 위한 값에 !를 붙이면 조건이 true가 되며 조건문을 수행할 수 있다.
+
+## 결론
+
+- 정의되지 않고 초기화된 적도 없다면 `undefined`이다.
+- 존재하지만 값이나 자료형이 존재하지 않으면 `null`이다.

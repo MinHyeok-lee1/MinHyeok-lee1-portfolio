@@ -1,0 +1,229 @@
+# value의 값이 undefined, null, ""인 값을 가진 json key 제거
+
+## 빈 값을 가진 json key 제거
+
+```js
+/**
+ * 빈 값을 가진 json key 제거
+ */
+const deleteKeyJsonObject = (wantDelteObj) => {
+  Object.keys(wantDelteObj).map((key) => {
+    if (wantDelteObj[key] === undefined || wantDelteObj[key] === null) {
+      delete wantDelteObj[key];
+    }
+  });
+};
+
+const userJson = {
+  name: "홍길동",
+  age: null,
+  major: "",
+  hi: undefined,
+};
+
+console.log("삭제 전: ", userJson);
+
+deleteKeyJsonObject(userJson);
+
+console.log("삭제 후: ", userJson);
+```
+
+출력결과
+
+```console filename="console"
+삭제 전: { name: '홍길동', age: null, major: '', hi: undefined }
+삭제 후: { name: '홍길동', major: '' }
+```
+
+- 위 코드는 json의 속성값이 null, undefined뿐인 것만을 제거한다.
+
+<br />
+
+## null, undefined뿐만 아니라 ""인 값도 제거
+
+### 방법 1
+
+위 코드의 조건문 5번째 줄의 조건문
+
+```js {1}
+if (wantDelteObj[key] === undefined || wantDelteObj[key] === null)
+```
+
+- 위 코드를 아래와 같이 수정한다.
+
+```js
+/**
+ * 빈 값을 가진 json key 제거
+ */
+const deleteKeyJsonObject = (wantDelteObj) => {
+  Object.keys(wantDelteObj).map((key) => {
+    if (
+      wantDelteObj[key] === undefined ||
+      wantDelteObj[key] === null ||
+      wantDelteObj[key] === ""
+    ) {
+      delete wantDelteObj[key];
+    }
+  });
+};
+
+const userJson = {
+  name: "홍길동",
+  age: null,
+  major: "",
+  hi: undefined,
+};
+
+console.log("삭제 전: ", userJson);
+
+deleteKeyJsonObject(userJson);
+
+console.log("삭제 후: ", userJson);
+```
+
+위 코드와 같이 위의 조건 식에서 `wantDelteObj[key] === ""`를 추가해주면 된다.
+
+출력결과
+
+```console filename="console"
+삭제 전: { name: '홍길동', age: null, major: '', hi: undefined }
+삭제 후: { name: '홍길동' }
+```
+
+<br />
+
+### 방법 2
+
+똑같이 조건문 5번째 줄의 조건문
+
+```js {1}
+if (wantDelteObj[key] === undefined || wantDelteObj[key] === null)
+```
+
+- 위 코드를 아래와 같이 수정한다.
+
+```js
+/**
+ * 빈 값을 가진 json key 제거
+ */
+const deleteKeyJsonObject = (wantDelteObj) => {
+  Object.keys(wantDelteObj).map((key) => {
+    if (!wantDelteObj[key]) {
+      delete wantDelteObj[key];
+    }
+  });
+};
+
+const userJson = {
+  name: "홍길동",
+  age: null,
+  major: "",
+  hi: undefined,
+};
+
+console.log("삭제 전: ", userJson);
+
+deleteKeyJsonObject(userJson);
+
+console.log("삭제 후: ", userJson);
+```
+
+위 코드와 같이 위의 조건 식을 `if(!wantDelteObj[key])`로 변경한다.
+
+출력결과
+
+```console filename="console"
+삭제 전: { name: '홍길동', age: null, major: '', hi: undefined }
+삭제 후: { name: '홍길동' }
+```
+
+- 하지만 if(!wantDelteObj[key])로 조건을 거는 방법은 단점이 하나 있다.
+- 그것은 falsy한 값을 가지고 있는 속성들이 전부 제거된다는 것이다
+
+```js
+/**
+ * 빈 값을 가진 json key 제거
+ */
+const deleteKeyJsonObject = (wantDelteObj) => {
+  Object.keys(wantDelteObj).map((key) => {
+    if (!wantDelteObj[key]) {
+      delete wantDelteObj[key];
+    }
+  });
+};
+
+const userJson = {
+  name: "홍길동",
+  age: 0,
+  major: "",
+  hi: undefined,
+  bigint: 0n,
+  notnumber: NaN,
+  boolean: false,
+};
+
+console.log("삭제 전: ", userJson);
+
+deleteKeyJsonObject(userJson);
+
+console.log("삭제 후: ", userJson);
+```
+
+출력결과
+
+```console filename="console"
+삭제 전: { name: '홍길동', age: null, major: '', hi: undefined, bigint: 0n, notnumber: NaN, boolean: false }
+삭제 후: { name: '홍길동' }
+```
+
+- 위와 같이 falsy값을 가지고 있는 속성(key)들이 전부 제거된다.
+- 이는 혹여나 개발자가 의도하지 않은 기능을 할 수 있다.
+  - 에를 들어 동의 여부같은 false 값을 가질 수 있는 속성까지 제거 될 수 있다.
+
+<br />
+
+### 빈 값(null, undefined, "")을 가진 json key 제거하는 방법 3가지
+
+1. 방법 1와 같이 원하는 조건을 직접 전부 적어준다.
+2. falsy한 값을 가지고 있는 key값을 전부 제거하기 위해 의도한거라면 방법 2와 같이 사용하는 것이 좋다.
+3. 방법 2를 먼저 조건으로 걸어주고 false같이 빼고 싶은 조건들을 다시 조건으로 제외시키는 방법도 있다.
+
+3번의 예)\_ boolean만 제외하고 falsy값을 가진 속성(key)값 제거하는 방법
+
+```js
+/**
+ * 빈 값을 가진 json key 제거
+ */
+const deleteKeyJsonObject = (wantDelteObj) => {
+  Object.keys(wantDelteObj).map((key) => {
+    if (!wantDelteObj[key] && wantDelteObj[key] !== false) {
+      delete wantDelteObj[key];
+    }
+  });
+};
+
+const userJson = {
+  name: "홍길동",
+  age: 0,
+  major: "",
+  hi: undefined,
+  bigint: 0n,
+  notnumber: NaN,
+  boolean: false,
+};
+
+console.log("삭제 전: ", userJson);
+
+deleteKeyJsonObject(userJson);
+
+console.log("삭제 후: ", userJson);
+```
+
+출력결과
+
+```console filename="console"
+삭제 전: { name: '홍길동', age: null, major: '', hi: undefined, bigint: 0n, notnumber: NaN, boolean: false }
+삭제 후: { name: '홍길동', boolean: false }
+```
+
+- 위 방법은 falsy한 값 중 필요한 값을 제외하도록 일일이 지정해줘야 한다.

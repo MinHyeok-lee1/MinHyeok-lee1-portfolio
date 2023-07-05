@@ -1,0 +1,274 @@
+# JSON형태의 Object에서 key와 value 추출 및 찾기
+
+## JSON형태의 Object에서 key값 추출하기
+
+- JSON형태의 Object에서 key값 추출할 때 Object.keys()메소드를 사용한다.
+- Object.keys()메소드는 주어진 객체의 속성 이름들을 일반적인 반복문과 동일한 순서로 순회되는 열거할 수 있는 배열로 반환한다.
+- 이 배열은 for...in 구문과 동일한 순서를 가진다.
+  - 단 순서만 동일하지, for...in반복문은 프로토타입 체인 또한 열거한다는 점에서 차이가 있다.
+
+Object.keys()메소드를 이용하여 json객체에서 keys추출하기
+
+```js
+const objectO = {
+  c: 3,
+  b: 2,
+  a: 1,
+};
+
+console.log(Object.keys(objectO));
+```
+
+출력결과
+
+```console filename="console"
+["c", "b", "a"]
+```
+
+<br />
+
+## JSON형태의 Object에서 value값 추출하기
+
+- JSON형태의 Object에서 value값 추출할 때 Object.keys()메소드를 사용한다.
+- Object.values()메소드는 전달된 파라미터 객체가 가지는 (열거 가능한)속성의 값들로 이루어진 배열을 리턴한다.
+- 이 배열은 for...in 구문과 동일한 순서를 가진다.
+  - 단 순서만 동일하지, for...in반복문은 프로토타입 체인 또한 열거한다는 점에서 차이가 있다.
+
+Object.values() 메소드를 이용한 json객체에서 values추출
+
+```js
+const objectO = {
+  c: 3,
+  b: 2,
+  a: 1,
+};
+
+console.log(Object.values(objectO));
+```
+
+출력결과
+
+```console filename="console"
+[3, 2, 1]
+```
+
+<br />
+
+## JSON형태의 Object에서 key, value값 추출할 때 주의할 점
+
+### 객체 안에 배열이 있는 경우
+
+예제:
+
+```js
+const objectO = {
+  objectIn: [{ c: 3 }, { b: 2 }, { a: 1 }],
+  objectNone: [],
+};
+
+// objectO.objectIn[0]의 key값들과 value값들 출력
+console.log(Object.keys(objectO.objectIn[0]));
+console.log(Object.values(objectO.objectIn[0]));
+
+// objectO.objectIn[0]의 key값들과 value값들 출력
+console.log(Object.keys(objectO.objectNone[0]));
+console.log(Object.values(objectO.objectNone[0]));
+
+console.log("다음 로직이 실행될 수 있다");
+```
+
+출력결과
+
+```console filename="console"
+[ 'c' ]
+[ 3 ]
+TypeError: Cannot convertundefined or null to object
+```
+
+-objectO.objectNone[0]에 접근할 수 없기때문에 위 코드처럼 error가 발생하고 다음 로직으로 넘어가지 못한다.
+
+### 객체 안에 배열이 있는 경우\_해결방법
+
+```js
+const objectO = {
+  objectIn: [{ c: 3 }, { b: 2 }, { a: 1 }],
+  objectNone: [],
+};
+
+// objectO.objectIn[0]의 key값들과 value값들 출력
+console.log(Object.keys(objectO.objectIn[0]));
+console.log(Object.values(objectO.objectIn[0]));
+
+if (objectO.objectNone.length !== 0) {
+  // objectO.objectIn[0]의 key값들과 value값들 출력
+  console.log(Object.keys(objectO.objectNone[0]));
+  console.log(Object.values(objectO.objectNone[0]));
+}
+
+console.log("다음 로직이 실행될 수 있다");
+```
+
+- 조건문을 걸어주어 배열이 비어있는지 확인하고 key의 값들과 value값들을 추출하고 안전하게 다음 로직으로 넘어갈 수 있다.
+
+출력결과
+
+```console filename="console"
+[ 'c' ]
+[ 3 ]
+"다음 로직이 실행될 수 있다"
+```
+
+- error가 발생하지 않고 정상적으로 출력한다.
+
+<br />
+
+### 여러 객체가 중첩되어있을 경우
+
+예제:
+
+```js
+const objectOut = {
+  objectO: {
+    objectIn: {
+      c: 3,
+      b: 2,
+      a: 1,
+    },
+  },
+  objectNone: {},
+};
+
+// objectOut.objectO.objectIn의 key값들과 value값들 출력
+console.log(Object.keys(objectOut.objectO.objectIn));
+console.log(Object.values(objectOut.objectO.objectIn));
+
+// objectOut.objectO.objectNone의 key값들과 value값들 출력
+console.log(Object.keys(objectOut.objectO.objectNone));
+console.log(Object.values(objectOut.objectO.objectNone));
+
+console.log("다음 로직이 실행될 수 있다");
+```
+
+- objectOut.objectNone으로 접근해야 빈값이 정상적으로 출력되지만 위처럼 objectOut.objectO.objectNone을 출력했다.
+
+출력결과
+
+```console filename="console"
+[ 'c', 'b', 'a' ]
+[ 3, 2, 1 ]
+TypeError: Cannot convertundefined or null to object
+```
+
+-objectOut.objectO.objectNone의 key와 value가 존재하지 않아 접근할 수 없기때문에 위 코드처럼 error가 발생하고 다음 로직으로 넘어가지 못한다.
+
+### 여러 객체가 중첩되어있을 경우\_해결방법
+
+```js
+const objectOut = {
+  objectO: {
+    objectIn: {
+      c: 3,
+      b: 2,
+      a: 1,
+    },
+  },
+  objectNone: {},
+};
+
+// objectOut.objectO.objectIn의 key값들과 value값들 출력
+console.log(Object.keys(objectOut.objectO.objectIn));
+console.log(Object.values(objectOut.objectO.objectIn));
+
+if (objectOut.objectO.objectNone) {
+  // objectOut.objectO.objectNone의 key값들과 value값들 출력
+  console.log(Object.keys(objectOut.objectO.objectNone));
+  console.log(Object.values(objectOut.objectO.objectNone));
+}
+
+console.log("다음 로직이 실행될 수 있다");
+```
+
+- 조건문을 걸어주어 배열이 비어있는지 확인하고 key의 값들과 value값들을 추출하고 안전하게 다음 로직으로 넘어갈 수 있다.
+
+출력결과
+
+```console filename="console"
+[ 'c', 'b', 'a' ]
+[ 3, 2, 1 ]
+"다음 로직이 실행될 수 있다"
+```
+
+- error가 발생하지 않고 정상적으로 출력한다.
+
+### 정리
+
+- '누가 존재하지도 않는 배열이나 속성값의 key나 value에 접근하겠어?' 라고 생각할 수도 있다.
+- 하지만 위와 같은 error는 정상적으로 선언되어있는 데이터 타입에서도 백엔드나 함수 등 `외부로부터 전달받는 값이 선언이 안되거나`, `초기화가 안되거나`, `값을 할당하지 않았을 때` 발생할 수 있다.
+
+<br />
+
+## JSON형태의 Object에서 key값으로 value값 찾기
+
+- Object[key]를 사용한다.
+
+```js
+const objectO = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 1,
+};
+
+console.log(objectO["a"]);
+```
+
+출력결과
+
+```console filename="console"
+1
+```
+
+<br />
+
+## JSON형태의 Object에서 value값으로 key값 찾기
+
+- getKeyByValue라는 함수를 만들어 value값으로 key값을 찾는다.
+- getKeyByValue함수 로직
+  - Object.keys()메소드를 사용하여 key값을 추출한다.
+  - object[key]를 사용하여 value값에 해당하는 key를 미리 생성한 배열에 추가한다.
+
+```js
+/**
+ * json에서 value로 key 값 찾기
+ * @param object
+ * @param value
+ * @returns keys[]
+ */
+
+const objectO = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 1,
+};
+
+const getKeyByValue = (object, value) => {
+  const result = [];
+  Object.keys(object).find((key) => {
+    if (object[key] === value) result.push(key);
+  });
+  return result;
+};
+
+console.log(getKeyByValue(objectO, 1));
+```
+
+- key값과 다르게 value값은 유일하지 않으므로 여러 개의 결과가 나올 수 있다.
+
+출력결과
+
+```console filename="console"
+[ 'a', 'd' ]
+```
+
+<br />

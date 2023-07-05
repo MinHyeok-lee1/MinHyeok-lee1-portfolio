@@ -1,0 +1,43 @@
+# Nullish coalescing operator(??)
+
+## Nullish coalescing operator
+
+- QQ마크로 불리는 ??연산자 의 정식명칭 Nullish coalescing operator이다.
+  - ?는 Question Mark여서 앞 Q를 따서 QQ마크
+- ??연산자는 좌측 피연산자가 nullish (null or undefined)일 경우 우측 피연산자를 반환하고 그 외에는 좌측 피연산자 반환한다.
+- ??연산자는 || 연산자의 특이한 케이스로 존재하는데 둘의 차이는 nullish로 걸리느냐 falsy로 걸리느냐 이다.
+
+## ?? vs ||
+
+- || 연산자는 좌측 피연산자가 falsy (null or undefined or '' or 0 ...)일 경우 우측 피연산자를 반환한다. (그 외, 좌측 피연산자 반환)
+- getData는 외부에서 get 방식으로 받아오는 data (외부에서 받아오는 데이터)
+- initData는 getData가 없을 시에 대신 초기화 해주는 데이터라고 했을 때,
+- nullishData는 null or undefined 값 중 하나
+- falsyData는 falsy Data 중 한 종류일 때 fallback 값을 받는 방식
+
+```js
+const a = nullishData ?? initData;
+const b = nullishData || initData;
+
+const c = falsyData ?? initData;
+const d = falsyData || initData;
+
+const e = getData ?? initData;
+const f = getData || initData;
+```
+
+이때 결과 값은 nullish한 값이 falsy한 값도 가질 수 있어 c상황에 케이스가 나뉜다.
+또한 getData의 형식에 따라 e와 f값에 할당되는 값이 다를 수 있다.
+
+- a에는 initData가 할당된다.
+- b에는 initData가 할당된다.
+- c에는 falsyData or initData가 할당된다.
+  - null과 undefined가 아닌 falsy Data이어야 falsy Data가 할당된다.
+  - falsyData가 nullish한 값이라면 initData가 할당된다.
+- d에는 initData가 할당된다.
+- e에는 getData의 형식에 따라 getData가 nullish한 값이라면 initData가 그렇지 않다면 getData가 할당된다.
+- f에는 getData의 형식에 따라 getData가 falsy한 값이라면 initData가 그렇지 않다면 getData가 할당된다.
+
+## 결론
+
+- getData가 0을 포함한 가격이나 빈 문자열 등이 의미가 있다면 ??를 사용하는 것이 좋고 falsy한 값들의 의미가 있을 수 있는 여지가 전혀 없다면 ||를 사용해도 좋으나 보통 ??를 사용한다.
