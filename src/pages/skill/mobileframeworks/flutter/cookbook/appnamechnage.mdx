@@ -1,0 +1,19 @@
+# 안드로이드 스튜디오 flutter 프로젝트에서 앱 이름 변경하기
+
+- 파일 경로: flutter_project\android\app\src\main\AndroidManifest
+
+![android header](/androidmanifest.png)
+
+<br />
+
+- AndroidManifest파일에서 android:label이름을 변경해주면 앱 이름이 변경된다.
+
+```dart filename="AndroidManifest"
+<manifest xmlns:android:"http://schemas.android.com/apk/res/android">
+    <application
+        android:label="앱 이름"
+        //  ...
+    >
+    //  ...
+<manifest>
+```

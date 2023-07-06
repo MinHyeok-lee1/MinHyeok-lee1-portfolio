@@ -1,5 +1,6 @@
 # NestJS의 아키텍처 구성
- - 모듈(Module), 컨트롤러(Controller), 서비스(Service), 프로바이더(Provider)
+
+- 모듈(Module), 컨트롤러(Controller), 서비스(Service), 프로바이더(Provider)
 
 - nest: using nestcli
 - g: generate
@@ -8,6 +9,7 @@
 ## 1. 모듈(Module)
 
 ### NestJS 모듈
+
 App Module안에 AuthModule과 같은 필요한 모듈들이 있으며 각 모듈안에 Controller, Entity, Service 등이 있다.  
 모듈은 @Module() 데코레이터로 주석이 달린 클래스이다.  
 @Module() 데코레이터는 Nest가 애플리케이션 구조를 구성하는데 사용하는 메타데이터를 제공한다.
@@ -17,17 +19,18 @@ App Module안에 AuthModule과 같은 필요한 모듈들이 있으며 각 모�
 모듈은 밀접하게 관련된 기능 집합으로 구성 요소를 구성하는 효과적은 방법이다.  
  -> 기능별로 만든다 ex) 유저 모듈, 주문 모듈, 챗 모듈
 
-
 같은 기능에 해당하는 것들은 하나의 모듈 폴더안에 넣어서 사용한다.  
  -> (UserController, UserService, UserEntity 다 같은 기능이기에 UserModule안에 넣는다.)
 
 모듈은 기본적으로 싱글톤이므로 여러 모듈간에 쉽게 공급자의 동일한 인스턴스를 공유할 수 있다.
 
 ### 모듈 생성 명령어
+
 ```sh
 $ nest g module "moduleName" --no-spec
 $ nest g mo "moduleName"
 ```
+
 - module을 mo로 줄일 수 있다.
 
 <br />
@@ -35,15 +38,18 @@ $ nest g mo "moduleName"
 ## 2. 컨트롤러(Controller)
 
 ### NestJS 컨트롤러
+
 컨트롤러는 들어오는 요청을 처리하고 클라이언트에 응답을 반환한다.  
 컨트롤러는 @Controller 데코레이터로 클래스를 데코레이션하여 정의된다.  
 데코레이터는 인자를 Controller에 의해서 처리되는 "경로"로 받는다.
 
 ### 컨트롤러 생성 명령어
+
 ```sh
 $ nest g controller 'controllerName' --no-spec
 $ nest g co 'controllerName'
 ```
+
 - controller를 co로 줄일 수 있다.
 
 <br />
@@ -51,17 +57,18 @@ $ nest g co 'controllerName'
 ## 3. 서비스(Service)
 
 ### NestJS 컨트롤러
+
 개념: 서비스는 소프트웨어 개발내의 공통 개념이며, NestJS, Javascript에서만 쓰이는 개념이다.
 @Injectable 데코레이터로 감싸져서 모듈에 제공되며, 이 서비스 인스턴스는 애플리케이션 전체에서 사용한다.
 서비스는 컨트롤러에서 데이터의 유효성 체크를 하거나 데이터베이스에 아이템을 생성하는 등의 작업을 하는 부분을 처리한다.
 
-
-
 ### 컨트롤러 생성 명령어
+
 ```sh
 nest g service 'serviceName' --no-spec
 nest g s 'serviceName'
 ```
+
 - service를 s로 줄일 수 있다.
 
 - CLI를 이용해서 Service를 생성하면 이렇게 'serviceName'.service.ts파일이 생성된다.
@@ -73,12 +80,14 @@ nest g s 'serviceName'
 ## 4. 프로바이더(Provider)
 
 ### NestJS 프로바이더
+
 프로바이더는 Nest의 기본 개념이다.  
 대부분의 기본 Nest 클래스는 서비스들(services), 리포지토리들(repositories), 팩토리들(factories), 헬퍼들(helpers)등 프로바이더로 취급될 수 있다.  
 프로바이더의 주요 아이디어는 종속성으로 주입할 수 있다는 것이다.  
-즉, 객체는 서로 다양한 관계를 만들 수 있으며 객체의 인스턴스를 "연결"하는 기능은 대부분 Nest 런타임 시스템에 위임될 수 있다.  
+즉, 객체는 서로 다양한 관계를 만들 수 있으며 객체의 인스턴스를 "연결"하는 기능은 대부분 Nest 런타임 시스템에 위임될 수 있다.
 
 ### 프로바이더 등록 및 종류
+
 Provider 등록하기: Provider를 사용하기 위해서는 이것을 Nest에 등록해줘야지 사용할 수가 있다. 등록하기 위해서는 module 파일에서 할 수 있다.  
 module 파일에 providers항목안에 해당 모듈에서 사용하고자 하는 Provider를 넣어주시면 된다.  
 Provider의 종류: Service, Helper, Factory, Repository 등  
@@ -87,5 +96,5 @@ Provider의 종류: Service, Helper, Factory, Repository 등
 <br />
 
 ## 5. 핸들러(Handler)
-핸들러(handler)는 @Get, @Post, @Delete 등과 같은 데코레이터로 장식된 컨트롤러 클래스 내의 단순한 메서드이다.
 
+핸들러(handler)는 @Get, @Post, @Delete 등과 같은 데코레이터로 장식된 컨트롤러 클래스 내의 단순한 메서드이다.

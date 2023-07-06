@@ -1,0 +1,237 @@
+# table_calendar 패키지 기능 및 사용법
+
+해당 [table_calendar](https://pub.dev/packages/table_calendar)를 사용한다.
+
+## 설치
+
+### table_calendar 추가
+
+```dart filename="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+
+  table_calendar: ^3.0.9
+```
+
+안드로이드 스튜디오 프로젝트 바로 아래 경로에 있는 pubspec.yaml 파일에 위 처럼 table_calendar를 추가한다.
+
+### 기본설정
+
+```dart
+import 'package:table_calendar/table_calendar.dart';
+```
+
+- 사용하고자 하는 파일에서 table_calendar를 import해준다.
+
+<br />
+
+- 이후 TableCalendar에 firstDay, lastDay, focusedDay를 제공해야 한다.
+  - firstDay: 달력에서 사용할 수 있는 첫 번째 날짜이고 사용자는 이전 날짜에 접근 할 수 없다.
+  - lastDay: 달력에서 사용할 수 있는 마지막 날이고 사용자는 이후 날짜에 접근할 수 없다.
+  - focusedDay: 현재 목표 날짜이고 이 속성을 사용하여 현재 표시되어야 하는 날짜를 결정한다.
+
+```dart
+TableCalendar(
+    firstDay: DateTime.utc(2010, 10, 16),
+    lastDay: DateTime.utc(2030, 3, 14),
+    focusedDay: DateTime.now(),
+)
+```
+
+- 위 코드는 달력의 시작날짜를 2010년 10월 16일로 결정하고 마지막 날짜를 2030년 3월 14일로 결정한다.
+- 2010년 10월 16일 이전 날짜와 2030년 3월 14일 이후 날짜에 접근할 수 없고 지정 날짜는(focusedDay) 현재 날짜로 설정된다.
+
+<br />
+
+## 상호작용 추가
+
+- 위에서 설정한 캘린더 위젯은 반응형이 아니다.
+- 현재 표시되는 날짜를 변경하려면 수평으로만 변경이 가능하다.
+- 캘린더 위젯에 아래 코드를 추가하면 선택한 날짜를 선택한 것으로 표시하여 사용자의 선택에 응답할 수 있다.
+
+```dart
+selectedDayPredicate: (day) {
+  return isSameDay(_selectedDay, day);
+},
+onDaySelected: (selectedDay, focusedDay) {
+  setState(() {
+    _selectedDay = selectedDay;
+    _focusedDay = focusedDay; // 여기서도 '_focused Day' 업데이트해야 한다.
+  });
+},
+```
+
+- 표시되는 달력 형식을 동적으로 업데이트하려면 해당 행을 위젯에 추가해야 한다.
+
+```dart
+calendarFormat: _calendarFormat,
+onFormatChanged: (format) {
+  setState(() {
+    _calendarFormat = format;
+  });
+},
+```
+
+- 이러한 두 가지 변경사항은 달력을 반응형으로 만들고 사용자 입력에 반응하도록 한다.
+
+<br />
+
+## focusedDay 변경
+
+- focusedDay를 정적인 값으로 설정하면 TableCalendar 위젯이 다시 빌드될 때마다 특정 focusedDay를 핫 리로드하여 신속하게 테스트가 가능하다.
+- focusedDay를 DateTime.now()로 설정하고 다음 달로 변경하여 핫 리로드를 트리거 하면 캘린더가 초기 상태로 재설정된다.
+- 이를 방지하려면 focusedDay 콜백이 이를 노출할 때마다 저장하고 변경해야 한다.
+
+아래 코드를 추가하면 설정이 완료된다.
+
+```dart
+onPageChanged: (focusedDay) {
+  _focusedDay = focusedDay;
+},
+```
+
+- PageChanged() 콜백에서 setState()를 호출할 필요가 없다.
+- 나중에 위젯이 다시 작성될 경우 적절한 포커스가 있는 날을 사용하도록 저장된 값을 업데이트해야 한다.
+
+<br />
+
+## 이벤트
+
+- TableCalendar 위젯에 사용자 정의 이벤트를 제공할 수 있다.
+- 이렇게 하려면 eventLoader 속성을 사용한다.
+- 이벤트 목록을 할당해야 하는 DateTime 개체가 제공된다.
+
+```dart
+eventLoader: (day) {
+  return _getEventsForDay(day);
+},
+```
+
+<br />
+
+- \_getEventsForDay()는 모든 구현이 될 수 있다.
+- 예를 들어 Map\<DateTime, Liset\<T>>는 아래처럼 사용이 가능하다.
+
+```dart
+List<Event> _getEventsForDay(DateTime day) {
+  return events[day] ?? [];
+}
+```
+
+- DateTime 개체는 날짜 및 시간 부분으로 구성된다.
+- 대부분의 경우 이 시간 부분은 일정과 관련된 측면에서 중복된다.
+- 맵을 사용하기로 결정한 경우 LinkedHashMap으로 만드는 것이 좋다.
+
+아래 코드처럼 하면 두 DateTime 개체에 대한 동일성 비교를 재정의하고 날짜 부분만 비교할 수 있다.
+
+```dart
+final events = LinkedHashMap(
+  equals: isSameDay,
+  hashCode: getHashCode,
+)..addAll(eventSource);
+```
+
+<br />
+
+## 순환적 이벤트
+
+- eventLoader를 사용하면 패턴으로 반복되는 이벤트를 쉽게 추가할 수 있다.
+
+아래 코드는 매주 월요일에 이벤트를 추가한다.
+
+```dart
+eventLoader: (day) {
+  if (day.weekday == DateTime.monday) {
+    return [Event('Cyclic event')];
+  }
+
+  return [];
+},
+```
+
+<br />
+
+## 탭에서 선택한 이벤트
+
+- 종종 하루를 눌러 선택한 이벤트의 하위 목록이 필요하다.
+- onDaySeleceted 콜백 내의 eventLoader를 적용한 것과 동일한 방법을 사용하여 이를 달성할 수 있다.
+  해당 방법은 아래 코드와 같다.
+
+```dart
+void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  if (!isSameDay(_selectedDay, selectedDay)) {
+    setState(() {
+      _focusedDay = focusedDay;
+      _selectedDay = selectedDay;
+      _selectedEvents = _getEventsForDay(selectedDay);
+    });
+  }
+}
+```
+
+<br />
+
+## CalendarBuilders를 사용한 커스텀 UI
+
+- 사용자 고유의 위젯으로 UI를 사용자 정의하려면 Calendar Builder를 사용한다.
+- 각 빌더를 사용하여 UI를 선택적으로 재정의할 수 잇으므로 번거로움을 최소화하면서 매우 구체적인 설게를 구현할 수 있다.
+- 어떤 builder에서도 null을 반환하여 기본 스타일을 사용할 수 있다.
+
+예를 들어 아래 코드는 일요일의 레이블만 재정의하고 다른 행 레이블은 변경되지 않는다.
+
+```dart
+dowBuilder: (context, day) {
+    if (day.weekday == DateTime.sunday) {
+      final text = DateFormat.E().format(day);
+
+      return Center(
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.red),
+        ),
+      );
+    }
+  },
+```
+
+<br />
+
+## Locale
+
+- Calendar를 원하는 언어로 표시하려면 Locale 속성을 사용한다.
+- 지정하지 않으면 기본 Locale이 사용된다.
+- 초기화
+  - Locale을 사용하려면 먼저 날짜 형식을 초기화해야 한다.
+  - 간단한 방법은 다음과 같다.
+  - 우선 pubspec.yaml 파일에 intl패키지를 추가해야 한다.
+
+그 다음 아래 코드와 같이 main()을 수정한다.
+
+```dart
+import 'package:intl/date_symbol_data_local.dart';
+
+void main() {
+  initializeDateFormatting().then((_) => runApp(MyApp()));
+}
+```
+
+- 이 두 단계 이후에 앱은 다른 언어로 TableCalendar를 사용할 준비가 되어야 한다.
+
+<br />
+
+## 언어지정
+
+- 언어를 지정하려면 locale 속성에 String 코드로 전달하기만 하면 된다.
+
+예를 들어 아래 코드와 같이 사용한다면 한국어를 사용하게 된다.
+
+```dart
+TableCalendar(
+  locale: 'ko_KR',
+),
+```
+
+- FormatButton 텍스트의 언어를 변경하려면 사용자가 직접 변경해야 한다.
+- 사용 가능한 CalendarFormats 속성을 사용하고 변환된 문자열을 전달한다.
+- 원하는 i18n 방법을 사용한다.

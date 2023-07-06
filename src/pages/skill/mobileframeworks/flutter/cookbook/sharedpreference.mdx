@@ -1,0 +1,161 @@
+# SharedPreferences 기능 및 사용법
+
+앱에서 간단한 DB역할을 할 수 있는 SharedPreferences란?
+SharedPreferences는 기기 내부 디스크에 내용을 저장한다.
+이것을 사용하는 이유는 앱이 종료되도 이전에 사용한 내용들을 저장해놓고 불러오기 위하여 많이 사용된다.
+
+1. 데이터가 Key-Value형태로 저장되게 됩니다.
+2. 저장될때는 파일 입출력을 사용하기 때문에 사용량이 많을 경우엔 DB와 연동하는 것이 낫다.
+3. 팝업창을 '다음에 보지않기' 라는 체크 박스를 저장하는 정도의 간단한 데이터만 저장합니다.
+4. 다른 플랫폼에서는 이와 같은 기능을 웹에서는 캐시, 아이폰에서는 UserDefaults, 안드로이드에서는 SharedPreferences라는 개념으로 말합니다.
+
+## 설치
+
+```dart filename="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+
+  shared_preferences: ^2.1.1
+```
+
+1. sharedPreferences 패키지 추가
+   1. pubspec.yaml을 연다.
+   2. shared_preferences: 를 dependencies:에 추가한다.
+   3. pub get한다.
+2. 패키지를 import해주고 SharedPreferences를 샤용할 곳에 만들고 추가해준다.
+
+sharedPreferences 의 구조는 파일 입출력이기 때문에 인스턴스 생성에 비동기 방식인 await를 사용한다
+
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+
+// ...
+
+  SharedPreferences pref = await SharedPreferences.getInstance();
+
+// ...
+```
+
+<br />
+
+## 사용법
+
+- 데이터 저장할 때 \_ .set(맞는 type).('key', 'value');
+
+```dart
+pref.setInt('number', 123); // 기기 내부에 123이 'number'라는 이름으로 저장된다.
+```
+
+<br />
+
+- 데이터 가져올 때 \_ .get(맞는 type).('key');
+
+```dart
+pref.getInt('number'); // 기기 내부에 number라는 이름 안에 있는 데이터를 가져온다.
+```
+
+<br />
+
+- 저장된 모든 키 가져오기
+
+```dart
+prefs.getKeys();
+```
+
+<br />
+
+- 키에 해당하는 값 가져오기
+
+```dart
+prefs.getBool('key')
+prefs.getInt('key')
+prefs.getDouble('key')
+prefs.getString('key')
+prefs.getStringList('key')
+```
+
+키에 해당하는 값을 가져오지만, 키를 저장했을때 당시의 데이터형과 다른 함수를 사용해서 가져올 경우 에러가 발생한다
+
+<br />
+
+- 값을 키에 맞춰 저장하기
+
+```dart
+prefs.setBool('key', true)
+prefs.setInt('key', 0)
+prefs.setDouble('key', 0.0)
+prefs.setString('key', 'value')
+prefs.setStringList('key',List<String>['one','two'])
+```
+
+<br />
+
+- 키에 해당하는 값 삭제하기
+
+```dart
+prefs.remove('key')
+```
+
+<br />
+
+- 모든 키 삭제하기
+
+```dart
+prefs.clear()
+```
+
+<br />
+
+## 예제 소스코드
+
+아래 코드는 화면에 있는 버튼을 누르게 되면, SharedPreferences에 1씩 증가하면서 저장하는 위젯을 만든다.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main(){
+  runApp(
+    MaterialApp(
+        home: FirstRoute()
+    )
+  );
+}
+
+
+class FirstRoute extends StatefulWidget {
+  @override
+  State createState() => _FirstRouteState();
+}
+
+class _FirstRouteState extends State<FirstRoute> {
+
+  String text = 'first';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Route'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Open route ' + text),
+          onPressed: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            int counter = (prefs.getInt('counter') ?? 0) + 1;
+            await prefs.setInt('counter', counter);
+            setState(() {
+              text = 'Pressed $counter times.';
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+- 위 코드에서는 데이터를 가져오고 데이터를 1증가시켜서 저장하고, text 데이터 새로 저장해서 Widget을 갱신한다.
+- 앱을 종료하고 나서도 counter가 유지 마치 DB에 저장되는 것처럼 저장되어 유지된다.
