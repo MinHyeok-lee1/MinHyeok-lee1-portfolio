@@ -1,6 +1,8 @@
 {
+  "json": "JSON_정의,메소드",
   "jsonkeyvalue": "JSON_(find:key-value)",
   "jsondelete": "JSON_(delete:key)",
+  "jsoncopy": "JSON_(얕은복사 vs 깊은복사)",
   "nullundefined": "null vs undefined",
   "nullishcoalescingoperator": "Nullish coalescing operator(??)",
   "variablenamenotation": "변수명 표기법",

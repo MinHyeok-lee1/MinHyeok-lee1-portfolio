@@ -1,0 +1,280 @@
+# JavaScript 이슈 정리
+
+## 코드 최적화 이슈
+
+### 반복문(for-of, for-in)
+
+1. iterable객체의 반복문
+
+배열과 객체의 내부에 접근할 때 단순 for문을 사용하는 것을 지양하고 자바스크립트에 기본 내장되어 있는 for..of, or..in문을 사용하면 명확하게 코드를 짤 수 있다.
+
+1-1. 배열은 for..of 문을 사용한다.
+
+```js
+const arr = ["A", "B", "C", "D", "E"];
+
+for (let i = 0; i < arr.length; i++) {
+  const element = arr[i];
+  console.log("1", element);
+}
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+for (const element of arr) {
+  console.log("2", element);
+}
+```
+
+출력결과
+
+```console filename="console"
+1 A
+1 B
+1 C
+1 D
+1 E
+2 A
+2 B
+2 C
+2 D
+2 E
+```
+
+<br />
+
+1-2. 객체는 for..in 문을 사용한다.
+
+```js
+const obj = {
+  KEY1: "VALUE1",
+  KEY2: "VALUE2",
+  KEY3: "VALUE3",
+};
+
+const keys = Object.keys(obj);
+for (let i = 0; i < keys.length; i++) {
+  const key = keys[i];
+  const value = obj[key];
+  console.log(value);
+}
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+for (const key in obj) {
+  const value = obj[key];
+  console.log(value);
+}
+```
+
+출력결과
+
+```console filename="console"
+1 = VALUE1
+1 = VALUE2
+1 = VALUE3
+2 = VALUE1
+2 = VALUE2
+2 = VALUE3
+```
+
+### 조건문(if문, switch문)
+
+2. switch문, if문과 같은 조건문
+
+- switch문이나 조건문 if문과 || 연산자를 조합해서 사용할 수도 있다.
+- 하지만 switch문은 json형태의 객체로 구성하여 접근하는 방식, if문은 배열과 include와 같은 함수를 사용하여 아래와 같이 구현하는것이 명확하게 코드를 짤 수 있다.
+
+2-1 switch 문(오늘 요일의 숫자(0~6) 비교해서 문자열로 출력)
+
+```js
+const dayNumber = new Date().getDay();
+
+let day;
+switch (dayNumber) {
+  case 0:
+    day = "Sunday";
+    break;
+  case 1:
+    day = "Monday";
+    break;
+  case 2:
+    day = "Tuesday";
+    break;
+  case 3:
+    day = "Wednesday";
+    break;
+  case 4:
+    day = "Thursday";
+    break;
+  case 5:
+    day = "Friday";
+    break;
+  case 6:
+    day = "Saturday";
+}
+console.log("1 = ", day);
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+const days = {
+  0: "Sunday",
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday",
+};
+day = days[dayNumber];
+console.log("2 = ", day);
+```
+
+출력결과(글 발행일 기준, 화요일)
+
+```console filename="console"
+1 = Tuesday
+2 = Tuesday
+```
+
+<br />
+
+2-2 if 문(문자열 동등비교)
+
+```js
+const isFruit = (fruit) => {
+  if (
+    fruit === "apple" ||
+    fruit === "banana" ||
+    fruit === "grape" ||
+    fruit === "lemon" ||
+    fruit === "orange"
+  ) {
+    return true;
+  }
+  return false;
+};
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+const isFruit2 = (fruit) =>
+  ["apple", "banana", "grape", "lemon", "orange"].includes(fruit);
+
+console.log(isFruit("apple"));
+console.log(isFruit2("apple"));
+```
+
+출력결과
+
+```console filename="console"
+true
+true
+```
+
+<br />
+
+### falsy값 체크
+
+- 타입스크립트가 아니라 자바스크립트를 사용한다면 꼭 해야하는게 타입 체크이다.
+- 특히, null ,undefined ,0 ,false ,NaN , "" 값을 체크해서 점검해야 할 때가 있다.
+- 논리 부정연산자인 "!" 를 이용하면 쉽게 쓸 수 있다.
+
+```js
+const isFalsy = (value) => {
+  if (
+    value === null ||
+    value === undefined ||
+    value === 0 ||
+    value === false ||
+    value === NaN ||
+    value === ""
+  ) {
+    return true;
+  }
+  return false;
+};
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+const isFalsy2 = (value) => !value;
+```
+
+- isFalsy(value), isFalsy2(value)는 동일하게 동작한다.
+  - value가 falsy값이라면 true 아니라면 false가 반환된다.
+
+<br />
+
+### 삼항 연산자
+
+조건이 복잡한 if-else 문이 아니라면 삼항 연산자로 아래와 같이 코드를 깔끔하게 유지할 수 있다.
+
+```js
+let info;
+if (value < minValue) {
+  info = "Value is smaller than minValue";
+} else if (value > maxValue) {
+  info = "Value is bigger than maxValue";
+} else {
+  info = "Value is in range";
+}
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+const info2 =
+  value < minValue
+    ? "Value is smaller than minValue";
+    : value > maxValue
+    ? "Value is bigger than maxValue";
+    : "Value is in range";
+```
+
+- info의 값과 info2의 값은 동일하게
+  1. value의 값이 minValue보다 작으면 "Value is smaller than minValue"이다.
+  2. value의 값이 maxValue보다 크면 "Value is bigger than maxValue"이다.
+  3. value의 값이 minValue보다 크거나 같고 maxValue보다 작거나 같으면 "Value is in range"이다.
+
+아래와 같이 함수 또한 삼항 연산자로 코드를 깔끔하게 유지할 수 있다.
+
+```js
+function function1() {
+  return console.log("function1 실행");
+}
+function function2() {
+  return console.log("function2 실행");
+}
+
+if (value) {
+  function1();
+} else {
+  function2();
+}
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
+(value ? function1 : function2)();
+```
+
+<br />
+
+### fallback 값 할당
+
+```js
+let name;
+if (user?.name) {
+  name = user.name;
+} else {
+  name = "Anonymous";
+}
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다. (삼항 연산자 사용)
+const name2 = user?.name ? user.name : "Anonymous";
+
+// 위 코드를 아래와 같이 변경해도 동일하게 동작한다. (|| 사용)
+const name3 = user?.name || "Anonymous";
+
+// 아래 코드는 위 코드들과 조금 다르게 동작한다. (?? 사용)
+const name4 = user?.name ?? "Anonymous";
+
+console.log("name = ", name,"name2 = ", name2,
+            "name3 = ", name3,"name4 = ", name4)
+};
+```
+
+1. user.name이 존재하면 name, name2, name3과 name4에 user.name이 할당된다.
+2. user.name이 nullish값(null, undefined)이면 name, name2, name3과 name4에 Anonymous가 할당된다.
+3. user.name이 nullish값이 아닌 falsy값이면 name, name2, name3에 Anonymous가 할당되고 name4에는 fasly값이 할당된다.
+4. user.name을 받아왔을 때, 존재하지 않을 수도 있지만 아직 값이 받아지지 않았을 수 있기 때문에 ??, ||와 같은 연산자를 적절하게 사용해야한다.
+
+<br />

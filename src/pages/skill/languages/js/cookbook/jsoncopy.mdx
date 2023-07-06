@@ -1,0 +1,465 @@
+# 객체 복사에 대한 문서
+
+## 1. 얕은 복사와 깊은 복사
+
+- A = 원본
+- B = 복사하려는 객체
+
+### 얕은 복사 (Shallow copy)란?
+
+- 주소 값을 복사하기 때문에 참조하고 있는 실제 값이 같아 원본과 복사본이 서로 영향을 받는다.
+- 새로운 B객체를 생성 후 원본 A객체를 메모리 영역을 참조해서 원본에 종속된 객체를 생성하는 것이 얕은 복사이다.
+- 서로 같은 메모리 영역을 참조하므로 독립적이지 못하고 A와 B는 서로 영향을 받는다.
+
+예제코드
+
+```js
+let A = ["a", "b", "c"];
+let B = A;
+
+A[0] = "d";
+
+console.log("A = ", A, "B = ", B);
+
+B[2] = "z";
+
+console.log("A = ", A, "B = ", B);
+```
+
+출력값
+
+```console
+A = ["d", "b", "c"] B = ["d", "b", "c"]
+A = ["d", "b", "z"] B = ["d", "b", "z"]
+```
+
+- A와 B는 서로 독립적이지 않은 객체인 것을 볼 수 있다.
+  <br />
+
+### 깊은 복사 (Deep copy)란?
+
+- 실제 값을 독립적인 새로운 메모리 공간에 복사, 참조를 공유하지 않아 원본과 복사본이 서로 영향을 받지 않는다.
+- 새로운 B객체를 생성 후 원본 A객체를 통째로 복사해서 독립적인 새로운 객체를 메모리 영역에 생성하는 것이 깊은 복사이다.
+- 서로 다른 메모리 영역을 참조하는 독립적인 객체이므로 A와 B는 서로 영향을 받지 않는다.
+
+js의 spread를 사용한 깊은 복사 예제코드
+
+```js
+let A = ["a", "b", "c"];
+let B = [...A];
+
+A[0] = "d";
+
+console.log("A = ", A, "B = ", B);
+
+B[2] = "z";
+
+console.log("A = ", A, "B = ", B);
+```
+
+출력값
+
+```console
+A = ["d", "b", "c"] B = ["d", "b", "c"]
+A = ["d", "b", "z"] B = ["d", "b", "z"]
+```
+
+<br />
+
+## 깊은 복사의 종류
+
+### Spread(전개 구문)
+
+전개 구문을 사용하면 배열이나 문자열과 같이 반복 가능한 문자들(iterable 객체) 예를 들어,
+
+1. 0개 이상의 인수 (함수로 호출할 경우)로 확장할 수 있다.
+
+```js
+function sum(arg1, arg2, arg3) {}
+
+sum(...iterableObj);
+```
+
+2. 0개 이상의 요소 (배열 리터럴의 경우)로 확장할 수 있다.
+
+```js
+let objExtends = [...iterableObj, "g", "7"];
+let objClone = [...iterableObj];
+```
+
+깊은복사 vs 얕은복사
+
+```js
+let A = [1, 2, 3];
+let B = [...A];
+let C = A;
+
+console.log(A === B);
+console.log(A === C);
+```
+
+출력값
+
+```console
+false
+true
+```
+
+- B는 Spread를 사용하여 A와 독립적인 객체로 깊은 복사가 잘 이루어졌다.
+- A와 C는 얕은 복사만 이루어 진것을 확인할 수 있다.
+
+3. 0개 이상의 키-값의 쌍으로 객체로 확장시킬 수 있다.
+
+```js
+let objClone = { ...iterableObj };
+```
+
+깊은복사 vs 얕은복사
+
+```js
+let A = { A: 1, B: 2, C: 3 };
+let B = { ...A };
+let C = A;
+
+console.log(A === B);
+console.log(A === C);
+console.log(B === C);
+```
+
+출력값
+
+```console
+false
+true
+```
+
+- B는 Spread를 사용하여 A와 독립적인 객체로 깊은 복사가 잘 이루어졌다.
+- A와 C는 얕은 복사만 이루어 진것을 확인할 수 있다.
+- 2번과 3번 예시에서처럼 객체를 확장하지 않고 있는 그대로 다시 선언해주면 깊은 복사가 이루어진다.
+
+<br />
+
+### Object.assign()
+
+- Object.assign() 메소드는 객체들의 모든 열거 가능한 자체 속성을 복사해 대상 객체에 붙여 놓은 후 대상 객체를 반환한다.
+
+깊은복사 vs 얕은복사
+
+```js
+const A = { a: 1, b: 2 };
+const B = Object.assign({}, A);
+const C = A;
+A.a = 77;
+console.log(A === B);
+console.log(A === C);
+console.log(B === C);
+console.log("A = ", A, " B = ", B, " C = ", C);
+```
+
+출력값
+
+```console
+false
+true
+false
+A = { a: 77, b: 2 } B = { a: 1, b: 2 } C = { a: 77, b: 2 }
+```
+
+- B는 Spread를 사용하여 A와 독립적인 객체로 깊은 복사가 잘 이루어졌다.
+- A와 C는 얕은 복사만 이루어 진것을 확인할 수 있다.
+
+<br />
+
+## 2차원 이상의 객체 얕은 복사
+
+### 믄제점
+
+- Spread(전개 구문), Object.assign()은 속성의 값을 복사하기 때문에, 깊은 복사를 수행하려면 다른 방법을 사용해야 한다.
+- 1차원 객체일 때는 깊은 복사가 되는 방법들이 2차원 이상부터 내부객체에 대하여 깊은복사가 이루어지지 않는다.
+- 만약 속성 값이 객체에 대한 참조라면 참조 값만 복사한다.
+
+```js {17}
+let A = { a: 0, b: { c: 0 } };
+let B = Object.assign({}, A);
+let C = { ...A };
+
+A.a = 1;
+console.log("A = ", A); // { a: 1, b: { c: 0}}
+console.log("B = ", B); // { a: 0, b: { c: 0}}
+console.log("C = ", C); // { a: 0, b: { c: 0}}
+console.log();
+
+B.a = 2;
+console.log("A = ", A); // { a: 1, b: { c: 0}}
+console.log("B = ", B); // { a: 2, b: { c: 0}}
+console.log("C = ", C); // { a: 0, b: { c: 0}}
+console.log();
+
+C.b.c = 3;
+console.log("A = ", A); // { a: 1, b: { c: 3}}
+console.log("B = ", B); // { a: 2, b: { c: 3}}
+```
+
+출력값
+
+```console
+A = { a: 1, b: { c: 0 } }
+B = { a: 0, b: { c: 0 } }
+C = { a: 0, b: { c: 0 } }
+
+A = { a: 1, b: { c: 0 } }
+B = { a: 2, b: { c: 0 } }
+C = { a: 0, b: { c: 0 } }
+
+A = { a: 1, b: { c: 3 } }
+B = { a: 2, b: { c: 3 } }
+C = { a: 0, b: { c: 3 } }
+```
+
+- 속성 값이 객체에 대한 참조라면 얕은 복사가 이루어진다.
+- L17에서 C.b.c = 3을 했을 때, A.b.c와 B.b.c는 C.b.c와 참조 값만 복사했기 때문에(얕은 복사) 전부 바뀌게 되었다.
+
+속성 값이 객체에 대한 참조라는 것은 배열에도 적용한다. (depth가 1단계보다 깊어질 경우라고 생각해도 무방하다.)
+
+```
+객체 = { firstDepth: 첫 번째 depth, { secondDepth: 두 번째 depth, { thirdDepth ... } } }
+배열 = [ firstDepth: 첫 번째 depth, [ secondDepth: 두 번째 depth, [ thirdDepth ... ] ] ]
+```
+
+객체가 아닌 배열의 예시이다.
+
+```js
+let A = [[0], 1, 2];
+let B = Object.assign({}, A);
+let C = [...A];
+
+A[1] = 77;
+console.log("A = ", A); // [[0] , 77, 2]
+console.log("B = ", B); // { 0: [0] , 1: 1, 2: 2 }
+console.log("C = ", C); // [[0] , 1, 2]
+console.log();
+
+B[2] = 33;
+console.log("A = ", A); // [[0] , 77, 2]
+console.log("B = ", B); // { 0: [0] , 1: 1, 2: 33 }
+console.log("C = ", C); // [[0] , 1, 2]
+console.log();
+
+C[0][0] = 99;
+console.log("A = ", A); // [[99] , 77, 2]
+console.log("B = ", B); // { 0: [99] , 1: 1, 2: 33 }
+console.log("C = ", C); // [[99] , 1, 2]
+```
+
+출력값
+
+```console
+[[0] , 77, 2]
+{ 0: [0] , 1: 1, 2: 2 }
+[[0] , 1, 2]
+
+[[0] , 77, 2]
+{ 0: [0] , 1: 1, 2: 33 }
+[[0] , 1, 2]
+
+[[99] , 77, 2]
+{ 0: [99] , 1: 1, 2: 33 }
+[[99] , 1, 2]
+```
+
+- 출력값에서 알 수 있는 것은 B는 객체 타입이라는 것이다.
+
+- Object.assign()를 사용하여 배열을 복사하는 것은 아래 코드와 같다.
+
+```js
+let A = [[0], 1, 2];
+let B = Object.assign({}, A);
+let C = { ...A };
+
+console.log("A = ", A);
+console.log("B = ", B);
+console.log("C = ", C);
+```
+
+출력값
+
+```console
+A = [[0], 1, 2]
+B = { 0: Array [0], 1: 1, 2: 2 }
+C = { 0: Array [0], 1: 1, 2: 2 }
+```
+
+Object.assign()를 사용하여 배열을 복사하는 것은 Spread(전개구문)을 사용하여 배열을 전개해주고 객체({})로 감싸주는 것과 동일하다.
+
+<br />
+
+### 해결방법
+
+```js
+let A = { a: 0, b: { c: 0 } };
+let B = JSON.parse(JSON.stringify(A));
+let C = { ...A, b: { ...A.b } };
+A.a = 4;
+A.b.c = 4;
+
+console.log("A = ", A);
+console.log("B = ", B);
+console.log("C = ", C);
+```
+
+출력값
+
+```console
+A = { a: 4, b: { c: 4 } }
+B = { a: 0, b: { c: 0 } }
+C = { a: 0, b: { c: 0 } }
+```
+
+- A.a = 4와 A.b.c = 4에 B와 C 모두 깊은 복사가 이루어져 영향을 받지 않는 독립적인 객체인 것을 확인할 수 있다.
+
+다음 코드를 보자.
+
+```js
+let A = { a: 0, b: { c: { d: 0 }, e: 1 } };
+let B = { ...A, b: { ...A.b } };
+let C = { ...A, b: { c: { ...A.b.c } } };
+let D = { ...A, b: { ...A.b, c: { ...A.b.c } } };
+let E = JSON.parse(JSON.stringify(A));
+
+A.a = 4;
+A.b.e = 7;
+A.b.c.d = 5;
+
+console.log("A = ", A);
+console.log("B = ", B);
+console.log("C = ", C);
+console.log("D = ", D);
+console.log("E = ", E);
+```
+
+출력값
+
+```console
+A = { a: 4, b: { c: { d: 5 }, e: 7 } }
+B = { a: 4, b: { c: { d: 5 }, e: 1 } }
+C = { a: 4, b: { c: { d: 0 } } }
+D = { a: 4, b: { c: { d: 0 }, e: 1 } }
+E = { a: 4, b: { c: { d: 0 }, e: 1 } }
+```
+
+1. B의 경우에는 A.b까지 전개구문(spread)를 하여 A.b. depth까지는 깊은 복사가 이루어져 있지만 A.b.c.의 depth는 얕은 복사가 이루어 진것을 알 수 있다.
+2. C의 경우에는 A.b까지 전개구문(spread)를 하여 A.b.c.까지는 깊은 복사가 이루어져 있지만 A.b.의 depth에서 전개구문(spread)을 사용하지 않아 그 단계에 있는 A.b.e 속성이 복사되지 않았다.
+3. 위 출력값을 보면 D와 E는 모든 속성을 포함한 깊은 복사가 된 것을 알 수 있다.
+4. B, C의 경우를 보면 객체의 depth가 깊어지면 깊어질 수록 전개구문(spread)을 사용하여 깊은 복사를 하는 것은 모든 단계를 전개구문을 사용하여 복사해야 한다.
+
+## 2차원 이상의 객체 깊은 복사하기
+
+### 방법 1. JSON.parse() + JSON.stringify()
+
+- depth가 깊은 객체라면 전개구문(spread)를 사용하기 보다는 JSON.parse(JSON.stringify("복사하고 싶은 객체"))를 사용하자.
+
+```js
+const original = {
+  a: 1,
+  b: {
+    c: 2,
+  },
+};
+
+const clone = JSON.parse(JSON.stringify(original));
+
+clone.b.c = 3;
+
+console.log(original === clone); // false 출력
+console.log(original.b.c); // 2 출력
+console.log(original.b.c === clone.b.c); // false 출력
+```
+
+- JSON.stringify() 메서드를 통해 String 타입으로 변환 후, JSON.parse() 메서드로 다시 객체로 변환해준다.
+- 이 과정에서 두 객체의 참조 관계는 완전히 끊기게 되어 깊은 복사가 된다.
+
+<br />
+
+### 방법 2. 재귀 함수
+
+```js
+const deepCopy = (obj) => {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+  let copy = {};
+  for (let key in obj) {
+    copy[key] = deepCopy(obj[key]);
+  }
+  return copy;
+};
+
+const original = {
+  a: 1,
+  b: {
+    c: 2,
+  },
+  func: function () {
+    return this.a;
+  },
+};
+
+const clone = deepCopy(original);
+clone.b.c = 3;
+
+console.log(original === clone); // false 출력
+console.log(original.b.c); // 2 출력
+console.log(original.b.c === clone.b.c); // false 출력
+```
+
+- 재귀 함수를 사용하여 2차원 이상의 객체일 때 내부 객체까지 깊은 복사를 하여 반환한다.
+
+<br />
+
+### 방법 3. lodash & cloneDeep()
+
+```js
+const L = require("lodash");
+
+const original = {
+  a: 1,
+  b: {
+    c: 2,
+  },
+};
+
+const clone = L.cloneDeep(original);
+
+clone.b.c = 3;
+
+console.log(original === clone); // false 출력
+console.log(original.b.c); // 2 출력
+console.log(original.b.c === clone.b.c); // false 출력
+```
+
+- 이 방법은 ladash 라이브러리를 설치해서 사용해야 한다.
+
+<br />
+
+### 방법 4. ramda & clone()
+
+```js
+const R = require("ramda");
+
+const original = {
+  a: 1,
+  b: {
+    c: 2,
+  },
+};
+
+const clone = R.clone(original);
+
+clone.b.c = 3;
+
+console.log(original === clone); // false 출력
+console.log(original.b.c); // 2 출력
+console.log(original.b.c === clone.b.c); // false 출력
+```
+
+- 이 방법은 ramda 라이브러리를 설치해서 사용해야 한다.

@@ -1,0 +1,202 @@
+# JSON
+
+## JavaScript Object Notation(JSON)이란?
+
+- JavaScript 객체 문법으로 구조화된 데이터를 표현하기 위한 문자 기반의 표준 포맷이다.
+- 속성-값 쌍, 배열 자료형 또는 기타 모든 시리얼화 가능한 값 또는 키-값 쌍으로 이루어져있다.
+- 데이터 오브젝트를 전달하기 위해 인간이 읽을 수 있는 텍스트를 사용하는 개방형 표준 포맷이다.
+- 비동기 브라우저/서버 통신 을 위해, 넓게는 XML을 대체하는 주요 데이터 포맷이다.
+- 상대적으로 쉽게 읽고 작성할 수 있고, 소프트웨어에서 파싱 및 생성하기도 쉽다.
+
+일반적으로 아래와 같은 형태로 구성된다.
+
+```js
+{
+    "key1": "value1",
+    "key2": value2
+}
+```
+
+<br />
+
+## JSON관련 메소드
+
+- 네트워크를 통해 객체를 어딘가에 보내거나 로깅 목적으로 객체를 출력해야 한다면 객체를 문자열로 전환해야 한다.
+- 전환된 문자열엔 원하는 정보가 있는 객체 프로퍼티 모두가 포함되어야만 한다.
+
+아래는 메소드를 구현해 객체를 문자열로 전환하는 코드이다.
+
+```js
+let user = {
+  name: "John",
+  age: 30,
+  toString() {
+    return `{name: "${this.name}", age: ${this.age}}`;
+  },
+};
+
+console.log(user.toString()); // {name: "John", age: 30}
+```
+
+1. 개발 과정에서 프로퍼티가 추가되거나 삭제, 수정될 수 있다.
+2. 삭제, 수정이 될때마다 위에서 구현한 toString()을 매번 수정해야 하는데 이는 매우 비효율적이다.
+3. 프로퍼티에 반복문을 돌리는 방법을 대안으로 사용할 수 있는데, 중첩 객체 등으로 인해 객체가 복잡한 경우 이를 문자열로 변경하는 건 까다로운 작업이라 이마저도 쉽지 않다.
+4. 자바스크립트엔 이런 문제를 해결해주는 관련 기능이 이미 구현되어 있어서 직접 코드를 짤 필요가 없다.
+5. 자바스크립트가 제공하는 JSON 관련 메소드는 아래와 같다.
+   - JSON.stringify() = 객체를 JSON으로 바꿔준다.
+   - JSON.parse() = JSON을 객체로 바꿔준다.
+
+<br />
+
+## JSON.stringify()
+
+1. JSON (JavaScript Object Notation)은 값이나 객체를 나타내주는 범용 포맷으로, RFC 4627 표준에 정의되어 있다.
+2. JSON은 본래 자바스크립트에서 사용할 목적으로 만들어진 포맷이다.
+3. 라이브러리를 사용하면 자바스크립트가 아닌 언어에서도 JSON을 충분히 다룰 수 있다.
+4. 특히 클라이언트 측 언어가 자바스크립트일 때 JSON을 데이터 교환 목적으로 사용하는 경우가 많으며 서버 측 언어는 무엇이든 상관없다.
+
+객체 student에 JSON.stringify()를 적용한 예제이다.
+
+```js
+let student = {
+  name: "John",
+  age: 30,
+  isAdmin: false,
+  courses: ["html", "css", "js"],
+  wife: null,
+};
+
+let json = JSON.stringify(student);
+
+console.log(typeof json); // string
+
+console.log(json);
+/* JSON으로 인코딩된 객체:
+{
+  "name": "John",
+  "age": 30,
+  "isAdmin": false,
+  "courses": ["html", "css", "js"],
+  "wife": null
+}
+*/
+```
+
+JSON.stringify(student)를 호출하자 student가 문자열로 바뀌었다.
+
+1. 이렇게 변경된 문자열은 JSON으로 인코딩된(JSON-encoded), 직렬화 처리된(serialized), 문자열로 변환된(stringified), 결집된(marshalled) 객체라고 부른다.
+2. 객체는 이렇게 문자열로 변환된 후에야 비로소 네트워크를 통해 전송하거나 저장소에 저장할 수 있다.
+3. JSON으로 인코딩된 객체는 일반 객체와 다른 특징을 보인다.
+4. 문자열은 큰따옴표로 감싸야 한다.
+5. JSON에선 작은따옴표나 백틱을 사용할 수 없다.('John'이 "John"으로 변경된 것을 통해 이를 확인할 수 있다).
+6. 객체 프로퍼티 이름은 큰따옴표로 감싸야 한다.(age:30이 "age":30으로 변한 것을 통해 이를 확인할 수 있다).
+7. JSON.stringify는 객체뿐만 아니라 원시값에도 적용할 수 있다.
+8. 적용할 수 있는 자료형은 아래와 같다.
+   - 객체 \{ ... }
+   - 배열 [ ... ]
+   - 원시형: 문자형, 숫자형, 불린형 값 true와 false, null
+
+예제코드
+
+```js
+// 숫자를 JSON으로 인코딩하면 숫자이다.
+console.log(JSON.stringify(1)); // 1
+
+// 문자열을 JSON으로 인코딩하면 문자열이다. (다만, 큰따옴표가 추가된다).
+console.log(JSON.stringify("test")); // "test"
+
+console.log(JSON.stringify(true)); // true
+
+console.log(JSON.stringify([1, 2, 3])); // [1,2,3]
+```
+
+1. JSON은 데이터 교환을 목적으로 만들어진 언어에 종속되지 않는 포맷이다.
+
+2. 자바스크립트 특유의 객체 프로퍼티는 JSON.stringify()가 처리할 수 없다.
+3. JSON.stringify 호출 시 무시되는 프로퍼티는 아래와 같다.
+
+- 함수 프로퍼티 (메소드)
+- 심볼형 프로퍼티 (키가 심볼인 프로퍼티)
+- 값이 undefined인 프로퍼티
+
+예제코드
+
+```js
+let meetup = {
+  title: "Conference",
+  room: {
+    number: 23,
+    participants: ["john", "ann"],
+  },
+};
+
+console.log(JSON.stringify(meetup));
+/* 객체 전체가 아래와 같이 문자열로 변환된다.
+{
+  "title":"Conference",
+  "room":{"number":23,"participants":["john","ann"]},
+}
+*/
+```
+
+<br />
+
+## JSON.parse()
+
+- JSON.parse를 사용하면 JSON으로 인코딩된 객체를 다시 객체로 디코딩 할 수 있다.
+
+예제코드
+
+```js
+// 문자열로 변환된 배열
+let numbers = "[0, 1, 2, 3]";
+
+numbers = JSON.parse(numbers);
+
+console.log(numbers[1]); // 1
+```
+
+- JSON.parse는 아래와 같이 중첩 객체에도 사용할 수 있다.
+
+예제코드
+
+```js
+let userData =
+  '{ "name": "John", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
+
+let user = JSON.parse(userData);
+
+console.log(user.friends[1]); // 1
+```
+
+- 중첩 객체나 중쳡 배열이 있다면 JSON도 복잡해지기 마련인데, 그렇더라도 결국엔 JSON 포맷 지켜야한다.
+
+아래에서 디버깅 등의 목적으로 직접 JSON을 만들 때 흔히 저지르는 실수의 예제코드이다.
+
+```js
+let json = `{
+  name: "John",                     // 실수 1: 프로퍼티 이름을 큰따옴표로 감싸지 않았다.
+  "surname": 'Smith',               // 실수 2: 프로퍼티 값은 큰따옴표로 감싸야 하는데, 작은따옴표로 감쌌다.
+  'isAdmin': false                  // 실수 3: 프로퍼티 키는 큰따옴표로 감싸야 하는데, 작은따옴표로 감쌌다.
+  "birthday": new Date(2000, 2, 3), // 실수 4: "new"를 사용할 수 없다. 순수한 값(bare value)만 사용할 수 있다.
+  "friends": [0,1,2,3]              // 이 프로퍼티는 괜찮다.
+}`;
+```
+
+- JSON은 주석을 지원하지 않아 주석을 추가하면 유효하지 않은 형식이 된다.
+- 키를 큰따옴표로 감싸지 않아도 되고 주석도 지원해주는 JSON5라는 포맷도 있는데, 이 포맷은 자바스크립트 명세서에서 정의하지 않은 독자적인 라이브러리이다.
+- JSON 포맷이 까다로운 규칙을 가지게 된 이유는 쉽고 빠르며 신뢰할 수 있을 만한 파싱 알고리즘을 구현하기 위해서이다.
+
+## 정리
+
+1. Back-End를 개발하다보면, JSON을 이용해서 웹 서버와 데이터를 자주 주고 받는다.
+2. 보통 Front-End 영역에서 JavaScript를 이용해서 AJAX로 Web API를 호출하고 이때 데이터 포멧을 JSON을 이용한다.
+3. 그러다 보면, 빈번히 JavaScript 객체를 String 타입으로 변경하였다가, 다시 객체로 변환하는 경우가 발생한다.
+4. JavaScript에 JSON과 관련된 위 과정을 쉽게 해주는 두 가지 메소드가 존재한다.
+   - JSON.stringify() = 객체를 JSON으로 바꿔준다.
+   - JSON.parse() = JSON을 객체로 바꿔준다.
+5. JSON 의 일반적인 용도는 웹 서버와 데이터를 주고 받는 것이다.
+   - AJAX 요청을 사용하여 서버에서 JSON을 요청할 수 있다.
+   - 웹 서버로 데이터를 보낼 때 데이터는 문자열이여야 하며 JSON객체를 문자열로 바꿀 때 JSON.stringify()를 사용하면 된다.
+   - 웹 서버에서 받은 데이터는 문자열이므로, JSON.parse()를 사용하여 데이터를 구문 분석하며, 데이터가 Javascript 객체로 변환한다.
+   - 이를 통해 서버의 응답이 JSON 형식으로 작성되는 한 문자열을 JavaScript 객체로 구문 분석을 할 수 있다.
