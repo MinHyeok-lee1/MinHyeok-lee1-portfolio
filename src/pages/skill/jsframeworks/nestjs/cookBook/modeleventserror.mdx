@@ -1,0 +1,88 @@
+# Model.events, Model관련 Error 처리
+
+## Model.events
+
+### Mongoose의 Model.events
+
+Model.events
+
+1. 발생한 오류를 보고하는 이벤트 이미터. 전역 오류 처리에 유용하다.
+2. Model 관련 Method를 처리할 때 따로 try.. catch문을 사용하지 않아도 된다.
+
+예제코드
+
+```js
+MyModel.events.on("error", (err) => console.log(err.message));
+
+await MyModel.findOne({ _id: "Not a valid ObjectId" }).catch(noop);
+```
+
+<br />
+
+출력값
+
+```sh
+Cast to ObjectId failed for value "Not a valid ObjectId" (type string) at path "_id" for model "User"
+```
+
+위와 같은 Cast Error가 출력된다.
+
+<br />
+
+### NestjS에 적용하기, Model관련 NestJS Error 처리 및 try.. catch문클린코드
+
+Model.events.on을 NsetJS에서 사용한 예시
+
+```js
+import { Inject, Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { User } from './entities/user.entity';
+
+@Injectable()
+export class UserService {
+  constructor(
+    @Inject('USER_MODEL')
+    private model: Model<User>,
+  ) {
+    model.events.on('error', (err) => console.log('#### = ', err.message));
+  }
+
+
+  async getUser(): Promise<User> {
+    try {
+      await this.model.findOne({ _id: 'zz' });
+    } catch (err) {
+      console.log('@@@@', err.message);
+    }
+
+    return await this.model.findOne({ _id: 'zz' }).catch();
+  }
+
+}
+```
+
+<br />
+
+출력값
+
+```sh
+* ERROR * =  Cast to ObjectId failed for value "zz" (type string) at path "_id" for model "User"
+@@@@ Cast to ObjectId failed for value "zz" (type string) at path "_id" for model "User"
+* ERROR * =  Cast to ObjectId failed for value "zz" (type string) at path "_id" for model "User"
+[Nest] 5382  - 02/28/2023, 4:43:01 PM   ERROR [ExceptionsHandler] Cast to ObjectId failed for value "zz" (type string) at path "_id" for model "User"
+CastError: Cast to ObjectId failed for value "zz" (type string) at path "_id" for model "User"
+```
+
+출력값을 보고 알게된 사실
+
+1. L17,L22 try.. catch에서 사용된 코드때문에 Model.events에 관한 에러관련 console.log이 2번 찍힌다.
+2. L22에서사용된 코드때문에. try.. catch에서 한 번 찍힌다.
+3. 마지막으로 NestJS에서 제공하는 Error가 마지막에 한 번 찍힌다.
+
+### 결론
+
+1. Model.events에 관한 에러관련 console.log이 2번 찍힌다.
+2. try.. catch에서 한 번 찍힌다.
+3. NestJS에서 제공하는 Error가 마지막에 한 번 찍힌다.
+4. NestJS의 예로 들면 Controller, Service에서 Model관련 Method를 사용할 때, 사용하는 함수마다 try.. catch문을 사용하기보다 Mdeol.events로 에러를 처리한다.
+   <br />

@@ -1,0 +1,365 @@
+# NestJS에서 MongoDB관련
+
+## 페이지네이션 방식으로 데이터 추출
+
+MongoDB에서 페이지네이션 방식으로 데이터 추출할 때 2가지 방법이 있다.
+
+1. skip()을 사용하는 방식
+2. cursor.hasNext(), next()를 사용하는 방식
+
+```js
+async userPagenation(): Promise<User[]> {
+    let page1, page2, page3;
+    try {
+      page1 = await this.model.find().limit(100);
+    } catch (err: unknown) {
+      console.log(err);
+    }
+    try {
+      page2 = await this.model.find().skip(100).limit(100);
+    } catch (err: unknown) {
+      console.log(err);
+    }
+
+    let latest = null;
+    const cursor = this.model.collection.find().limit(100);
+    while (await cursor.hasNext()) {
+      latest = await cursor.next();
+    }
+
+    try {
+      page3 = await this.model
+        .find({ createdAt: { $gt: latest.createdAt } })
+        .limit(100);
+    } catch (err: unknown) {
+      console.log(err);
+    }
+
+    return page3;
+  }
+```
+
+- page1이 첫번째 100개의 items를 페이지네이션하고 있을 때,
+- page2
+  1. skip()을 사용하고 있다.
+  2. skip()을 하는 만큼 읽고 버린다.
+  3. page1과 겹치는 100개의 items를 읽고 버리고 그 다음 100개를 꺼낸다.
+  4. 고로 skip()안에 들어가는 매개변수가 커지면 커질 수록 사용을 지양한다.
+- page3
+  1.  page1 다음의 커서를 가지고 있다가 그 다음 100개를 꺼낸다.
+  2.  cursor.hasNext()를 사용하여 cursor가 collection.find()에서 문서를 반환하기 위해 반복할 수 있는 경우 true가 반환된다.
+  3.  while문과 next()를 사용하여 cursor를 page1 다음으로 최신화 시켜준다.
+  4.  page2_2는 page1 다음 데이터부터 바로 시작할 수 있다.
+- 결론: 페이지네이션 형태로 데이터를 꺼내야할 때, 되도록 page3과 같은 방식을 사용하자.
+
+<br />
+
+## MongoDB 컬렉션에 문서(객체)를 삽입하기
+
+MongoDB(mongosh)에서 컬렉션에 문서를 삽입하는 3가지 방법을 mongoose를 사용하여 NestJS에서 사용하기
+
+- db.collection.insert(): 하나 혹은 여러개의 문서를 삽입한다.
+- db.collection.insertOne(): 하나의 문서를 삽입한다.
+- db.collection.insertMany(): 여러개의 문서를 삽입한다.
+
+<br />
+
+### 1. 하나의 객체(문서) 생성(db.collection.insertOne())
+
+```js
+async createOne(createUserDto: CreateUserDto): Promise<User> {
+    const createUser = new this.model(createUserDto);
+    return createUser.save();
+}
+```
+
+- db.collection.insertOne()과 같은 기능을 사용하고자 하면 mongoose의 Model.prototype.save()를 사용하면 된다.
+- mongosh의 db.collection.insertOne()과 유사하게 동작한다.
+- 하나의 User에 대한 문서를 NestJS에서 MongoDB에 삽입할 수 있다.
+- 일반적으로 하나의 객체를 Create(POST)하는 경우 사용한다.
+
+<br />
+
+### 2. 여러개의 객체(문서) 생성(db.collection.insertMany())
+
+```js
+async createMany(createUserDto: CreateUserDto[]): Promise<User[]> {
+    const createUsers = this.model.insertMany(userList);
+    return createUsers;
+}
+```
+
+- db.collection.insertMany()과 같은 기능을 사용하고자 하면 mongoose의 Model.insertMany()를 사용하면 된다.
+- mongosh의 db.collection.insertMany()과 유사하게 동작한다.
+- 여러개의 User에 대한 문서배열을 NestJS에서 MongoDB에 삽입할 수 있다.
+- 일반적으로 여러개의 객체를 Create(POST)하는 경우 사용한다.
+
+<br />
+
+### 3. db.collection.insert()의 경우
+
+```js
+async create(
+  createUserDto: CreateUserDto | CreateUserDto[],
+): Promise<User | User[]> {
+  return await this.model.create(createUserDto);
+}
+```
+
+- db.collection.insert()과 같은 기능을 사용하고자 하면 mongoose의 Model.create를 사용하면 된다.
+- mongosh의 db.collection.insert()와 유사하게 동작한다.
+- db.collection.insert()의 경우 인수로 하나의 객체 혹은 객체배열을 받아 두 개의 타입 모두 MongoDB에 생성가능하다.
+- mongosh에서도 db.collection.insert()를 사용하는 것은 인수의 타입도 두 개, 반환값의 타입도 두 개이므로 (객체 타입, 객체 배열타입) 사용을 지양한다.
+  - 하나만 생성할 때는 예제1처럼 db.collection.insertOne()을 사용하는 것이 직관적이다.
+  - 여러개를 생성할 때는 예제2처럼 db.collection.insertMany()를 사용하는 것이 직관적이다.
+- 일반적인 경우 하나의 객체를 생성할 경우와 여러개의 객체를 생성할 때는 로직이 다르기때문에 함수도 분리해주는 것이 좋고 직관적이다.
+- db.collection.insert()는 [더 이상 사용하지 않는 Mongosh방법](https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/#std-label-compatibility)이다.
+
+<br />
+
+## 매핑유형(Partial, Pick, Omit, Intersection)
+
+- NestJS에서 PartialType(), PickType(), OmitType(), IntersectionType()의 사용
+- CRUD (Create / Read / Update / Delete)와 같은 기능을 구축할 때 기본 엔터티 유형에서 변형을 구성하는 것이 유용하다.
+- Nest는 이 작업을 보다 편리하게 만들기 위해 유형 변환을 수행하는 여러 유틸리티 기능을 제공한다.
+- 입력 유효성 검사 유형(DTO)을 빌드할 때 동일한 유형에서 생성 및 업데이트 변형을 빌드하는 것이 유용한 경우가 많다.
+- 예를 들어 생성 변형은 모든 필드를 요구할 수 있지만 업데이트 변형은 모든 필드를 선택 사항으로 만들 수 있다.
+
+<br />
+
+### 1. PartialType() 함수
+
+- Nest는 PartialType()이 작업을 더 쉽게 만들고 상용구를 최소화하기 위한 유틸리티 기능을 제공한다.
+- PartialType()함수는 입력 유형의 모든 속성이 옵션으로 설정된 유형(클래스)을 반환한다.
+
+예를 들어 다음과 같은 생성 유형이 있다고 가정하자.
+
+```js
+export class userStrongInfo {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  level: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  magicPower: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  swordPower: number;
+}
+```
+
+기본적으로 이러한 필드는 모두 필수이다.
+
+동일한 필드가 있지만 각 필드가 선택 사항인 유형을 생성하려면 PartialType()클래스 참조(userStrongInfo)를 인수로 전달한다.
+
+```js
+export class PartialTypeClass extends PartialType(userStrongInfo) {}
+```
+
+- userStrongInfo과 같은 속성을 가진 PartialTypeClass가 생성된다.
+- PartialTypeClass의 필드들은 속성이 모두 옵션으로 설정된 새로운 클래스 PartialTypeClass이다.
+
+```ts
+PartialTypeClass = {
+  level: number, // Optional
+  magicPower: number, // Optional
+  swordPower: number, // Optional
+};
+```
+
+<br />
+
+### 2. PickType() 함수
+
+- PickType()함수는 입력 유형에서 속성 집합을 선택하여 새 유형(클래스)을 생성한다.
+- userStrongInfo는 `### 1.`예제에서 사용한 클래스를 그대로 사용한다.
+
+```js
+export class PickTypeClass extends PickType(userStrongInfo, ['level'] as const) {}
+```
+
+- userStrongInfo에서 level만 선택되어 생성된 새로운 클래스 PickTypeClass이다.
+
+```ts
+PickTypeClass = {
+  level: number, // Required
+};
+```
+
+<br />
+
+### 3. OmitType() 함수
+
+- OmitType()함수는 입력 유형에서 모든 속성을 선택한 다음 특정 키 세트를 제거하여 유형을 구성한다
+- userStrongInfo는 `### 1.`예제에서 사용한 클래스를 그대로 사용한다.
+
+```js
+export class OmitTypeClass extends OmitType(userStrongInfo, ['magicPower'] as const) {}
+```
+
+- userStrongInfo에서 magicPower가 제거되고 생성된 새로운 클래스 OmitTypeClass이다.
+
+```ts
+OmitTypeClass = {
+  level: number, // Required
+  swordPower: number, // Required
+};
+```
+
+<br />
+
+### 4. IntersectionType() 함수
+
+- IntersectionType()함수는 두 가지 유형을 하나의 새로운 유형(클래스)으로 결합한다.
+
+```js
+export class userStrongInfo {
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  level: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  magicPower: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  swordPower: number;
+}
+
+export class userBaseInfo {
+  @ApiProperty({ type: String })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  age: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  major: number;
+}
+```
+
+- 두 유형의 모든 속성을 결합하여 새 유형을 생성할 수 있다.
+
+```js
+export class UserInfo extends IntersectionType(userBaseInfo, userStrongInfo) {}
+```
+
+- userBaseInfo와 userStrongInfo가 결합되어 생성된 새로운 클래스 UserInfo 이다.
+
+```ts
+UserInfo = {
+  name: string, // Required
+  age: number, // Required
+  major: number, // Required
+  level: number, // Required
+  magicPower: number, // Required
+  swordPower: number, // Required
+};
+```
+
+<br />
+
+### 5. 유형 매핑 유틸리티 함수는 함께 사용 가능하다.
+
+- PartialType과 OmitType을 같이 사용하는 예시이다.
+
+```js
+export class PartialTypeOmitClass extends PartialType(
+  OmitType(userStrongInfo, ['swordPower', 'magicPower'] as const),
+) {}
+
+```
+
+- swrodPower와 magicPower가 제거되고 나머지 속성이 옵션으로 설정되어 생성된 새로운 클래스 PartialTypeOmitClass 이다.
+
+```ts
+PartialTypeOmitClass = {
+  level: number, // Optional
+};
+```
+
+<br />
+
+- 물론 위 예제에 아래처럼 새로운 속성이 추가가 가능하다.
+
+```ts
+export class UserInfo extends IntersectionType(userBaseInfo, userStrongInfo) {
+  @ApiProperty({ type: Date })
+  @IsDateString()
+  playTime: Date;
+}
+```
+
+- userBaseInfo와 userStrongInfo가 결합되고 playTime이 추가되어 UserInfo 클래스가 생성된다.
+
+```ts
+UserInfo = {
+  name: string, // Required
+  age: number, // Required
+  major: number, // Required
+  level: number, // Required
+  magicPower: number, // Required
+  swordPower: number, // Required
+  playTime: string($date_time), //Required
+};
+```
+
+<br />
+
+## DB 자원(임계구역)에 동시접근할 때, 트랜잭션을 이용해 자원소비 제어 코드
+
+1. DB자원이 0이하로 내려가지 않게 백엔드에서 구현한다. (자원이 0이하면 소비할 수 없고 Error처리)
+2. 하지만 트랜잭션을 걸어주지 않는다면 DB 임계구역에 있는 자원에 동시에 접근하여 소비하여 자원이 동시에 -2가 되어 자원이 -1이 되는 경우가 있다.
+
+이를 해결하기 위해 트랜잭션을 걸어주는 코드이다. (동시에 접근하는 것을 방지한다)
+
+```js
+async spendResource() {
+    const session = await this.model.db.startSession();
+    session.startTransaction();
+    try{
+
+        // 자원이 없으면 예외처리 추가 부분 (rollback)
+        if(!resource) throw BadRequestException();
+        ...
+
+        await session.commitTransaction();
+
+    } catch (error) {
+
+        await session.abortTransaction();
+
+        throw error;
+
+
+    } finally {
+
+        session.endSession();
+
+    }
+}
+```
+
+1. try 구문에서 자원이 없으면 예외처리를 해주고 자원이 있으면 commit(저장)하고 완료한다.
+2. catch 구문에서 문제가 생기면 error을 발생하고 트랜잭션을 abort(중단)한다.
+3. finally 구문에서 session을 종료한다.
+
+위 로직은 하나의 프로세스씩 실행된다.  
+Transaction은 복수개의 작업들을 격리된(isolation) 상태로 진행하게 해준다.  
+복수개의 작업이 모두 성공했을 때만 성공하게 되고 이를 commit 한다.  
+하나라도 실패하게 되면 모두가 실패하게 되고 이를 abort 한다.  
+실패하게 된다면 transaction 작업 전의 상태로 되돌아가게 된고 이를 rollback이라 한다.
+
+- 참고
+  - MongoDB에서 transaction은 replicaset에서만 가능하다.
+  - standalone에서는 불가능하다.
+  - mongoose 버전이 5.2.0 이상이어야한다.
+  - Transaction은 MongoDB sessions에 구성되어 있다.
+  - startSession()를 호출한뒤 startTransaction()을 호출하여야 트렌젝션을 시작할 수 있다.
+  - 트렌젝션 안에서 작업을 실행하려면 session을 옵션으로 전달해야한다.

@@ -1,23 +1,27 @@
 # NestJS에서 Validation(유효성 검증)
+
 NestJS에서 Validation(유효성 검증)하기 위한 도구는 class-validator이다.
 
 ## class-validator란?
-- NestJS에서 Validation(유효성 검증)하기 위한 도구, class-validator  
-- ValidationPipe는 강력한 클래스 유효성 검사기 패키지와 선언적 유효성 검사 데코레이터를 사용한다.  
-- ValidationPipe는 들어오는 모든 클라이언트 페이로드에 대한 유효성 검사 규칙을 적용하는 편리한 접근방식을 제공한다.  
--  -> ex. 특정 규칙은 각 모듈의 로컬 클래스/DTO 선언에서 간단한 주석으로 선언된다.  
+
+- NestJS에서 Validation(유효성 검증)하기 위한 도구, class-validator
+- ValidationPipe는 강력한 클래스 유효성 검사기 패키지와 선언적 유효성 검사 데코레이터를 사용한다.
+- ValidationPipe는 들어오는 모든 클라이언트 페이로드에 대한 유효성 검사 규칙을 적용하는 편리한 접근방식을 제공한다.
+- -> ex. 특정 규칙은 각 모듈의 로컬 클래스/DTO 선언에서 간단한 주석으로 선언된다.
 - class-validator, class-transformer가 있다.
 
-      
 ### 내장 Validation Pipe 사용
+
 class-validator사용하기 위한 필요한 종속성 설치
+
 ```sh
 $ npm i --save class-validator class-transformer
 ```
 
 패키지의 import
+
 ```js
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from "@nestjs/common";
 ```
 
 <br />
@@ -26,6 +30,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 ValidationPipe 애플리케이션 수준에서 바인딩하여, 모든 엔드포인트가 잘못된 데이터를 수신하지 않도록 보호합니다.  
 main.ts에서 아래와 같이 설정한다.
+
 ```js filename="main.ts"
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -42,13 +47,15 @@ bootstrap();
 오류 메시지는 요청에서 무엇이 잘못되었는지 파악하는데 도움이 될 수 있다.  
 하지만 일부 production(운영) 환경에서는 자세한 오류를 비활성화 하는 것을 선호한다.  
 자세한 오류 비활성화는 다음과 같이 사용한다.
+
 ```js
 app.useGlobalPipes(
   new ValidationPipe({
     disableErrorMessages: true,
-  }),
+  })
 );
 ```
+
 <br />
 
 ## 스트리핑 속성(Stripping properties)
@@ -57,13 +64,15 @@ ValidationPipe 핸들러에서 수신해서는 안되는 속성을 필터링할 
 이 경우 허용 가능한 속성을 화이트리스트에 추가할 수 있으며 화이트리스트에 포함되지 않은 모든 속성은 결과 개체에서 자동으로 제거된다.  
 예를들어 핸들러가 email과 password속성을 예상하지만 요청에 age 속성도 포함되어 있는 경우 이 속성은 결과 DTO에서 자동으로 제거될 수 있다.  
 이 동작을 활성화하려는 경우 다음과 같이 사용한다.
+
 ```js
 app.useGlobalPipes(
   new ValidationPipe({
     whitelist: true,
-  }),
+  })
 );
 ```
+
 whitelist: true로 설정하면 화이트리스트에 없는 속성(검증 클래스에 데코레이터가 없는 속성)을 자동으로 제거합니다.  
 또는 화이트리스트에 포함되지 않은 속성이 있을 때 요청 처리를 중지하고 사용자에게 오류 응답을 반환할 수 있다.  
 이를 활성화하려면 forbidNonWhitelisted 옵션 속성을 true로 설정하고 whitelist를 true로 설정하면 된다.
@@ -75,6 +84,7 @@ whitelist: true로 설정하면 화이트리스트에 없는 속성(검증 클�
 네트워크를 통해 들어오는 페이로드는 일반 JavaScript개체이다.  
 ValidationPipe DTO 클래스에 따라 유형이 지정된 객체로 페이로드를 자동으로 변환할 수 있다.  
 이 동작을 활성화하려는 경우 다음과 같이 사용한다.
+
 ```js filename="user.controller.ts"
 @Post()
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -82,19 +92,22 @@ async create(@Body() createCatDto: CreateCatDto) {
   this.userService.create(createCatDto);
 }
 ```
+
 자동 변환을 활성화하려면 transform을 true로 설정한다.
 
 이 동작을 전역적으로 활성화하려면 아래와 같이 전역 파이프에서 옵션을 설정한다.
+
 ```js
 app.useGlobalPipes(
   new ValidationPipe({
     transform: true,
-  }),
+  })
 );
 ```
 
 자동변환 옵션을 활성화하면 ValidationPipe 기본 유형의 변환도 수행한다.  
 다음 예제에서 findOne()메소드는 추출된 id 경로 매개변수를 나타내는 하나의 인수를 사용한다.
+
 ```js
 @Get(':id')
 findOne(@Param('id') id: number) {
@@ -102,24 +115,21 @@ findOne(@Param('id') id: number) {
   return 'This action returns a user';
 }
 ```
+
 기본적으로 모든 경로 매개변수와 쿼리 매개변수는 네트워크를 통해 문자열로 전달된다.  
 위의 예의 메소드 assingment에서 id 유형을 숫자로 지정했다.  
 따라서 ValidationPipe는 자동으로 문자열 식별자를 숫자로 변환한다.
 
 <br />
 
-
 ## 명시적 변환(Explicit conversion)
 
-위에서 ValidationPipe 유형을 쿼리 및 경로 매개변수를 암시적으로 변환하는 방법을 보여주었다.
-
-그러나 이 기능을 사용하려면 자동 변환을 활성화해야 한다.
-
- 
-
+위에서 ValidationPipe 유형을 쿼리 및 경로 매개변수를 암시적으로 변환하는 방법을 보여주었다.  
+그러나 이 기능을 사용하려면 자동 변환을 활성화해야 한다.  
 자동 변환이 비활성화 된 상태에서라면 ParseIntPipe 또는 ParseBoolPipe를 사용하여 명시적으로 값을 캐스팅할 수 있다.
 
- -> (앞서 언급한 것처럼 모든 경로 매개변수와 쿼리 매개변수가 기본적으로 네트워크를 통해 문자열로 제공되기 때문에 ParseStringPipe는 필요하지 않음)
+- 앞서 언급한 것처럼 모든 경로 매개변수와 쿼리 매개변수가 기본적으로 네트워크를 통해 문자열로 제공되기 때문에 ParseStringPipe는 필요하지 않다.
+
 ```js
 import { ParseIntPipe, ParseBoolPipe } from '@nestjs/common';
 
@@ -133,5 +143,6 @@ findOne(
   return 'This action returns a user';
 }
 ```
+
 위까지가 가장 많이 사용하는 class-validator 예제이다.
 class-validator의 더 많은 정보가 필요하다면 [이곳을](https://github.com/typestack/class-validator) 확인해보면 좋다.
