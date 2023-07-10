@@ -5,8 +5,8 @@
   "jsoncopy": "JSON_(얕은복사 vs 깊은복사)",
   "nullundefined": "null vs undefined",
   "nullishcoalescingoperator": "Nullish coalescing operator(??)",
+  "optionalchaining": "옵셔널 체이닝(?.)",
   "variablenamenotation": "변수명 표기법",
   "varletconst": "var, let, const",
-  "deleteblank": "문자열 공백 제거",
-  "optionalchaining": "옵셔널 체이닝(?.)"
+  "deleteblank": "문자열 공백 제거"
 }
