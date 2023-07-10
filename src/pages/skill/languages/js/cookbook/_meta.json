@@ -7,5 +7,6 @@
   "nullishcoalescingoperator": "Nullish coalescing operator(??)",
   "variablenamenotation": "변수명 표기법",
   "varletconst": "var, let, const",
-  "deleteblank": "문자열 공백 제거"
+  "deleteblank": "문자열 공백 제거",
+  "optionalchaining": "옵셔널 체이닝(?.)"
 }
