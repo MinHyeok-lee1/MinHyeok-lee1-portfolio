@@ -1,0 +1,413 @@
+# 타입 정리
+
+## 내장형 타입
+
+- Numbers (int, double)
+- Strings (String)
+- Booleans (bool)
+- Records ((value1, value2))
+- Lists (List, also known as arrays)
+- Sets (Set)
+- Maps (Map)
+- Runes (Runes; often replaced by the characters API):
+  - Dart에서 룬은 문자열의 유니코드 코드 포인트를 노출한다. 문자 패키지를 사용하여 유니코드(확장) 문자소 클러스터라고도 하는 사용자 인식 문자를 보거나 조작할 수 있다.
+- Symbols (Symbol)
+  - Symbol 객체는 Dart 프로그램에서 선언된 연산자 또는 식별자를 나타낸다.
+  - 기호를 사용할 필요가 없을 수도 있지만 최소화는 식별자 이름을 변경하지만 식별자 기호는 변경하지 않기 때문에 이름으로 식별자를 참조하는 API에 매우 중요하다.
+  - 식별자에 대한 기호를 얻으려면 기호 리터럴을 사용하자. 기호 리터럴은 # 다음에 식별자가 오는 것이다.
+    ```dart
+    #radix
+    #bar
+    ```
+    - 기호 리터럴은 컴파일 타임 상수이다.
+- The value null (Null)
+
+이 지원에는 리터럴을 사용하여 개체를 만드는 기능이 포함된다. 예를 들어 'this is a string'은 문자열 리터럴이고 true는 부울 리터럴이다.
+
+Dart의 모든 변수는 객체(클래스의 인스턴스)를 참조하기 때문에 일반적으로 생성자를 사용하여 변수를 초기화할 수 있다.
+예를 들어 Map() 생성자를 사용하여 지도를 만들 수 있다.
+
+일부 다른 유형도 Dart 언어에서 특별한 역할을 한다.
+
+- Object: Null을 제외한 모든 Dart 클래스의 슈퍼클래스이다.
+- Enum: 모든 열거형의 슈퍼클래스이다.
+- Future 및 Stream: 비동기 지원에 사용된다.
+- Iterable: for-in 루프 및 동기 생성기 함수에 사용된다.
+- Never: 표현식이 평가를 성공적으로 완료할 수 없음을 나타낸다. 항상 예외를 발생시키는 함수에 가장 자주 사용된다.
+- dynamic: 정적 검사를 비활성화할 것임을 나타낸다. 일반적으로 Object를 의미한다.
+- void: 값이 사용되지 않음을 나타낸다. 종종 반환 유형으로 사용된다.
+
+<br />
+
+## Records
+
+## Collections
+
+Dart는 목록, 집합 및 맵 컬렉션을 기본적으로 지원한다.  
+컬렉션에 포함된 유형 구성에 대해 자세히 알아보려면 Generics를 확인하자.
+
+### Lists
+
+Dart `List` 리터럴은 대괄호([])로 묶인 표현식 또는 값의 쉼표로 구분된 목록으로 표시된다.  
+다음은 간단한 Dart `List`이다.
+
+```dart
+var list = [1, 2, 3];
+```
+
+- 참고: Dart는 목록에 List\<int> 유형이 있다고 추론한다. 정수가 아닌 개체를 이 목록에 추가하려고 하면 분석기 또는 런타임에서 오류가 발생한다.
+
+```dart
+var list = [1, 2, 3];
+assert(list.length == 3);
+assert(list[1] == 2);
+
+list[1] = 1;
+assert(list[1] == 1);
+```
+
+컴파일 시간 상수인 목록을 만들려면 목록 리터럴 앞에 const를 추가한다.
+
+```dart
+var 이름 = <문자열>{}; // Set<String> 이름 = {}; // 이것도 작동한다. // var 이름 = {}; // 세트가 아닌 맵을 생성한다.
+```
+
+### Sets
+
+Dart의 집합은 고유 항목의 정렬되지 않은 모음이다.  
+세트에 대한 Dart 지원은 세트 리터럴 및 세트 유형에 의해 제공된다. 다음은 세트 리터럴을 사용하여 만든 간단한 Dart 세트이다.
+
+```dart
+var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
+```
+
+- 참고: Dart는 할로겐이 Set\<String> 유형이라고 추론한다. 집합에 잘못된 유형의 값을 추가하려고 하면 분석기 또는 런타임에서 오류가 발생한다.
+
+- 빈 집합을 만들려면 {} 앞에 유형 인수를 사용하거나 {}를 Set 유형의 변수에 할당한다.
+
+```dart
+var names = <String>{};
+// Set<String> names = {}; // This works, too.
+// var names = {}; // Creates a map, not a set.
+```
+
+- \{}의 유형 주석이나 할당된 변수를 잊은 경우 Dart는 Map\<dynamic, dynamic> 유형의 객체를 생성한다.
+
+halogens는 위에서 가져온다.
+
+```dart
+var elements = <String>{};
+elements.add('fluorine');
+elements.addAll(halogens);
+assert(elements.length == 5);
+```
+
+add() 또는 addAll() 메서드를 사용하여 기존 세트에 항목을 추가한다.  
+.length를 사용하여 집합의 항목 수를 가져온다.
+
+컴파일 시간 상수인 집합을 만들려면 집합 리터럴 앞에 const를 추가한다.
+
+```dart
+final constantSet = const {
+  'fluorine',
+  'chlorine',
+  'bromine',
+  'iodine',
+  'astatine',
+};
+// constantSet.add('helium'); // This line will cause an error.
+```
+
+### Maps
+
+일반적으로 Map은 키와 값을 연결하는 개체이다.  
+키와 값 모두 모든 유형의 객체가 될 수 있다.  
+각 키는 한 번만 발생하지만 동일한 값을 여러 번 사용할 수 있다.
+
+다음은 맵 리터럴을 사용하여 만든 몇 가지 간단한 Dart 맵이다.
+
+```dart
+var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+};
+
+var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+```
+
+- Dart는 gifts가 Map\<String, String> 유형이고 nobleGases가 Map\<int, String> 유형이라고 추론한다.
+
+Map 생성자를 사용하여 동일한 개체를 만들 수 있다.
+
+```dart
+var gifts = Map<String, String>();
+gifts['first'] = 'partridge';
+gifts['second'] = 'turtledoves';
+gifts['fifth'] = 'golden rings';
+
+var nobleGases = Map<int, String>();
+nobleGases[2] = 'helium';
+nobleGases[10] = 'neon';
+nobleGases[18] = 'argon';
+```
+
+아래 첨자 할당 연산자([]=)를 사용하여 기존 맵에 새 키-값 쌍을 추가한다.  
+.length를 사용하여 맵에서 키-값 쌍의 수를 가져온다.
+
+```dart
+var gifts = {'first': 'partridge'};
+gifts['fourth'] = 'calling birds';
+assert(gifts.length == 2);
+```
+
+컴파일 시간 상수인 맵을 만들려면 맵 리터럴 앞에 const를 추가한다.
+
+```dart
+final constantMap = const {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+};
+
+// constantMap[2] = 'Helium'; // This line will cause an error.
+```
+
+### 연산자
+
+#### Spread operators
+
+Dart는 목록, 맵 및 세트 리터럴에서 스프레드 연산자(...) 및 null 인식 스프레드 연산자(...?)를 지원한다. 스프레드 연산자는 컬렉션에 여러 값을 삽입하는 간결한 방법을 제공한다.
+
+예를 들어 스프레드 연산자(...)를 사용하여 목록의 모든 값을 다른 목록에 삽입할 수 있다.
+
+```dart
+var list = [1, 2, 3];
+var list2 = [0, ...list];
+assert(list2.length == 4);
+```
+
+스프레드 연산자 오른쪽에 있는 표현식이 null일 수 있는 경우 null 인식 스프레드 연산자(...?)를 사용하여 예외를 방지할 수 있다.
+
+```dart
+var list2 = [0, ...?list];
+assert(list2.length == 1);
+```
+
+#### Control-flow operators
+
+Dart는 목록, 맵 및 세트 리터럴에서 사용하기 위한 컬렉션 if 및 컬렉션을 제공한다. 이러한 연산자를 사용하여 조건(if) 및 반복(for)을 사용하여 모음을 작성할 수 있다.
+
+다음은 3개 또는 4개의 항목이 있는 목록을 만들기 위해 collection if를 사용하는 예이다.
+
+```dart
+var nav = ['Home', 'Furniture', 'Plants', if (promoActive) 'Outlet'];
+```
+
+Dart는 컬렉션 리터럴 내부의 if-case도 지원한다.
+
+```dart
+var nav = ['Home', 'Furniture', 'Plants', if (login case 'Manager') 'Inventory'];
+```
+
+다음은 다른 목록에 항목을 추가하기 전에 목록 항목을 조작하기 위해 collection for를 사용하는 예이다.
+
+```dart
+var listOfInts = [1, 2, 3];
+var listOfStrings = ['#0', for (var i in listOfInts) '#$i'];
+assert(listOfStrings[1] == '#1');
+```
+
+## Generics
+
+### 제네릭을 사용하는 이유
+
+제네릭은 유형 안전성을 위해 종종 필요하지만 코드 실행을 허용하는 것보다 더 많은 이점이 있다.
+
+- 제네릭 형식을 올바르게 지정하면 코드가 더 잘 생성된다.
+- 제네릭을 사용하여 코드 중복을 줄일 수 있다
+
+List에 문자열만 포함하려는 경우 목록을 List\<String>으로 선언할 수 있다("문자열 목록"이라고 읽음).  
+당신, 당신의 동료 프로그래머, 그리고 당신의 도구는 문자열이 아닌 것을 목록에 할당하는 것이 아마도 실수임을 감지할 수 있다.  
+예를 들면 다음과 같습니다.
+
+```dart
+var names = <String>[];
+names.addAll(['Seth', 'Kathy', 'Lars']);
+names.add(42); // Error
+```
+
+제네릭을 사용하는 또 다른 이유는 코드 중복을 줄이기 위해서이다.  
+제네릭을 사용하면 정적 분석을 계속 활용하면서 여러 유형 간에 단일 인터페이스와 구현을 공유할 수 있다.  
+예를 들어 객체 캐싱을 위한 인터페이스를 생성한다.
+
+```dart
+abstract class ObjectCache {
+  Object getByKey(String key);
+  void setByKey(String key, Object value);
+}
+```
+
+이 인터페이스의 문자열 특정 버전이 필요하다는 사실을 발견하고 다른 인터페이스를 생성한다.
+
+```dart
+abstract class StringCache {
+  String getByKey(String key);
+  void setByKey(String key, String value);
+}
+```
+
+나중에 이 인터페이스의 번호별 ​​버전을 원한다고 결정한다... 아이디어를 얻는다.
+
+제네릭 형식을 사용하면 이러한 모든 인터페이스를 만드는 수고를 덜 수 있다.  
+대신 유형 매개변수를 사용하는 단일 인터페이스를 작성할 수 있다.
+
+```dart
+abstract class Cache<T> {
+  T getByKey(String key);
+  void setByKey(String key, T value);
+}
+```
+
+이 코드에서 T는 stand-in 유형이다.  
+나중에 개발자가 정의할 유형으로 생각할 수 있는 자리 표시자이다.
+
+<br />
+
+### 컬렉션 리터럴 사용
+
+예제
+
+```dart
+var names = <String>['Seth', 'Kathy', 'Lars'];
+var uniqueNames = <String>{'Seth', 'Kathy', 'Lars'};
+var pages = <String, String>{
+  'index.html': 'Homepage',
+  'robots.txt': 'Hints for web robots',
+  'humans.txt': 'We are people, not machines'
+};
+
+```
+
+<br />
+
+### 생성자와 함께 매개변수화된 유형 사용
+
+예제
+
+```dart
+var nameSet = Set<String>.from(names);
+var views = Map<int, View>();
+```
+
+<br />
+
+### 제네릭 컬렉션 및 컬렉션에 포함된 유형
+
+예제
+
+```dart
+var names = <String>[];
+names.addAll(['Seth', 'Kathy', 'Lars']);
+print(names is List<String>); // true
+```
+
+<br />
+
+### 매개변수화된 유형 제한
+
+예제
+
+```dart
+class Foo<T extends Object> {
+  // Foo 에서 T에 제공된 모든 유형은 null을 허용하지 않아야 한다.
+}
+```
+
+Object 외에 다른 유형과 함께 extends를 사용할 수 있다. 다음은 SomeBaseClass를 확장하여 SomeBaseClass의 멤버가 T 유형의 객체에서 호출될 수 있도록 하는 예이다.
+
+```dart
+class Foo<T extends SomeBaseClass> {
+  // Implementation goes here...
+  String toString() => "Instance of 'Foo<$T>'";
+}
+
+class Extender extends SomeBaseClass {...}
+```
+
+SomeBaseClass 또는 그 하위 유형을 일반 인수로 사용하는 것은 괜찮다.
+
+```dart
+var someBaseClassFoo = Foo<SomeBaseClass>();
+var extenderFoo = Foo<Extender>();
+```
+
+일반 인수를 지정하지 않아도 된다.
+
+```dart
+var foo = Foo();
+print(foo); // Instance of 'Foo<SomeBaseClass>'
+```
+
+SomeBaseClass가 아닌 유형을 지정하면 오류가 발생한다.
+
+```dart
+var foo = Foo<Object>(); // Error 발생
+```
+
+<br />
+
+### 제네릭 메서드 사용
+
+예제
+
+```dart
+T first<T>(List<T> ts) {
+  // 일부 초기 작업 또는 오류 검사를 수행한 다음...
+  T tmp = ts[0];
+  // 추가 확인 또는 처리를 수행하자..
+  return tmp;
+}
+```
+
+여기서 첫 번째(\<T>)의 제네릭 형식 매개 변수를 사용하면 여러 위치에서 형식 인수 T를 사용할 수 있다.
+
+- 함수의 반환 유형(T)에서.
+- 인수 유형(List\<T>).
+- 지역 변수의 유형(T tmp).
+
+<br />
+
+## Typedefs
+
+유형 별칭(typedef 키워드로 선언되기 때문에 종종 typedef라고 함)은 유형을 참조하는 간결한 방법이다. 다음은 IntList라는 유형 별칭을 선언하고 사용하는 예이다.
+
+```dart
+typedef IntList = List<int>;
+IntList il = [1, 2, 3];
+```
+
+유형 별칭은 유형 매개변수를 가질 수 있다.
+
+```dart
+typedef ListMapper<X> = Map<X, List<X>>;
+Map<String, List<String>> m1 = {}; // Verbose.
+ListMapper<String> m2 = {}; // Same thing but shorter and clearer.
+```
+
+대부분의 상황에서 함수에 대해 typedef 대신 인라인 함수 유형을 사용하는 것이 좋습니다. 그러나 함수 typedef는 여전히 유용할 수 있다.
+
+```dart
+typedef Compare<T> = int Function(T a, T b);
+
+int sort(int a, int b) => a - b;
+
+void main() {
+  assert(sort is Compare<int>); // True!
+}
+```
