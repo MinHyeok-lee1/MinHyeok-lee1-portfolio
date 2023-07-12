@@ -59,30 +59,30 @@ yarn add nextra nextra-theme-docs
 
 루트 디렉토리에 있는 next.config.js파일을 아래와 같이 설정한다.
 
-```js filename="theme.config.js"
+```js filename="next.config.js"
 /** @type {import('nextra').NextraConfig} */
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.jsx'
-})
+const withNextra = require("nextra")({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.jsx",
+});
 
-module.exports = withNextra()
+module.exports = withNextra();
 ```
 
 다른 Next.js 구성이 있는 경우 매개 변수로 전달할 수 있다.
 
 ```js filename="theme.config.js"
 /** @type {import('nextra').NextraConfig} */
-const withNextra = require('nextra')({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.jsx'
-})
+const withNextra = require("nextra")({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.jsx",
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 };
-module.exports = withNextra(nextConfig)
+module.exports = withNextra(nextConfig);
 ```
 
 <br />
@@ -95,10 +95,10 @@ module.exports = withNextra(nextConfig)
 export default {
   logo: <span>My Nextra Documentation</span>,
   project: {
-    link: 'https://github.com/shuding/nextra'
-  }
+    link: "https://github.com/shuding/nextra",
+  },
   // ...
-}
+};
 ```
 
 이 파일은 Nextra Docs테마를 구성하는 데 사용된다.

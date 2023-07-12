@@ -28,20 +28,20 @@ pages/
 ```json
 [
   {
-    name: "About",
-    children: [{ name: "Index" }, { name: "Legal" }],
+    "name": "About",
+    "children": [{ "name": "Index" }, { "name": "Legal" }],
   },
-  { name: "Contact" },
-  { name: "Index" },
+  { "name": "Contact" },
+  { "name": "Index" },
 ];
 ```
 
-- 글로벌 페이지 맵은 Nextra에 의해 각 페이지에 번들로 제공돤다.
+- 글로벌 페이지 맵은 Nextra에 의해 각 페이지에 번들로 제공된다.
 - 이후, 구성된 테마는 해당 페이지 맵으로 실제 UI를 렌더링한다.
 
 ## 페이지
 
-사이드바에 표시되는 페이지의 제모고가 순서는 `_meta.json`파일에서 키-값쌍으로 구성해야 한다.  
+사이드바에 표시되는 페이지의 제목과 순서는 `_meta.json`파일에서 키-값쌍으로 구성해야 한다.  
 예를 들어 다음과 같은 파일 구조가 있는 경우:
 
 <FileTree>
@@ -413,7 +413,7 @@ pages/
 }
 ```
 
-#### Full Layouy
+#### Full Layout
 
 전체 컨테이너 너비와 높이로 일부 페이지를 렌더링하지만 다른 모든 스타일은 유지하고 싶을 수 있다.  
 이를 위해 `"full"` 레이아웃을 사용할 수 있다.
