@@ -1,0 +1,200 @@
+# $eq, $regex를 이용한 값(문서, 배열)일치, 값 포함 여부(정규식) 검색
+
+## $eq
+
+비교 쿼리 연산자(Comparison Query Operators) 중 하나로 지정된 값과 같은 값을 찾는다.
+
+## $regex
+
+평가 쿼리 연산자 중 하나로 값이 지정된 정규식과 일치하는 문서를 선택한다.
+
+- MongoDB shell에서 진행
+
+<br />
+
+### 선행작업
+
+아래와 같은 문서 내용을 삽입해준다.
+
+```js
+db.user.insertMany([
+  {
+    _id: 1,
+    info: { name: "user1", role: "Magician" },
+    level: 15,
+    skills: ["A", "B", "C"],
+  },
+  {
+    _id: 2,
+    info: { name: "user11", role: "Warrior" },
+    level: 20,
+    skills: ["B"],
+  },
+  {
+    _id: 3,
+    info: { name: "user111", role: "Magician" },
+    level: 25,
+    skills: ["A", "B"],
+  },
+  {
+    _id: 4,
+    info: { name: "user1111", role: "Thief" },
+    level: 30,
+    skills: ["B", "A"],
+  },
+  {
+    _id: 5,
+    info: { name: "user1112", role: "Warrior" },
+    level: 20,
+    skills: [["A", "B"], "C"],
+  },
+]);
+```
+
+<br />
+
+### 1. 지정된 값과 같음
+
+아래 예제는 인벤토리 컬렉션을 쿼리하여 level 필드 값이 20인 모든 문서를 선택한다.
+
+아래 두 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ level: { $eq: 20 } });
+db.user.find({ level: 20 });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ _id: 2, info: { name: "user11", role: "Warrior" }, level: 20, skills: [ "B" ] }
+{ _id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
+```
+
+<br />
+
+### 2. 포함된 문서의 필드가 값과 같음
+
+다음 예는 user 컬렉션을 쿼리하여 항목 문서의 이름 필드 값이 "user1"인 모든 문서를 선택한다.
+
+포함된 문서의 필드에 대한 조건을 지정하려면 점 표기법을 사용해야 한다.
+
+아래 두 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ "info.name": { $eq: "user1" } });
+db.user.find({ "info.name": "user1" });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ _id: 1, info: { name: "user1", role: "Magician" }, level: 15, skills: [ "A", "B", "C" ] }
+```
+
+<br />
+
+### 3. 배열 요소가 값과 같음
+
+다음 예제는 user 컬렉션을 쿼리하여 skills 배열에 값이 B인 요소가 포함된 모든 문서를 선택한다.
+
+아래 두 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ skills: { $eq: "B" } });
+db.user.find({ skills: "B" });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ _id: 1, info: { name: "user1", role: "Magician" }, level: 15, skills: [ "A", "B", "C" ] }
+{ _id: 2, info: { name: "user11", role: "Warrior" }, level: 20, skills: [ "B" ] }
+{ _id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+{ _id: 4, info: { name: "user1111", role: "Thief" }, level: 30, skills: [ "B", "A" ] }
+```
+
+<br />
+
+### ### 4. 배열 값과 같음
+
+다음 예제는 인벤토리 컬렉션을 쿼리하여 tags 배열이 지정된 배열과 정확히 일치하거나 tags 배열에 [ "A", "B" ] 배열과 동일한 요소가 포함된 모든 문서를 선택한다.
+
+아래 두 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ skills: { $eq: ["A", "B"] } });
+db.user.find({ skills: ["A", "B"] });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ _id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+{ _id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
+```
+
+정규식 일치 동작
+
+다음 예는 암시적 정규식 일치와 명시적 정규식 일치 간의 동작 차이를 보여준다.
+
+<br />
+
+### 1. 문자열에서 $eq 일치
+
+암시적 일치이든 $eq의 명시적 사용이든 동일한 값을 반환하도록 문자열이 확장된다.
+
+아래 두 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ "info.name": "user111" });
+db.user.find({ "info.name": { $eq: "user111" } });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ \_id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+```
+
+<br />
+
+### 2. 정규 표현식에서 $eq 일치
+
+$eq 및 정규식을 사용하는 명시적 쿼리는 정규식이기도 한 개체와만 일치한다.
+
+info.name 필드의 값이 문자열이므로 아래 쿼리는 아무 것도 반환하지 않는다.
+
+```js
+db.user.find({ "info.name": { $eq: /user111/ } });
+```
+
+쿼리 출력값
+
+```console
+[];
+```
+
+<br />
+
+### 3. 정규식 일치
+
+정규식에 대한 암시적 일치가 있는 쿼리는 $regex 연산자를 사용하여 쿼리를 만드는 것과 같다.
+
+아래 세 쿼리 모두 동일하게 동작한다.
+
+```js
+db.user.find({ "info.name": /user111/ });
+db.user.find({ "info.name": { $regex: /user111/ } });
+db.user.find({ "info.name": { $regex: "user111" } });
+```
+
+두 쿼리 모두 다음 문서와 일치한다.
+
+```console
+{ \_id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+{ \_id: 4, info: { name: "user1111", role: "Thief" }, level: 30, skills: [ "B", "A" ] }
+{ \_id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
+```
+
+위와 같이 info.name에 user111이 포함된 문서들이 출력된다.

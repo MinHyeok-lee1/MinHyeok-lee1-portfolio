@@ -1,0 +1,63 @@
+# 접두사 인덱스, 동치 상태 (Index Prefix, Equality State)란?
+
+## 인덱스 Prefix란?
+
+MongoDB의 인덱스 관련 메뉴얼을 읽다 보면 자주 나오는 용어 중에 Index Prefix라는 말이 있다.  
+접두사 인덱스 / 선행 인덱스 / 앞쪽 인덱스 해석하면 약간 어색해진다.
+
+일단 아래 예제 코드로 살펴보자.
+
+```js
+db.collection.createIndex({ a: 1, b: 1, c: 1 });
+```
+
+```console
+{ a: 1 }
+{ a: 1, b: 1 }
+{ a: 1, b: 1, c: 1 }
+```
+
+정의 된 인덱스의 앞 쪽부터 포함하는 부분집합의 인덱스들을 인덱스 Prefix라고 말한다.
+
+컴파운드 인덱스는 첫 번째 인덱스는 단일 인덱스처럼 일렬로 나열되어 있다.  
+두 번째 인덱스는 동일한 첫 번째 인덱스들 안에서 일렬로 나열되어 있다.  
+세 번째 인덱스는 동일한 두 번째 인덱스들 안에서 일렬로 나열되어 있다.
+
+- [\[MongoDB\] Single Field Indexes, Compound Index (단일 인덱스, 복합 인덱스)](./singlecompound)와 관련된 설명내용이다.
+
+첫 번째 인덱스부터 순서대로 그룹지어진 전체 인덱스의 부분 집합은 이런 구조로 인해 인덱스의 성능을 최대로 발휘 할 수 있게 된다.  
+이런 인덱스들을 `인덱스 Prefix`라고 한다.
+
+<br />
+
+## Equality 상태란?
+
+... 정렬 조건이 prefix가 아니라면?
+
+1. prefix가 아닌 정렬 조건은 사용 가능은하지만, 한가지 조건이 충족되어야 한다.
+2. 정렬 조건이 `prefix`가 아닌 경우 검색 조건이 `Equality` 상태여야 한다.
+3. 쿼리의 검색조건과 정렬 조건을 하나의 인덱스 Prefix처럼 일렬로 나열해보자.
+4. 이 상황에서 검색 조건의 키들은 특정값과 등치 (=) 상태여야 한다.
+5. 동일 비교가 아닌 다른 비교 상태라면 이 조건을 만족하지 못한다.
+
+아래는 인덱스를 올바르게 사용하는 예제들이다.
+
+```js
+db.collection.createIndex({ a: 1, b: 1, c: 1 });
+
+db.data.find({ a: 5 }).sort({ b: 1, c: 1 }); // indexPrefix: { a: 1, b: 1, c: 1 }
+db.data.find({ a: 5, b: 1 }).sort({ c: 1 }); // indexPrefix: { a: 1, b: 1, c: 1 }
+db.data.find({ a: 5, b: { $gt: 3 } }).sort({ b: 1 }); // indexPrefix:{ a: 1, b: 1 }
+```
+
+L4의 `db.data.find({ a: 5, b: 1 }).sort({ c: 1 })`는 `db.data.find({ b: 1, a: 5 }).sort({ c: 1 })`와 동일하다.
+
+<br />
+
+반면, 아래 쿼리들은 검색 조건이 Index Prefix도 아니고, equality 상태 역시 만족하지 못하기 때문에 인덱스가 효과적으로 적용되지 않는다.
+
+```js
+db.data.find({ a: 5 }).sort({ c: 1 }); // indexPrefix: { a: 1, c: 1 }
+db.data.find({ b: 5 }).sort({ c: 1 }); // indexPrefix: { b: 1, c: 1 }
+db.data.find({ c: { $gt: 3 } }).sort({ c: 1 }); // indexPrefix: { c: 1 }
+```
