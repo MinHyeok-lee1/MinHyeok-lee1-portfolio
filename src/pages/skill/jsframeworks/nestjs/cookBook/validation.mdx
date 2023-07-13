@@ -28,7 +28,7 @@ import { ValidationPipe } from "@nestjs/common";
 
 ## 자동 검증(Auto-validation)
 
-ValidationPipe 애플리케이션 수준에서 바인딩하여, 모든 엔드포인트가 잘못된 데이터를 수신하지 않도록 보호합니다.  
+ValidationPipe 애플리케이션 수준에서 바인딩하여, 모든 엔드포인트가 잘못된 데이터를 수신하지 않도록 보호한다.  
 main.ts에서 아래와 같이 설정한다.
 
 ```js filename="main.ts"
@@ -73,7 +73,7 @@ app.useGlobalPipes(
 );
 ```
 
-whitelist: true로 설정하면 화이트리스트에 없는 속성(검증 클래스에 데코레이터가 없는 속성)을 자동으로 제거합니다.  
+whitelist: true로 설정하면 화이트리스트에 없는 속성(검증 클래스에 데코레이터가 없는 속성)을 자동으로 제거한다.  
 또는 화이트리스트에 포함되지 않은 속성이 있을 때 요청 처리를 중지하고 사용자에게 오류 응답을 반환할 수 있다.  
 이를 활성화하려면 forbidNonWhitelisted 옵션 속성을 true로 설정하고 whitelist를 true로 설정하면 된다.
 

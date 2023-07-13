@@ -2,9 +2,9 @@ import { FileTree } from "nextra-theme-docs";
 
 # 슬러그 사용법
 
-슬러그는 1. 슬러그:[slug], 2. 다중 슬러그 [...slug], 3. 옵셔널 슬러그 [[...slug]] 3가지 형태가 있다.
-다중 슬러그와 옵셔널 슬러그에서 slug는 배열이므로 []안에 스프레드 연산자(...)을 이용하여 생성한다.
-슬러그를 이해하기 위해 아래 예제를 보자
+슬러그는 1. 슬러그:[slug], 2. 다중 슬러그 [...slug], 3. 옵셔널 슬러그 [[...slug]] 3가지 형태가 있다.  
+다중 슬러그와 옵셔널 슬러그에서 slug는 배열이므로 []안에 스프레드 연산자(...)을 이용하여 생성한다.  
+슬러그를 이해하기 위해 아래 예제를 보자.
 
 ## 1. 슬러그의 간단한 예제
 
@@ -12,15 +12,15 @@ import { FileTree } from "nextra-theme-docs";
 2. pages/post/[pid].js
 3. pages/post/[...slug].js
 
-/가 pages라고 되어있을 때,
-1의 pages/post/create.js는 /post/create 경로와 일치한다.
-2의 pages/post/[pid].js는 /post/1, /post/abc, 기타등등과 경로가 일치하지만 /post/create의 경로와 일치하지 않는다.
-3의 pages/post/[...slug].js는 /post/1/2, /post/a/b/c, 기타등등과 경로가 일치하지만 /post/create, /post/abc의 경로와 일치하지 않는다.
+/가 pages라고 되어있을 때,  
+1의 pages/post/create.js는 /post/create 경로와 일치한다.  
+2의 pages/post/[pid].js는 /post/1, /post/abc, 기타등등과 경로가 일치하지만 /post/create의 경로와 일치하지 않는다.  
+3의 pages/post/[...slug].js는 /post/1/2, /post/a/b/c, 기타등등과 경로가 일치하지만 /post/create, /post/abc의 경로와 일치하지 않는다.  
 [[...slug]]는 [...slug]와 3.의 명시한 차이를 제외하면 동일하게 동작한다.
 
 ```js
-pages/post/[slug].js; // http://www.~~~~.com/post/:slug 와 같다. (ex: http://URL/post/a)
-pages/post/[...slug].js; // http://www.~~~~.com/post/:slug/:slug/:slug...... 와 같다. (ex: http://URL/post/a/b/c/d/...)
+pages / post / [slug].js; // http://www.~~~~.com/post/:slug 와 같다. (ex: http://URL/post/a)
+pages / post / [...slug].js; // http://www.~~~~.com/post/:slug/:slug/:slug...... 와 같다. (ex: http://URL/post/a/b/c/d/...)
 ```
 
 - 정적으로 만들어져 있는 페이지를 제외한 페이지로 둘 다 Wild Card 처럼 아무 페이지나 동적으로 이동 가능하다.
@@ -55,7 +55,7 @@ export default ExampleSlug;
 - url/abc/[slug]와 같은 주소로 [slug]에 어떤 값을 넣더라도 해당 url로 바뀌며 This Page is "slug에 입력한 값"이 출력된다.
 - 어떤 값도 가능하지만 위에 설명한 것처럼 이미 존재하는 정적페이지는 제외되어야 한다.
 
-### 2. 다중 슬러그 [...slug], 3. 옵셔널 슬러그 [[...slug]] 사용
+### 2. 다중 슬러그 [...slug], 옵셔널 슬러그 [[...slug]] 사용
 
 <FileTree.Folder name="pages" defaultOpen>
   <FileTree.Folder name="[slug1]" defaultOpen>
@@ -92,8 +92,8 @@ export default ExampleSlug2;
 [...slug]와 [[...slug]]는 index.js 파일이 있어야 하느냐 없어도 되느냐의 차이가 있다.
 
 ```js
-pages/post/[...slug].js; // http://www.~~~~.com/post 로 접근하면 404에러가 발생한다.
-pages/post/[[...slug]].js; // post아래 index파일이 없더라도 http://URL/post로 접근가능하다.
+pages / post / [...slug].js; // http://www.~~~~.com/post 로 접근하면 404에러가 발생한다.
+pages / post / [[...slug]].js; // post아래 index파일이 없더라도 http://URL/post로 접근가능하다.
 ```
 
 <br />
