@@ -4,7 +4,7 @@
 
 expo에 로그인하면 개발중인 프로젝트를 실제 스마트폰에서 확인이 가능하다.
 
-```
+```sh
 expo login
 ```
 
@@ -12,13 +12,13 @@ expo login
 
 로그인된 정보를 확인
 
-```
+```sh
 expo whoami
 ```
 
 ## 프로젝트 생성
 
-```
+```sh
 expo init
 ```
 
@@ -29,7 +29,7 @@ expo init
 
 nativewind는 expo용 tailwind 컴포넌트다.
 
-```
+```sh
 yarn add nativewind && yarn add --dev tailwindcss && npx tailwindcss init
 ```
 
@@ -39,12 +39,9 @@ nativewind를 적용할 디렉토리를 설정한다.
 
 - screens은 화면구성용 소스코드 디렉토리
 
-```
+```js
 module.exports = {
-  content: [
-    "./App.{js,jsx,ts,tsx}",
-    "./screens/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./App.{js,jsx,ts,tsx}", "./screens/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
   },
@@ -56,7 +53,7 @@ module.exports = {
 
 babel.config.js 파일을 수정한다.
 
-```
+```js
 module.exports = function (api) {
   api.cache(true);
   return {
@@ -70,15 +67,15 @@ module.exports = function (api) {
 
 react-native의 컴포넌트에서 NativeWind의 className 속성을 사용하기 위해서 app.d.ts 파일을 생성하고 다음의 내용을 추가한다.
 
-```
-/// <reference types="nativewind/types" />
+```js
+<reference types="nativewind/types" />
 ```
 
 ### 적용 여부 확인
 
 App.tsx 파일을 다음과 같이 수정한다.
 
-```
+```js
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Text, View } from "react-native";
@@ -91,12 +88,11 @@ export default function App() {
     </View>
   );
 }
-
 ```
 
 적용여부를 확인하기 위해 expo를 실행한다.
 
-```
+```sh
 export start
 ```
 
@@ -106,19 +102,19 @@ export start
 
 assets 디렉토리의 파일을 참조할 때 다음과 같이 절대경로로 사용하는 방법
 
-```
+```js
 const PlaceholderImage = require("@assets/background-image.png");
 ```
 
 관련 패키지 설치
 
-```
+```sh
 yarn add -D babel-plugin-module-resolver,
 ```
 
 babel.config.js 파일 수정
 
-```
+```js
 module.exports = function (api) {
   api.cache(true);
   return {
@@ -146,7 +142,7 @@ module.exports = function (api) {
 
 tsconfig.json 파일 수정
 
-```
+```json
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {

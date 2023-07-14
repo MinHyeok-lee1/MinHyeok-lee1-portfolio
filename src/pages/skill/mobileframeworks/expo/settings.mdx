@@ -30,7 +30,7 @@ $ expo login
 
 expo init 명령어를 통해 프로젝트를 생성할 수 있다. TypeScript를 이용하기 위해 템플릿을 옵셥을 선택한다.
 
-```
+```sh
 ubuntu@ip-172-26-13-163:~$ expo init
 ✔ What would you like to name your app? … expo-tutorial
 ✔ Choose a template: › blank (TypeScript)  same as blank but with TypeScript configuration
@@ -58,7 +58,7 @@ Expo 프로젝트를 생성하면 기본적으로 로컬 환경 개발용으로 
 
 **변경 전**
 
-```
+```json
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -70,7 +70,7 @@ Expo 프로젝트를 생성하면 기본적으로 로컬 환경 개발용으로 
 
 **변경 후**
 
-```
+```json
   "scripts": {
     "start": "expo start --tunnel",
     "start:clearcache": "expo start -c --tunnel",
@@ -116,20 +116,17 @@ expo start로 실행된 Metro는 ctrl+c 를 눌러 종료할 수 있으며, 이 
 개발할 소스코드는 TypeScript를 이용하기 때문에 각 파일들을 다음과 같은 확장자 중 하나를 가진다.
 
 - ts: 기본적인 TypeScript 기반의 소스 파일
-
 - tsx: 컴포넌트를 가지는 TypeScript 기반의 소스 파일
 
 <br />
 
 ## 기타 설정
 
-<br />
-
 ### yarn 설치
 
 yarn은 facebook에서 npm의 단점을 보완하여 만든 npm 패키지 관리툴로 Expo에선 npm이 아닌 yarn을 이용한다.
 
-```
+```sh
 sudo npm i -g yarn
 ```
 
@@ -139,7 +136,7 @@ sudo npm i -g yarn
 
 **설치**
 
-```
+```sh
 expo install react-native-logs
 ```
 
@@ -151,19 +148,19 @@ react-native-logs는 단순히 레벨(debug/info/warn/error 등)에 따라 정�
 
 예를 들어 index.tsx에서 로그를 출력할 때 해당 로그가 Index 화면에서 출력된다고 명시하기 위해선 다음과 같이 설정함
 
-```
+```sh
 const lg = getLogger("Index");
 ```
 
 그리고 디버그용 로그를 호출할 때엔 다음과 같이 호출함
 
-```
+```js
 lg.d("테스트용 디버그 로그");
 ```
 
 그럼 최종적으로 다음과 같은 형태의 로그가 출력됨
 
-```
+```sh
 Index | [D] 테스트용 디버그 로그
 ```
 
@@ -183,7 +180,7 @@ Expo로 생성된 프로젝트에는 기본적으로 app.json 파일에 생성�
 **관련 npm 패키지 설치**
 expo 프로젝트에의 패키지 추가는 기본적으로 npm이 아닌 expo install 명령어나 yarn 명령어를 이용한다. (expo install 명령어가 yarn을 이용하는 것 같다.)
 
-```
+```sh
 expo install dotenv expo-constants
 ```
 
@@ -199,28 +196,30 @@ expo install dotenv expo-constants
 
 RN은 개발한 소스코드를 기본적으로 다음과 같이 상대경로로 참조한다.
 
-```
+```js
 import { ScreenNameList } from "../../screen.settings";
 ```
 
 이러한 방식은 소스트리가 복잡해 질수록 명시성이 떨어지게 되므로 다음과 깉이 절대경로로 참조할 수 있도록 하는 설정이 필요하다.
 
-```
+```js
 import { ScreenNameList } from "src/screens/screen.settings";
 ```
 
 이를 위해서는 babel-plugin-module-resolver 패키지 설치 및 tsconfig.json과 babel.config.js 파일의 설정이 필요하다.
 
+<br />
+
 **패키지설치**
 
-```
+```sh
 expo install  babel-plugin-module-resolver
 ```
 
 **tsconfig.json 설정**
 compilerOptions에 baseUrl 항목 추가
 
-```
+```json
   "compilerOptions": {
     "strict": true,
     "baseUrl": "./"
@@ -230,41 +229,41 @@ compilerOptions에 baseUrl 항목 추가
 **babel.config.js 설정**
 plugins 항목 추가
 
-```
-  return {
-    presets: ["babel-preset-expo"],
-    plugins: [
-      [
-        "module-resolver",
-        {
-          root: ["./"],
-          extensions: [
-            ".ios.ts",
-            ".android.ts",
-            ".ts",
-            ".ios.tsx",
-            ".android.tsx",
-            ".tsx",
-            ".jsx",
-            ".js",
-            ".json",
-          ],
-        },
-      ],
+```js
+return {
+  presets: ["babel-preset-expo"],
+  plugins: [
+    [
+      "module-resolver",
+      {
+        root: ["./"],
+        extensions: [
+          ".ios.ts",
+          ".android.ts",
+          ".ts",
+          ".ios.tsx",
+          ".android.tsx",
+          ".tsx",
+          ".jsx",
+          ".js",
+          ".json",
+        ],
+      },
     ],
-  };
+  ],
+};
 ```
 
 **프로젝트 재시작**
 개발중에 상대경로 설정을 한 경우 Metro의 캐시를 지우고 다시 시작해야한다.
 
-```
+```sh
 npm run start:clearcache
 ```
 
 혹은
 
-```
+```sh
 expo start -c --tunnel
 ```
 
@@ -277,25 +276,25 @@ safe-area는 스마트폰 앱에서 스크린을 출력하는 화면의 영역�
 
 스크린 네이게이팅(라우팅)을 위해 다음의 패키지를 설치한다.
 
-```
+```sh
 yarn add @react-navigation/native @react-navigation/native-stack
 ```
 
 종속성 패키지도 설치한다.
 
-```
+```sh
 expo install react-native-screens react-native-safe-area-context
 ```
 
 Mac을 이용하는 경우 pods라는 추가 패키지 설치가 필요하다.(확인 필요)
 
-```
+```sh
 npx pod-install ios
 ```
 
 화면 네비게이션을 위해서는 React Navigation을 이용한다.
 
-```
+```sh
 npm install --save @react-navigation/native
 ```
 
@@ -305,7 +304,7 @@ npm install --save @react-navigation/native
 
 서비스 실행 중 JS 에러가 발생하면 서비스가 종료될 수 있는데, ErrorBoundarary로 컴포넌트를 감싸게 되면 해당 컴포넌트에서 JS 에러가 발생할 경우 에러를 캐치하여 보고하고 서비스가 종료되는 것을 방지한다. 루트 컴포넌트를 감싸게 되면 서비스 실행 중 발생하는 모든 JS 에러로부터 서비스 비정상 종료를 방지할 수 있다.
 
-```
+```sh
 yarn add react-native-error-boundary
 ```
 
@@ -315,7 +314,7 @@ yarn add react-native-error-boundary
 
 사용법 App.tsx 파일 참고
 
-```
+```sh
 expo install expo-localization i18n-js @types/i18n-js
 ```
 
@@ -325,7 +324,7 @@ expo install expo-localization i18n-js @types/i18n-js
 
 Recoil은 RN과 React에서 전역 상태값을 관리할 수 있도록 지원하는 툴이다. Recoil 상태값은 어느 컴포넌트에서든 get/set 할 수 있다.
 
-```
+```sh
 expo install recoil
 ```
 
