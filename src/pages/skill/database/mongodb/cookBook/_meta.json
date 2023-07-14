@@ -1,10 +1,10 @@
 {
-  "index": "Index",
-  "dump": "Dump and Restore",
+  "indexs": "Index",
   "query": "Query & Projection",
-  "arrayobject": "배열과 이중 객체 쿼리",
   "eqregex": "$eq, $regex",
+  "arrayobject": "배열과 이중 객체 쿼리",
   "singlecompound": "Single Indexes, Compound Index",
   "prefixequality": "Index Prefix, Equality State",
-  "indexinterserction": "Index Interserction"
+  "indexinterserction": "Index Interserction",
+  "dump": "Dump and Restore"
 }

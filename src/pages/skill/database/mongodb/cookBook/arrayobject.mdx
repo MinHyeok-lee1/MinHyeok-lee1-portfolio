@@ -323,7 +323,7 @@ db.user.find({ info: { level: 20, role: "Warrior" } });
 
 #### 1. 중첩된 필드에 동등 일치 지정
 
-다음 예에서는 info 필드에 중첩된 role 필드가 "Magician"인 모든 문서를 선택한다
+다음 예에서는 info 필드에 중첩된 role 필드가 "Magician"인 모든 문서를 선택한다.
 
 ```js
 db.user.find({ "info.role": "Magician" });

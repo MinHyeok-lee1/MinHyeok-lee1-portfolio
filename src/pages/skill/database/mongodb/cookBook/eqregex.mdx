@@ -1,13 +1,5 @@
 # $eq, $regex를 이용한 값(문서, 배열)일치, 값 포함 여부(정규식) 검색
 
-## $eq
-
-비교 쿼리 연산자(Comparison Query Operators) 중 하나로 지정된 값과 같은 값을 찾는다.
-
-## $regex
-
-평가 쿼리 연산자 중 하나로 값이 지정된 정규식과 일치하는 문서를 선택한다.
-
 - MongoDB shell에서 진행
 
 <br />
@@ -50,6 +42,10 @@ db.user.insertMany([
   },
 ]);
 ```
+
+## $eq
+
+비교 쿼리 연산자(Comparison Query Operators) 중 하나로 지정된 값과 같은 값을 찾는다.
 
 <br />
 
@@ -116,7 +112,7 @@ db.user.find({ skills: "B" });
 
 <br />
 
-### ### 4. 배열 값과 같음
+### 4. 배열 값과 같음
 
 다음 예제는 인벤토리 컬렉션을 쿼리하여 tags 배열이 지정된 배열과 정확히 일치하거나 tags 배열에 [ "A", "B" ] 배열과 동일한 요소가 포함된 모든 문서를 선택한다.
 
@@ -134,8 +130,11 @@ db.user.find({ skills: ["A", "B"] });
 { _id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
 ```
 
-정규식 일치 동작
+## $regex
 
+- 평가 쿼리 연산자 중 하나로 값이 지정된 정규식과 일치하는 문서를 선택한다.
+
+정규식 일치 동작  
 다음 예는 암시적 정규식 일치와 명시적 정규식 일치 간의 동작 차이를 보여준다.
 
 <br />
@@ -154,7 +153,7 @@ db.user.find({ "info.name": { $eq: "user111" } });
 두 쿼리 모두 다음 문서와 일치한다.
 
 ```console
-{ \_id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+{ _id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
 ```
 
 <br />
@@ -192,9 +191,9 @@ db.user.find({ "info.name": { $regex: "user111" } });
 두 쿼리 모두 다음 문서와 일치한다.
 
 ```console
-{ \_id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
-{ \_id: 4, info: { name: "user1111", role: "Thief" }, level: 30, skills: [ "B", "A" ] }
-{ \_id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
+{ _id: 3, info: { name: "user111", role: "Magician" }, level: 25, skills: [ "A", "B" ] }
+{ _id: 4, info: { name: "user1111", role: "Thief" }, level: 30, skills: [ "B", "A" ] }
+{ _id: 5, info: { name: "user1112", role: "Warrior" }, level: 20, skills: [ [ "A", "B" ], "C" ] }
 ```
 
 위와 같이 info.name에 user111이 포함된 문서들이 출력된다.
