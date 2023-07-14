@@ -1,13 +1,15 @@
-# NestJS 형상관리 도구_스웨거(Swagger)
+# NestJS 형상관리 도구\_스웨거(Swagger)
+
 Swagger(스웨거)는 개발자가 REST 웹 서비스를 설계, 빌드, 문서화, 소비하는 일을 도와주는 대형 도구 생태계의 지원을 받는 오픈 소스 소프트웨어 프레임워크라고 설명하지만 쉽게 말하면
 
 ## Swagger란?
-Swagger는 API 문서 자동화 도구이다.
-1. API 문서를 따로 작성할 필요 없다.  
-2. 만약에 코드와 API 문서를 따로 관리하게 되면 코드를 수정하였는데 API 문서 최신화를 잊어버려서 다른 팀원들에게 공유된 API 문서가 실제 API와 다른 문제가 발생할 수 있다.  
- ->  스웨거를 사용한다면 NestJS에서 코드를 수정하면서 API 문서를 같이 수정할 수 있다.  
-3. 다른 장점으로는 Swagger는 API를 테스트할 수 있는 GUI를 제공한다.
 
+Swagger는 API 문서 자동화 도구이다.
+
+1. API 문서를 따로 작성할 필요 없다.
+2. 만약에 코드와 API 문서를 따로 관리하게 되면 코드를 수정하였는데 API 문서 최신화를 잊어버려서 다른 팀원들에게 공유된 API 문서가 실제 API와 다른 문제가 발생할 수 있다.  
+   -> 스웨거를 사용한다면 NestJS에서 코드를 수정하면서 API 문서를 같이 수정할 수 있다.
+3. 다른 장점으로는 Swagger는 API를 테스트할 수 있는 GUI를 제공한다.
 
 ### NestJS에서 Swagger 설치하는 방법
 
@@ -22,43 +24,48 @@ npm install --save @nestjs/swagger fastify-swagger
 ```
 
 Swagger를 사용하기 위해서 main.ts에서 설정을 해주어야 한다.
+
 <br />
 
-
 ## Swagger 설정
+
 main.ts에서 아래와 같이 설정한다.
+
 ```js filename="main.ts"
-import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = (await NestFactory.create) < NestExpressApplication > AppModule;
 
   // Swagger 문서툴 설정
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('API server')
+    .setTitle("API server")
     .setDescription("The API server's API description")
-    .setVersion('1.0')
+    .setVersion("1.0")
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup("api", app, document);
 
   // 서버 실행
   await app.listen(3000);
 }
 bootstrap();
 ```
-- L10: DocumentBuilder() 객체를 생성할 때 제목, 설명 , 버전, 태그(.addTag)등을 설정해준다.  
+
+- L10: DocumentBuilder() 객체를 생성할 때 제목, 설명 , 버전, 태그(.addTag)등을 설정해준다.
 - L16: 주소 뒤에 /api를 붙이면 Swagger가 실행되게 설정한다. 'api'가 아나리 'apiDoc'이라고 하면 주소뒤에 /apiDoc을 붙이듯이 본인에게 맞게 설정하면 된다.
 
-
 ## Swagger 실행
+
 Swagger 실행 명령어
+
 ```sh
 $ npm run start
 ```
+
 - 설정주소를 api로 했을 경우: `http://localhost:3000/api`로 접속하면 Swagger문서를 확인할 수 있다.
 - Swagger를 실행하면 상단 부에 DocumentBuilder() 객체를 생성할 때 제목, 설명 , 버전등을 설정했던 정보들이 나온다.
 - 아래로 내려보면 본인이 만든 백엔드 API들을 Swagger를 통해 확인해볼 수 있다.
@@ -68,7 +75,9 @@ $ npm run start
 - 결론적으로 NestJS에서 Swagger를 통해 형상관리를 하면 동시에 할 수 있어서 최신화하기 편하다.
 
 ## Swagger Decorator
+
 사용 가능한 모든 OpenAPI 데코레이터는 핵심 데코레이터와 구별하기 위해 Api 접두사가 있다.
+
 ```js
 import { IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
@@ -77,33 +86,32 @@ import { ApiProperty } from '@nestjs/swagger'
 @ApiProperty()
 name: string;
 ```
-@IsString() =  문자열(string)인지 판별하는 유효성 검사 데코레이터 (validation)로 class-validator에서 가져와서 사용할 수 있다.  
-@ApiProperty() = 데코레이터는 nestjs/swagger에 자체 내장되어있는 데코레이터이고 type 인자로 해당 데코레이터로 데코레이팅 된 클래스를 넘겨주면 해당 정보를 swagger에 표시한다.  
+
+@IsString() = 문자열(string)인지 판별하는 유효성 검사 데코레이터 (validation)로 class-validator에서 가져와서 사용할 수 있다.  
+@ApiProperty() = 데코레이터는 nestjs/swagger에 자체 내장되어있는 데코레이터이고 type 인자로 해당 데코레이터로 데코레이팅 된 클래스를 넘겨주면 해당 정보를 swagger에 표시한다.
 
 - 아래는 데코레이터가 적용될 수 있는 수준(Method, Controller, Model) 지정과 OpenAPI 데코레이터의 전체 목록이다.
-`
-| Decorator  |  Useage   |
-|---|---|
-|  @ApiBasicAuth()   |  Method / Controller  |
-|  @ApiBearerAuth()  |  Method / Controller  |
-|  @ApiBody()	| Method|
-|  @ApiConsumes()	| Method / Controller |
-|  @ApiCookieAuth()	| Method / Controller |
-|  @ApiExcludeController()	| Controller |
-|  @ApiExcludeEndpoint()	| Method |
-|  @ApiExtension()	| Method  |
-|  @ApiExtraModels()	| Method / Controller |
-|  @ApiHeader()	| Method / Controller |
-|  @ApiHideProperty()	| Model |
-|  @ApiOAuth2()	| Method / Controller |
-|  @ApiOperation()	| Method |
-|  @ApiParam()	| Method|
-|  @ApiProduces()	| Method / Controller|
-|  @ApiProperty()	| Model|
-|  @ApiPropertyOptional()	| Model |
-|  @ApiQuery()|	 Method |
-|  @ApiResponse()	| Method / Controller|
-|  @ApiSecurity()	| Method / Controller|
-|  @ApiTags()	| Method / Controller|
-
-
+  `
+  | Decorator | Useage |
+  |---|---|
+  | @ApiBasicAuth() | Method / Controller |
+  | @ApiBearerAuth() | Method / Controller |
+  | @ApiBody() | Method|
+  | @ApiConsumes() | Method / Controller |
+  | @ApiCookieAuth() | Method / Controller |
+  | @ApiExcludeController() | Controller |
+  | @ApiExcludeEndpoint() | Method |
+  | @ApiExtension() | Method |
+  | @ApiExtraModels() | Method / Controller |
+  | @ApiHeader() | Method / Controller |
+  | @ApiHideProperty() | Model |
+  | @ApiOAuth2() | Method / Controller |
+  | @ApiOperation() | Method |
+  | @ApiParam() | Method|
+  | @ApiProduces() | Method / Controller|
+  | @ApiProperty() | Model|
+  | @ApiPropertyOptional() | Model |
+  | @ApiQuery()| Method |
+  | @ApiResponse() | Method / Controller|
+  | @ApiSecurity() | Method / Controller|
+  | @ApiTags() | Method / Controller|

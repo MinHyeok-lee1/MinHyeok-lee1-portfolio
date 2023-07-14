@@ -1,1 +1,354 @@
 # MongoDB 이슈 정리
+
+## MongoDB 데이터 추출(페이지네이션 방식)할 때, 주의해야 할 점
+
+MongoDB에서 페이지네이션 방식으로 데이터 추출할 때 2가지 방법이 있다.
+
+1. skip()을 사용하는 방식
+2. cursor.hasNext(), next()를 사용하는 방식
+   예제 코드:
+
+```js
+const page1 = db.items.find().limit(100);
+const page2_1 = db.items.find().skip(100).limit(100);
+
+let latest = null;
+while (page1.hasNext()) {
+  latest = page1.next();
+}
+
+const page2_2 = db.items.find({ date: { $gt: latest.date } }).limit(100);
+```
+
+- page1이 첫번째 100개의 items를 페이지네이션하고 있다.
+
+<br />
+
+- page2_1의 경우는 아래와 같다.
+  1. skip()을 사용하고 있다.
+  2. skip()을 하는 만큼 읽고 버린다.
+  3. page1과 겹치는 100개의 items를 읽고 버리고 그 다음 100개를 꺼낸다.
+  4. 고로 skip()안에 들어가는 매개변수가 커지면 커질 수록 사용을 지양한다.
+
+<br />
+
+- page2_2의 경우는 아래와 같다.
+  1. page1 다음의 커서를 가지고 있다가 그 다음 100개를 꺼낸다.
+  2. cursor.hasNext()를 사용하여 cursor가 collection.find()에서 문서를 반환하기 위해 반복할 수 있는 경우 true가 반환된다.
+  3. while문과 next()를 사용하여 cursor를 page1 다음으로 최신화 시켜준다.
+  4. page2_2는 page1 다음 데이터부터 바로 시작할 수 있다.
+
+결론: 페이지네이션 형태로 데이터를 꺼내야할 때, 되도록 page2_2와 같은 방식을 사용하자.
+
+<br />
+
+## 빠른 탐색을 위한 인덱싱(indexing)
+
+- NestJS(typegoose)에서 MongoDB를 빠르게 탐색하기 위해 인덱스를 사용하는 방법, explain.executionStats를 사용하여 실행속도 확인
+
+아래와 같이 십만개(100,000)의 더미 유저 데이터가 있다.
+![100,000개의 Dummy user 데이터](/db_issue1.png)
+100,000개의 dummy user 데이터
+
+데이터의 형식은 아래와 같다.
+
+1. userBase.name이 userDummy0, userDummy1, userDummy2, ... , userDummy99999형식으로 되어 있다.
+2. userBase.role은 Wrrior, Thief, Magician 중에 랜덤하게 생성되어 있다.
+
+### 1. NestJS에서 Index 생성 이전
+
+'userBase.role'이 'Magician'이고 'userBase.name'에 '3'이 포함된 더미 유저데이터를 찾을 때 걸리는 시간을 찾는 코드이다.
+
+```js
+async getUser(): Promise<void> {
+    const exc: any = await this.userModel
+      .find({
+        'userBase.role': 'Magician',
+        'userBase.name': { $regex: '3' },
+      })
+      .explain('executionStatus');
+
+    console.log('인덱싱 전 = ', exc.executionStats.executionTimeMillis);
+  }
+```
+
+위와 같이 NestJS에서 .explain('executionStatus')를 사용한면 반환 값은 아래와 같다.
+
+```json
+// ...
+executionStats: {
+  // ...
+  "executionTimeMillis": "반환되는 밀리초"
+  // ...
+}
+// ...
+```
+
+때문에 console.log('인덱싱 전 = ', exc.executionStats.executionTimeMillis)와 같이 콘솔을 찍어주면 결과는 아래와 같다.
+
+![100,000개의 Dummy user 데이터](/db_issue2_index_before.png)
+인덱싱 전 결과
+
+인덱싱을 걸기 전에는 위와 같은 결과가 나온다.  
+오래걸리면 1초 이상도 걸리는 것을 볼 수 있다. (밀리초 단위이므로 0.83, 0.94 ... 등 시간 소요된다)
+
+### 2. NestJS에서 Index 생성 이후
+
+NestJS에서 typegoose를 이용해 데코레이터로 인덱싱을 지원해준다.
+
+```js
+@index({
+  'userBase.role': 1,
+  'userBase.name': 1,
+})
+export class User extends UserInfo {
+  @ApiProperty({ type: Date })
+  @IsDateString()
+  @IsOptional()
+  @prop()
+  createdAt?: Date;
+}
+```
+
+위와 같이 'userBase.role', 'userBase.name'에 인덱싱을 걸어준다.
+
+그 후 똑같이 'userBase.role'이 'Magician'이고 'userBase.name'에 '3'이 포함된 더미 유저데이터를 찾을 때 걸리는 시간을 찾는 코드를 실행한다.
+
+```js
+async getUser(): Promise<void> {
+    const exc: any = await this.userModel
+      .find({
+        'userBase.role': 'Magician',
+        'userBase.name': { $regex: '3' },
+      })
+      .explain('executionStatus');
+
+    console.log('인덱싱 후 = ', exc.executionStats.executionTimeMillis);
+  }
+```
+
+console.log('인덱싱 후 = ', exc.executionStats.executionTimeMillis)와 같이 콘솔을 찍어주면 결과는 아래와 같다.
+
+![100,000개의 Dummy user 데이터](/db_issue3_index_after.png)
+인덱싱 후 결과
+
+인덱스를 건 후에는 위와 같은 결과가 나온다.  
+인덱싱을 하기 전과 비교하여 시간이 거의 반정도로 줄은 것을 확인할 수 있다.
+
+<br />
+
+### 결론
+
+인덱싱이 제대로 걸렸는지 확인해보려면 MongoCompass와 같은 도구로 Index를 확인해본다.  
+인덱싱이 걸리기 전의 Index목록은 다음과 같다.
+
+인덱싱을 걸기 전 Index목록은 다음과 같다.
+![100,000개의 Dummy user 데이터](/db_issue4_index_result_before.png)
+인덱싱을 걸기 전 MongoDB Compass
+
+인덱싱이 걸린 후의 Index목록은 다음과 같다.
+![100,000개의 Dummy user 데이터](/db_issue5_index_result_after.png)
+인덱싱을 건 후 MongoDB Compass
+
+<br />
+
+## 인덱스 검색, 인덱스 정렬 방식에 따른 검색속도 차이
+
+- 인덱스 검색, 인덱스 정렬 방식에 따른 검색 및 정렬 빠르게 하는 방법
+
+각 명령어의 출력시간은 explain.executionStats를 사용하여 실행속도를 확인하였다.  
+[빠른 탐색을 위한 인덱싱(indexing)](#빠른-탐색을-위한-인덱싱indexing)은 위에서 설명한 내용이다.
+
+1. 인덱스 순서와 검색에 있어서 검색은 정렬에 비해 인덱스 순서가 중요하지 않다.
+2. 인덱스 순서와 정렬에 있어서 정렬은 인덱스 순서가 중요하다.
+
+쿼리를 할 때의 순서와 마찬가지로 정렬을 할 때에도 순서는 중요하다.  
+만약 `{a : 1, b : 1}` 의 형태로 정의된 인덱스가 있다면 정렬을 할 때, 그 순서가 지켜져야 한다.
+
+```js
+db.collection.createIndex({ a: 1, b: 1 });
+
+// 성능차이가 존재하지 않는다.
+db.collection.find({ a: 1, b: 1 }).sort(); // 탐색순서 순서지킴
+db.collection.find({ b: 1, a: 1 }).sort(); // 탐색순서 순서 안지킴
+
+// 성능차이가 존재한다.
+db.collection.find().sort({ a: 1, b: 1 }); // 정렬순서 순서지킴
+db.collection.find().sort({ b: 1, a: 1 }); // 정렬순서 순서 안지킴
+```
+
+만약 `{a : 1, b : 1}` 의 형태로 정의된 인덱스가 있다면 정렬을 할 때에도 그 순서가 지켜져야 한다.  
+만약 `{a : 1, b : 1}` 의 형태로 정의된 인덱스가 있다면 검색을 할 때에도 그 순서가 아래 출력 값에서는 의미가 없는 듯 하지만 되도록 맞춰 적는 것을 지향한다.
+
+출력값은 다음과 같다.
+![100,000개의 Dummy user 데이터](/db_issue6_time.png)
+컴파운드 인덱스에서 정렬 뱡향에 따라 걸리는 시간
+
+---
+
+컴파운드 인덱스에서 인덱스의 정렬방향 또한 중요하다.
+
+```js
+db.collection.createIndex({ a: 1, b: -1 });
+
+// 성능이 좋다
+db.collection.find().sort({ a: 1, b: -1 });
+db.collection.find().sort({ a: -1, b: 1 });
+
+// 성능이 좋지 않다
+db.collection.find().sort({ a: 1, b: 1 });
+db.collection.find().sort({ a: -1, b: -1 });
+```
+
+- 오름차순 1과 내림차순 -1의 정렬 순서가 인덱스의 정렬된 순서와 방향이 동일해야 성능이 좋다.
+  - 전체적인 방향이 정방향, 역방향으로 같으면 된다.
+
+index에서 `_id:1`, `_createdAt: 1`일 때, 각 정렬방향에 대한 출력값은 다음과 같다.
+![100,000개의 Dummy user 데이터](/db_issue7_time.png)
+컴파운드 인덱스에서 정렬 뱡향에 따라 걸리는 시간
+
+단일 인덱스가 오름차순, 내림차순의 구분 없이 좋은 인덱스 효과를 낼 수 있었던 것은 일렬로 나열된 데이터 구조때문이다.  
+컴파운드 인덱스는 구성하는 키들의 방향은 서로 다르더라도 데이터 구조는 일렬로 나열되어 있다.  
+각 키의 방향 조합만 제대로 유지해주면 단 한번의 스캔으로 검색이 가능하기 때문에 인덱스의 효과를 누릴 수가 있다.
+
+- 참고: 점 표기법을 이용한 포함된 필드의 인덱스를 사용하면 순서가 반대방향이 더 빠르게 출력된다.
+  index에서 userBase.Role:1, userBase.name: 1일 때, 각 정렬방향에 대한 출력값은 다음과 같다.
+
+![100,000개의 Dummy user 데이터](/db_issue8_time.png)  
+컴파운드 인덱스에서 정렬 뱡향에 따라 걸리는 시간 (점 표기법)
+
+위 두 출력값에 대한 MongoDB의 컴파운드 인덱스는 아래와 같다.
+![100,000개의 Dummy user 데이터](/db_issue9_index.png)  
+MongoDB 인덱스
+
+<br />
+
+## Deprecated Methods (지원중단 메소드)
+
+- 지원중단된 메소드의 종류는 아래와 같다.
+  1. db.collection.count()
+  2. db.collection.insert()
+  3. db.collection.remove()
+  4. db.collection.remove()
+  5. db.collection.save()
+  6. db.collection.update()
+
+다음 셸 메서드는 mongosh에서 더 이상 사용되지 않는다.  
+대신 대체 자원 열에 나열된 방법을 사용한다.
+
+| 지원중단 메소드(사용되지 않는 방법) | 대신 사용하는 메소드 (대체 자원)                                                                                                                                       |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| db.collection.copyTo()              | Aggregation stage: $out                                                                                                                                                |
+| db.collection.count()               | db.collection.countDocuments() <br /> db.collection.estimatedDcoumentCount()                                                                                           |
+| db.collection.insert()              | db.collection.insertOne() <br /> db.collection.insertMany() <br /> db.collection.bulkWrite()                                                                           |
+| db.collection.remove()              | db.collection.deleteOne() <br /> db.collection.deleteMany() <br /> db.collection.findOneAndDelete() <br /> db.collection.bulkWrite()                                   |
+| db.collection.save()                | db.collection.insertOne() <br /> db.collection.insertMany() <br /> db.collection.updateOne() <br /> db.collection.updateMany() <br /> db.collection.findOneAndUpdate() |
+| db.collection.update()              | db.collection.updateOne() <br /> db.collection.updateMany() <br /> db.collection.findOneAndUpdate() <br /> db.collection.bulkWrite()                                   |
+| DBQuery.shellBatchSize              | config.set("displayBatchSize", "\<value>") <br /> cursor.batchSize()                                                                                                   |
+| Mongo.getSecondaryOk                | Mongo.getReadPrefMode()                                                                                                                                                |
+| Mongo.isCausalConsistency           | Session.getOptions()                                                                                                                                                   |
+| Mongo.setSecondaryOk                | Mongo.setReadPref()                                                                                                                                                    |
+| rs.secondaryOk                      | 더 이상 필요하지 않다.                                                                                                                                                 |
+
+Mongoose 사용자가 알아야 할 MongoDB Node.js 드라이버에는 몇 가지 지원 중단이 있다.
+
+<br />
+
+## Deprecation Warnings(remove(), update(), count())
+
+### remove()
+
+MongoDB 드라이버의 remove() 함수 대신 deleteOne() 및 deleteMany()를 사용한다.  
+이는 모든 MongoDB 드라이버에서 CRUD 작업을 위한 일관된 API를 제공하는 것을 목표로 하는 MongoDB CRUD 사양을 준수하기 위한 것이다.
+
+이 사용 중단 경고를 제거하려면 remove()에 대한 단일 옵션을 지정하지 않는 한 remove()의 사용을 deleteMany()로 바꾸어야 한다.  
+단일 옵션은 remove()를 최대 하나의 문서 삭제로 제한하므로 remove(filter, \{ single: true })를 deleteOne(filter)으로 바꿔야 한다.
+
+```js
+// 지원중단 경고코드
+MyModel.remove({ foo: "bar" });
+// 대체코드
+MyModel.deleteMany({ foo: "bar" });
+
+// 지원중단 경고코드
+MyModel.remove({ answer: 42 }, { single: true });
+// 대체코드
+MyModel.deleteOne({ answer: 42 });
+```
+
+- remove()를 단일 옵션을 지정하지 않았다면 deleteMany()로 변경
+- remove()를 단일 옵션을 지정(\{ single: true })했다면 deleteOne()로 변경
+
+<br />
+
+### update()
+
+update() 함수는 더 명확한 updateOne(), updateMany() 및 replaceOne() 함수를 위해 더 이상 사용되지 않는다.  
+다중 또는 덮어쓰기 옵션을 사용하지 않는 한 update()를 updateOne()으로 바꿔야 한다.
+
+```js
+// 지원중단 경고코드
+MyModel.update({ foo: "bar" }, { answer: 42 });
+// 대체코드
+MyModel.updateOne({ foo: "bar" }, { answer: 42 });
+
+// "overwrite: true"를 사용하는 경우 다음 대신 "replaceOne()"을 사용해야 한다.
+MyModel.update(filter, update, { overwrite: true });
+// 대체코드
+MyModel.replaceOne(filter, update);
+
+// "multi: true"를 사용하는 경우 대신 "updateMany()"를 사용해야 한다.
+MyModel.update(filter, update, { multi: true });
+// 대체코드
+MyModel.updateMany(filter, update);
+```
+
+- update()를 다중 또는 덮어쓰기 옵션을 사용하지 않는 경우 updateOne로 변경
+- update()를 덮어쓰기 옵션을 사용하는 경우(\{ overwrite: true}) replaceOne()로 변경
+- update()를 다중옵션을 사용하는 경우(\{ multi: true})일때는 updateMany()로 변경
+
+<br />
+
+### count()
+
+MongoDB 서버는 두 개의 별도 함수인 countDocuments() 및 estimateDocumentCount()를 위해 count() 함수를 더 이상 사용하지 않는다.
+
+둘 사이의 차이점은 countDocuments()가 find()와 같은 필터 매개변수를 허용할 수 있다는 것이다.  
+estimateDocumentCount() 함수는 더 빠르지만 컬렉션에 있는 총 문서 수만 알려줄 수 있다.  
+estimateDocumentCount()에 필터를 전달할 수 없다.
+
+마이그레이션하려면 count()에 인수를 전달하지 않는다면 count()를 countDocuments()로 바꾼다.  
+쿼리와 일치하는 문서를 세는 대신 count()를 사용하여 컬렉션의 모든 문서를 세는 경우 estimateDocumentCount()를 사용한다.
+
+```js
+// 지원중단 경고코드
+MyModel.count({ answer: 42 });
+// 대체코드
+MyModel.countDocuments({ answer: 42 });
+
+// 컬렉션에 있는 모든 문서를 세는 경우 (인수가 없을 경우)
+MyModel.count();
+// 대체코드
+MyModel.estimatedDocumentCount();
+
+// 지원중단 경고코드
+MyModel.find({ answer: 42 }).count().exec();
+// 대체코드
+MyModel.find({ answer: 42 }).countDocuments().exec();
+
+// 지원중단 경고코드
+MyModel.find().count().exec();
+// 대체코드 (find에 필터가 없기때문에)
+MyModel.find().estimatedDocumentCount().exec();
+```
+
+- count()를 전체 컬렉션(필터 있음)에 있는 문서 수를 계산하려는 경우가 아니면 countDocuments()로 변경
+- count()를 전체 컬렉션(필터 없음)에 있는 문서 수를 계산하려는 경우 estimateDocumentCount()로 변경
+
+<br />
+
+### 정리
+
+1. remove()를 deleteOne() 또는 deleteMany()로 교체
+2. update()를 updateOne(), updateMany() 또는 replaceOne()으로 교체
+3. count()를 countDocuments() 또는 estimateDocumentCount()로 교체
