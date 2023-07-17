@@ -41,6 +41,8 @@ Dart의 모든 변수는 객체(클래스의 인스턴스)를 참조하기 때�
 
 ## Records
 
+<br />
+
 ## Collections
 
 Dart는 목록, 집합 및 맵 컬렉션을 기본적으로 지원한다.  
@@ -71,6 +73,8 @@ assert(list[1] == 1);
 ```dart
 var 이름 = <문자열>{}; // Set<String> 이름 = {}; // 이것도 작동한다. // var 이름 = {}; // 세트가 아닌 맵을 생성한다.
 ```
+
+<br />
 
 ### Sets
 
@@ -117,6 +121,8 @@ final constantSet = const {
 };
 // constantSet.add('helium'); // This line will cause an error.
 ```
+
+<br />
 
 ### Maps
 
@@ -178,6 +184,8 @@ final constantMap = const {
 // constantMap[2] = 'Helium'; // This line will cause an error.
 ```
 
+<br />
+
 ### 연산자
 
 #### Spread operators
@@ -198,6 +206,8 @@ assert(list2.length == 4);
 var list2 = [0, ...?list];
 assert(list2.length == 1);
 ```
+
+<br />
 
 #### Control-flow operators
 
@@ -222,6 +232,8 @@ var listOfInts = [1, 2, 3];
 var listOfStrings = ['#0', for (var i in listOfInts) '#$i'];
 assert(listOfStrings[1] == '#1');
 ```
+
+<br />
 
 ## Generics
 
@@ -325,11 +337,12 @@ print(names is List<String>); // true
 
 ```dart
 class Foo<T extends Object> {
-  // Foo 에서 T에 제공된 모든 유형은 null을 허용하지 않아야 한다.
+  // Foo 에서 T에 제공된 모든 유형은 null을 허용하지 않아야한다.
 }
 ```
 
-Object 외에 다른 유형과 함께 extends를 사용할 수 있다. 다음은 SomeBaseClass를 확장하여 SomeBaseClass의 멤버가 T 유형의 객체에서 호출될 수 있도록 하는 예이다.
+Object 외에 다른 유형과 함께 extends를 사용할 수 있다.  
+다음은 SomeBaseClass를 확장하여 SomeBaseClass의 멤버가 T 유형의 객체에서 호출될 수 있도록 하는 예이다.
 
 ```dart
 class Foo<T extends SomeBaseClass> {
@@ -377,15 +390,16 @@ T first<T>(List<T> ts) {
 
 여기서 첫 번째(\<T>)의 제네릭 형식 매개 변수를 사용하면 여러 위치에서 형식 인수 T를 사용할 수 있다.
 
-- 함수의 반환 유형(T)에서.
-- 인수 유형(List\<T>).
-- 지역 변수의 유형(T tmp).
+- 함수의 반환 유형(T)에서
+- 인수 유형(List\<T>)
+- 지역 변수의 유형(T tmp)
 
 <br />
 
 ## Typedefs
 
-유형 별칭(typedef 키워드로 선언되기 때문에 종종 typedef라고 함)은 유형을 참조하는 간결한 방법이다. 다음은 IntList라는 유형 별칭을 선언하고 사용하는 예이다.
+유형 별칭(typedef 키워드로 선언되기 때문에 종종 typedef라고 함)은 유형을 참조하는 간결한 방법이다.  
+다음은 IntList라는 유형 별칭을 선언하고 사용하는 예이다.
 
 ```dart
 typedef IntList = List<int>;
@@ -400,7 +414,8 @@ Map<String, List<String>> m1 = {}; // Verbose.
 ListMapper<String> m2 = {}; // Same thing but shorter and clearer.
 ```
 
-대부분의 상황에서 함수에 대해 typedef 대신 인라인 함수 유형을 사용하는 것이 좋다. 그러나 함수 typedef는 여전히 유용할 수 있다.
+대부분의 상황에서 함수에 대해 typedef 대신 인라인 함수 유형을 사용하는 것이 좋다.  
+그러나 함수 typedef는 여전히 유용할 수 있다.
 
 ```dart
 typedef Compare<T> = int Function(T a, T b);

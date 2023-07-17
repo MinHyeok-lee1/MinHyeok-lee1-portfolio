@@ -1,0 +1,327 @@
+# 패턴
+
+## 패턴의 역할
+
+일반적으로 패턴은 패턴의 컨텍스트와 모양에 따라 값과 일치하거나 값을 구성하거나 둘 다를 구성할 수 있다.  
+먼저 패턴 일치를 통해 지정된 값이 다음과 같은지 확인할 수 있다.
+
+- 일정한 모양을 가지고 있다.
+- 일정한 상수이다.
+- 다른 것과 동등하다.
+- 특정 유형을 가집니다.
+
+그런 다음 패턴 파괴는 해당 값을 구성 요소로 분할할 수 있는 편리한 선언 구문을 제공한다.  
+또한 동일한 패턴을 사용하면 공정에서 변수를 해당 부품의 일부 또는 전부에 바인딩할 수 있다.
+
+### 매칭
+
+패턴은 항상 값에 대해 테스트를 수행하여 값이 사용자가 예상하는 형식을 갖는지 여부를 확인한다.  
+즉, 값이 패턴과 일치하는지 확인하는 것이다.
+
+어떤 패턴을 사용하느냐에 따라 일치 항목이 달라진다.  
+예를 들어, 아래 코드는 상수 패턴은 값이 패턴의 상수와 같은 경우 일치한다.
+
+```dart
+switch (number) {
+  // 상수 패턴은 1 == 숫자일 경우 일치한다.
+  case 1:
+    print('one');
+}
+```
+
+많은 패턴은 각각 외부 및 내부 패턴이라고도 하는 하위 패턴을 사용한다.  
+패턴은 하위 패턴에서 재귀적으로 일치한다.  
+예를 들어, 수집 유형 패턴의 개별 필드는 변수 패턴 또는 상수 패턴일 수 있다.
+
+```dart
+const a = 'a';
+const b = 'b';
+switch (obj) {
+    // 필드가 일정한 하위 패턴 'a'와 'b'와 일치하는 경우,
+    // 리스트 패턴 [a, b]는 obj가 두 개의 필드를 가진 리스트인 경우 obj와 먼저 일치한다.
+  case [a, b]:
+    print('$a, $b');
+}
+```
+
+일치하는 값의 일부를 무시하려면 와일드카드 패턴을 자리 표시자로 사용할 수 있다.  
+목록 패턴의 경우 나머지 요소를 사용할 수 있다.
+
+<br />
+
+### 분해
+
+개체와 패턴이 일치하면 패턴이 개체의 데이터에 액세스하여 부분적으로 추출할 수 있다.  
+즉, 패턴은 개체를 분해한다.
+
+```dart
+var numList = [1, 2, 3];
+// 목록 패턴 [a, b, c]는 numList...의 세 요소를 분해한다.
+var [a, b, c] = numList;
+// ...그리고 새로운 변수에 할당한다.
+print(a + b + c);
+```
+
+Destructuring 패턴 안에 모든 종류의 패턴을 중첩할 수 있다.  
+예를 들어, 이 케이스 패턴은 첫 번째 요소가 a 또는 b인 두 개의 요소 목록을 일치시키고 분해한다.
+
+```dart
+switch (list) {
+  case ['a' || 'b', var c]:
+    print(c);
+}
+```
+
+<br />
+
+## Place 패턴이 나타날 수 있다.
+
+다트 언어의 여러 위치에서 패턴을 사용할 수 있다.
+
+- 로컬 변수 선언 및 할당
+- for and for-in 루프
+- if-case 및 switch-case
+- collection 리터럴의 흐름 제어
+
+이 절에서는 패턴을 일치시키고 분해하는 일반적인 사용 사례에 대해 설명한다.
+
+<br />
+
+### 변수 선언
+
+패턴 변수 선언은 Dart에서 로컬 변수 선언을 허용하는 모든 위치에서 사용할 수 있다.  
+패턴은 선언의 오른쪽에 있는 값과 일치한다.  
+일치하면 값이 분해되고 새 로컬 변수에 바인딩된다.
+
+```dart
+// Declares new variables a, b, and c.
+var (a, [b, c]) = ('str', [1, 2]);
+```
+
+패턴 변수 선언은 var 또는 final로 시작하고 그 뒤에 패턴이 와야 한다.
+
+<br />
+
+### 변수 할당
+
+변수 할당 패턴은 할당의 왼쪽에 있다.  
+먼저, 일치하는 객체를 분해한다.  
+그런 다음 새 변수를 바인딩하는 대신 기존 변수에 값을 할당한다.
+
+변수 할당 패턴을 사용하여 세 번째 임시 변수를 선언하지 않고 두 변수의 값을 스왑한다.
+
+```dart
+var (a, b) = ('left', 'right');
+(b, a) = (a, b); // Swap.
+print('$a $b'); // Prints "right left".
+```
+
+<br />
+
+### Switch 문 및 표현식
+
+모든 사례 절에는 패턴이 포함되어 있다.  
+이는 스위치 문 및 식뿐만 아니라 if-case 문에도 적용된다.  
+케이스에 어떤 패턴이든 사용할 수 있다.  
+사례 패턴은 반박할 수 있다. 제어 흐름은 다음 중 하나를 수행할 수 있다.
+
+스위치를 켤 개체를 일치시키고 구성을 해제한다.  
+개체가 일치하지 않으면 실행을 계속한다.  
+패턴이 사례에서 구성하는 값은 로컬 변수가 된다. 그들의 범위는 오직 그 사건의 본문 안에 있다.
+
+```dart
+switch (obj) {
+  // 1 == obj일 경우 일치합니다.
+  case 1:
+    print('one');
+
+  // obj의 값이 '처음'과 '마지막'의 상수 값 사이에 있는 경우 일치한다.
+  case >= first && <= last:
+    print('in range');
+
+  // obj가 두 개의 필드가 있는 레코드인지 일치시킨 다음 필드를 'a'와 'b'에 할당한다.
+  case (var a, var b):
+    print('a = $a, b = $b');
+
+  default:
+}
+```
+
+Logical-or 패턴은 switch 표현식이나 명령문에서 여러 케이스가 본문을 공유하도록 하는 데 유용하다.
+
+```dart
+var isPrimary = switch (color) {
+  Color.red || Color.yellow || Color.blue => true,
+  _ => false
+};
+```
+
+Switch 문은 논리적 or 패턴을 사용하지 않고 본문을 공유하는 여러 사례를 가질 수 있지만 여러 사례가 가드를 공유하도록 허용하는 데 여전히 고유하게 유용하다.
+
+```dart
+switch (shape) {
+  case Square(size: var s) || Circle(size: var s) when s > 0:
+    print('Non-empty symmetric shape');
+}
+```
+
+<br />
+
+### for 및 for-in 루프
+
+for 및 for-in 루프의 패턴을 사용하여 컬렉션의 값을 반복하고 분해할 수 있다.  
+이 예제는 for-in 루프에서 객체 분해를 사용하여 \<Map>.entries 호출이 반환하는 MapEntry 객체를 분해한다.
+
+```dart
+Map<String, int> hist = {
+  'a': 23,
+  'b': 100,
+};
+
+for (var MapEntry(key: key, value: count) in hist.entries) {
+  print('$key occurred $count times');
+}
+```
+
+개체 패턴은 hist.entries가 명명된 MapEntry 유형을 가지고 있는지 확인한 다음 명명된 필드 하위 패턴 키 및 값으로 재귀한다.  
+각 반복에서 MapEntry에서 키 게터와 값 게터를 호출하고 결과를 각각 로컬 변수 키와 카운트에 바인딩한다.
+
+getter 호출 결과를 동일한 이름의 변수에 바인딩하는 것은 일반적인 사용 사례이므로 개체 패턴도 변수 하위 패턴에서 getter 이름을 유추할 수 있다.  
+이를 통해 변수 패턴을 키와 같은 중복된 것에서 키와 같은 것으로 단순화할 수 있다.
+
+```dart
+for (var MapEntry(:key, value: count) in hist.entries) {
+  print('$key occurred $count times');
+}
+```
+
+<br />
+
+## 패턴에 대한 사례 사용
+
+이전 섹션에서는 패턴이 다른 Dart 코드 구성에 어떻게 적용되는지 설명한다.  
+두 변수의 값을 스왑하거나 맵에서 키-값 쌍을 파괴하는 등의 몇 가지 흥미로운 사용 사례를 예로 들어 보았다.  
+이 섹션에서는 더 많은 사용 사례를 설명하며 다음과 같은 답변을 제공한다.
+
+- 패턴을 사용하려는 시기와 이유.
+- 그들이 어떤 종류의 문제를 해결하는지.
+- 그들이 가장 잘 어울리는 관용구.
+
+<br />
+
+### 여러 returns을 분해
+
+레코드를 사용하면 단일 함수 호출에서 여러 값을 집계하고 반환할 수 있다.  
+패턴은 함수 호출에 따라 레코드 필드를 직접 로컬 변수로 구성할 수 있는 기능을 추가한다.
+
+각 레코드 필드에 대해 새 로컬 변수를 개별적으로 선언하는 대신 다음과 같이 지정한다.
+
+```dart
+var info = userInfo(json);
+var name = info.$1;
+var age = info.$2;
+```
+
+변수 선언 또는 할당 패턴을 사용하고 레코드 패턴을 하위 패턴으로 사용하여 함수가 로컬 변수로 반환하는 레코드의 필드를 구조화할 수 있다.
+
+```dart
+var (name, age) = userInfo(json);
+```
+
+<br />
+
+### 클래스 인스턴스 분해
+
+개체 패턴은 명명된 개체 유형과 일치하므로 개체 클래스가 이미 노출된 게터를 사용하여 데이터를 구조화할 수 있다.  
+클래스 인스턴스의 구조를 해제하려면 명명된 유형과 괄호 안에 포함된 구조를 해제할 속성을 사용한다.
+
+```dart
+final Foo myFoo = Foo(one: 'one', two: 2);
+var Foo(:one, :two) = myFoo;
+print('one $one, two $two');
+```
+
+<br />
+
+### 대수적 자료형
+
+객체 파괴 및 스위치 케이스는 대수 데이터 유형 스타일로 코드를 작성하는 데 유용하다. 다음과 같은 경우 이 방법을 사용한다.
+
+- 관련 유형의 패밀리가 있다.
+- 각 유형에 대해 특정 동작이 필요한 작업이 있다.
+- 이 동작을 다른 모든 유형 정의에 분산시키는 대신 한 곳에 그룹화할 수 있다.
+
+모든 유형에 대해 작업을 인스턴스 메서드로 구현하는 대신 하위 유형을 전환하는 단일 함수에서 작업의 변동을 유지한다.
+
+```dart
+sealed class Shape {}
+
+class Square implements Shape {
+  final double length;
+  Square(this.length);
+}
+
+class Circle implements Shape {
+  final double radius;
+  Circle(this.radius);
+}
+
+double calculateArea(Shape shape) => switch (shape) {
+      Square(length: var l) => l * l,
+      Circle(radius: var r) => math.pi * r * r
+    };
+```
+
+<br />
+
+### 입력 JSON 검증
+
+맵 및 목록 패턴은 JSON 데이터에서 키-값 쌍을 분해하는 데 적합하다.
+
+```dart
+var json = {
+  'user': ['Lily', 13]
+};
+var {'user': [name, age]} = json;
+```
+
+SON 데이터가 예상되는 구조를 가지고 있다는 것을 알고 있으면 이전 예제가 현실적이다.  
+그러나 데이터는 일반적으로 네트워크와 같은 외부 소스에서 제공된다.  
+구조를 확인하려면 먼저 유효성을 검사해야 한다.
+
+패턴이 없으면 유효성 검사가 상세하다.
+
+```dart
+if (json is Map<String, Object?> &&
+    json.length == 1 &&
+    json.containsKey('user')) {
+  var user = json['user'];
+  if (user is List<Object> &&
+      user.length == 2 &&
+      user[0] is String &&
+      user[1] is int) {
+    var name = user[0] as String;
+    var age = user[1] as int;
+    print('User $name is $age years old.');
+  }
+}
+```
+
+단일 케이스 패턴은 동일한 검증을 달성할 수 있다.  
+단일 사례는 if-case 문으로 가장 잘 작동한다.  
+패턴은 JSON 유효성을 검사하는 보다 선언적이고 훨씬 덜 장황한 방법을 제공한다.
+
+```dart
+if (json case {'user': [String name, int age]}) {
+  print('User $name is $age years old.');
+}
+```
+
+이 사례 패턴은 동시에 다음을 검증한다.
+
+- json은 지도이다. 왜냐하면 계속하려면 먼저 외부 지도 패턴과 일치해야 하기 때문이다.
+- 그리고 지도이기 때문에 json이 null이 아니라는 것도 확인할 수 있다.
+- json에는 키 사용자가 포함되어 있다.
+- 키 사용자는 두 개의 값 목록과 쌍을 이룬다.
+- 목록 값의 유형은 String과 int이다.
+- 값을 유지할 새 로컬 변수는 String 및 int이다.
