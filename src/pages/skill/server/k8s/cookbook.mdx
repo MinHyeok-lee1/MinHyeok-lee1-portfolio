@@ -1,0 +1,162 @@
+# Next.js 프로젝트 Docker를 이용하여 배포 자동화
+
+## 1. Next.js Dcoker 이미지 만들기
+
+참고: [Next.js Dockerfile 예제](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile)
+
+1. 위 링크를 참고하여 docker image로 만들기 위해 새 Dockerfile을 추가한다.
+2. 일단, 가장 기본이 되는 Base Image를 정한다.
+3. node.js의 경우 node와 버전을 명시한다.
+4. alpine은 최소단위의 linux 버전을 의미한다.
+
+```sh
+FROM node:18-alpine As base
+```
+
+### 1. Get NPM package
+
+1. npm 의존성 설치
+
+```sh
+# 필요한 경우에만 종속성 설치한다.
+FROM base AS deps
+```
+
+`FROM base AS deps`의 의미 - `multi-stage`빌드는 컨테이너 이미지를 만들며 빌드 등에는 필요하지만 쵲오 컨테이너 이미지에는 필요없는 환경을 제거할 수 있도록 단계를 나누어서 기반 이미지를 만드는 방법이다. - 빌드와 러닝 이미지를 나누는 `Builder Pattern`, Builder에서 빌드한 바이너리를 실행할 이미지로 전달해주기 위해 `COPY`의 `--from`옵션을 통해 실행 이미지로 전달해 줄 수 있다.
+
+<Callout type="default">
+  결과적으로 도커 이미지 사이즈를 줄이기 위한 작업이다.
+</Callout>
+
+2. lib6c-compat을 설치한다. - alpine 이미지가 musl libc대신 glibc and freinds를 사용한다. - libc 의존성을 참조하는 의존성 라이브러리에 대한 문제가 발생할 수 있다.
+   대부분의 경우 문제가 없고 예방 차원에서 하는 선택이다.
+
+```sh
+RUN apk add --no-cache libc6-compat
+```
+
+libc6-compat이 필요한 이유를 알아보려면 [이곳을](https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine)을 확인하십시오.  
+3. 작업 경로를 설정한다.
+WORKDIR은 cd 명령이랑 동일하다.  
+ app 폴더에다가 작업 프로젝트를 구성하겠다는 뜻이다.
+
+```sh
+WORKDIR /app
+```
+
+4. 프로젝트 파일을 복사한다.
+   일반적으로 Dockerfile에서 파일을 복사하고 명령어를 수행할 때 Layer System으로 구성하기 때문에 변경이 빈번하게 발생할 경우 마지막에 작성하는것이 좋다.
+
+package.json, pnpm-lock.yaml은 그리 빈번하게 변경되지 않으니 처음 작성해주는 것이 좋다.
+
+<Callout type="info">
+  Dockerfile은 명령어 한 줄, 한 줄이 Layer 형식으로 실행된다. 그래서 만약
+  소스코드인 src ./ 가 수정될 경우 이후 레이어만 다시 빌드를 하고 나머지 Layer는
+  재사용할 수 있다. 그렇게되면 이미지를 제작하는 시간을 단축하고, 효율성이
+  높아진다.
+</Callout>
+
+그 후 RUN 명령어를 통해 package.json에 명시되어있는 라이브러리를 모두 설치한다.
+
+```sh
+RUN npm i
+```
+
+## 2. Build the app
+
+위처럼 라이브러리를 설치하고 그 다음으로는 build를 한다.
+
+```sh
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# This will do the trick, use the corresponding env file for each environment.
+COPY .env.development .env.production
+RUN yarn build
+```
+
+- FROM base AS builder 를 하고 COPY —from=deps를 하는것은 위에서 빌드 이미지를 줄이기 위한 작업이다.
+- COPY..: 필요한 모든 파일을 복사한다.
+- COPY .env.development .env.production: yarn build는 기본적으로 .env.productuib을 바라보기때문에 현재 .env.development를 .env.production으로 만든다음에 yarn build를 통해 해당 설정된 환경변수를 사용하게 만드는 것이다.
+- RUN yarn build : 최종 빌드
+
+## 3. Production image, copy all the files and run next
+
+최종 실행하기 위한 이미지를 만드는 단계이다.  
+결국 우리가 진짜로 필요한 것이 해당 이미지이다.
+
+따라서 마찬가지로 FROM base AS runner로 구분해준다.
+
+```sh
+FROM base AS runner
+WORKDIR /app
+```
+
+NODE_ENV를 production으로 환경 변수를 설정한다.
+
+```sh
+ENV NODE_ENV production
+```
+
+리눅스 gid, uid를 생성해준다.
+
+```sh
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+```
+
+builder된 곳에 만들어진 /app/public을 해당 runner 이미지에 추가해주기 위해 복사한다.
+
+```sh
+COPY --from=builder /app/public ./public
+```
+
+아래 명령을 수행하는데 그 전에 알아야 할 사전 지식이 필요하다.
+
+```sh
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+```
+
+[참고](https://nextjs.org/docs/pages/api-reference/next-config-js/output)
+
+Next.js 12부터는 .next/ 디렉토리의 출력 파일 추적을 활용하여 필요한 파일만 포함할 수 있다.
+
+next build 중에, Next.js는 `@vercel/nft`를 사용하여 가져오기, 요구 사항 및 fs 사용량을 정적으로 분석하여 페이지가 로드될 수 있는 모든 파일을 결정한다.  
+next.js의 프로덕션 서버는 프로덕션에서 활용할 수 있는 `.next/next-server.js.nft.json`에서 필요한 파일과 출력을 추적합니다.
+
+Next.js는 node_modules의 선택 파일을 포함하여 프로덕션 배포에 필요한 파일만 복사하는 독립 실행형 폴더를 자동으로 생성할 수 있다.  
+이 자동 복사를 활용하려면 `next.config.js`에서 자동 복사를 활성화하면 된다.
+
+```js
+module.exports = {
+  output: "standalone",
+};
+```
+
+그러면 `.next/standalone`에 폴더가 생성되고 node_modules를 설치하지 않고도 자체적으로 배포할 수 있고 다음 시작 대신 사용할 수 있는 최소 server.js 파일도 출력됩니다.
+
+- standalone를 사용하는 이유는 이미지 사이즈를 줄일 수 있다.
+
+사용자 설정
+
+```sh
+USER nextjs
+```
+
+3000 포트 사용 및 포트 3000 환경변수 설정
+
+```sh
+EXPOSE 3000
+ENV PORT 3000
+```
+
+마지막으로 최종 실행. 위에 standalone로 만들어졌다면 server.js로 실행할 수 있다.
+
+```sh
+CMD ["node", "server.js"]
+```

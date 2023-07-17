@@ -1,0 +1,318 @@
+import { Callout } from "nextra-theme-docs";
+
+# Next.js 프로젝트 Docker를 이용하여 배포 자동화
+
+## 1. Next.js Dcoker 이미지 만들기
+
+참고: [Next.js Dockerfile 예제](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile)  
+참고: [https://bum-developer.tistory.com/entry/Docker-Node-환경-만들기](https://bum-developer.tistory.com/entry/Docker-Node-환경-만들기) (Dockerfile 설정하기)
+
+1. 위 링크를 참고하여 docker image로 만들기 위해 새 Dockerfile을 추가한다.
+2. 일단, 가장 기본이 되는 Base Image를 정한다.
+
+```docker
+FROM node:18-alpine AS base
+```
+
+- node.js의 경우 node와 버전을 명시한다.
+- alpine은 최소단위의 linux 버전을 의미한다.
+- 뒤에 `AS base`는 별칭을 지정하는 것이다.
+
+## 2. NPM 패키지 설치
+
+1. npm 의존성 설치
+
+```docker
+# 필요한 경우에만 종속성 설치한다.
+FROM base AS deps
+```
+
+- `FROM base AS deps`의 의미
+  - `multi-stage`빌드는 컨테이너 이미지를 만들며 빌드 등에는 필요하지만 최초 컨테이너 이미지에는 필요없는 환경을 제거할 수 있도록 단계를 나누어서 기반 이미지를 만드는 방법이다.
+  - 빌드와 러닝 이미지를 나누는 `Builder Pattern`, Builder에서 빌드한 바이너리를 실행할 이미지로 전달해주기 위해 `COPY`의 `--from`옵션을 통해 실행 이미지로 전달해 줄 수 있다.
+
+<Callout type="default">
+  결과적으로 도커 이미지 사이즈를 줄이기 위한 작업이다.
+</Callout>
+
+2. lib6c-compat을 설치한다.
+   alpine 이미지가 musl libc대신 glibc and freinds를 사용한다.  
+   libc 의존성을 참조하는 의존성 라이브러리에 대한 문제가 발생할 수 있다.
+   대부분의 경우 문제가 없고 예방 차원에서 하는 선택이다.
+
+```docker
+RUN apk add --no-cache libc6-compat
+```
+
+libc6-compat이 필요한 이유를 알아보려면 [이곳을](https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine)을 확인하자.
+
+3. 작업 경로를 설정한다.
+   WORKDIR은 cd 명령이랑 동일하다.  
+   app 폴더에다가 작업 프로젝트를 구성하겠다는 뜻이다.
+
+```docker
+WORKDIR /app
+```
+
+4. 프로젝트 파일을 복사한다.
+   일반적으로 Dockerfile에서 파일을 복사하고 명령어를 수행할 때 Layer System으로 구성하기 때문에 변경이 빈번하게 발생할 경우 마지막에 작성하는것이 좋다.
+
+package.json, pnpm-lock.yaml은 그리 빈번하게 변경되지 않으니 처음 작성해주는 것이 좋다.
+
+<Callout type="info">
+  Dockerfile은 명령어 한 줄, 한 줄이 Layer 형식으로 실행된다. 그래서 만약
+  소스코드인 src ./ 가 수정될 경우 이후 레이어만 다시 빌드를 하고 나머지 Layer는
+  재사용할 수 있다. 그렇게되면 이미지를 제작하는 시간을 단축하고, 효율성이
+  높아진다.
+</Callout>
+
+그 후 RUN 명령어를 통해 package.json에 명시되어있는 라이브러리를 모두 설치한다.
+
+```docker
+RUN npm i
+```
+
+## 3. Build 하기
+
+위처럼 라이브러리를 설치하고 그 다음으로는 build를 한다.
+
+```docker
+# 필요한 경우에만 소스 코드 재구성하자.
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# 이렇게 하면 각 환경에 해당하는 환경 파일을 사용할 수 있다.
+COPY .env.development .env.production
+RUN yarn build
+```
+
+- FROM base AS builder 를 하고 COPY —from=deps를 하는것은 위에서 빌드 이미지를 줄이기 위한 작업이다.
+- COPY..: 필요한 모든 파일을 복사한다.
+- COPY .env.development .env.production: yarn build는 기본적으로 .env.productuib을 바라보기때문에 현재 .env.development를 .env.production으로 만든다음에 yarn build를 통해 해당 설정된 환경변수를 사용하게 만드는 것이다.
+- RUN yarn build : 최종 빌드
+
+## 4. production mode 이미지, 모든 파일 복사 및 다음 실행
+
+최종 실행하기 위한 이미지를 만드는 단계이다.  
+결국 우리가 진짜로 필요한 것이 해당 이미지이다.
+
+따라서 마찬가지로 FROM base AS runner로 구분해준다.
+
+```docker
+FROM base AS runner
+WORKDIR /app
+```
+
+NODE_ENV를 production으로 환경 변수를 설정한다.
+
+```docker
+ENV NODE_ENV production
+```
+
+리눅스 gid, uid를 생성해준다.
+
+```docker
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+```
+
+builder된 곳에 만들어진 /app/public을 해당 runner 이미지에 추가해주기 위해 복사한다.
+
+```docker
+COPY --from=builder /app/public ./public
+```
+
+아래 명령을 수행하는데 그 전에 알아야 할 사전 지식이 필요하다.
+
+```docker
+# 아래는 출력 트레이스를 자동으로 활용하여 이미지 크기 축소하는 방법이다.
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+```
+
+참고: [https://nextjs.org/docs/pages/api-reference/next-config-js/output](https://nextjs.org/docs/pages/api-reference/next-config-js/output)
+
+Next.js 12부터는 .next/ 디렉토리의 출력 파일 추적을 활용하여 필요한 파일만 포함할 수 있다.
+
+next build 중에, Next.js는 `@vercel/nft`를 사용하여 가져오기, 요구 사항 및 fs 사용량을 정적으로 분석하여 페이지가 로드될 수 있는 모든 파일을 결정한다.  
+next.js의 프로덕션 서버는 프로덕션에서 활용할 수 있는 `.next/next-server.js.nft.json`에서 필요한 파일과 출력을 추적한다.
+
+Next.js는 node_modules의 선택 파일을 포함하여 프로덕션 배포에 필요한 파일만 복사하는 독립 실행형 폴더를 자동으로 생성할 수 있다.  
+이 자동 복사를 활용하려면 `next.config.js`에서 자동 복사를 활성화하면 된다.
+
+```js
+module.exports = {
+  output: "standalone",
+};
+```
+
+그러면 `.next/standalone`에 폴더가 생성되고 node_modules를 설치하지 않고도 자체적으로 배포할 수 있고 다음 시작 대신 사용할 수 있는 최소 server.js 파일도 출력됩니다.
+
+- standalone를 사용하는 이유는 이미지 사이즈를 줄일 수 있다.
+
+사용자 설정
+
+```docker
+USER nextjs
+```
+
+3000 포트 사용 및 포트 3000 환경변수 설정
+
+```docker
+EXPOSE 3000
+ENV PORT 3000
+```
+
+마지막으로 최종 실행. 위에 standalone로 만들어졌다면 server.js로 실행할 수 있다.
+
+```docker
+CMD ["node", "server.js"]
+```
+
+## 5. 도커 이미지 생성하기
+
+Dockerfile을 작성했다면 이를 기반으로 도커 빌드를 통해 이미지를 만들어볼 수 있다.  
+여기서 -t는 —tag 옵션을 의미한다.  
+이미지 이름을 지정한다고 보면 될 거 같다.  
+그리고 . 은 현재 경로를 기반으로 만든다는 뜻이다.
+
+```sh
+docker build -t nextjs-docker .
+```
+
+근데 현재 Dockerfile 경로는 docker 폴더 아래 있다.  
+그래서 그런지 저렇게 실행하면 `failed to read dockerfile` 이라는 오류가 나면서 실행이 안된다.  
+Dockerfile을 밖으로 빼면 잘 됩니다.
+
+`-f` 옵션을 통해 Dockerfile 경로를 강제로 지정해줄 수 있다.
+
+```sh
+docker build -t nextjs-docker -f ./docker/Dockerfile .
+```
+
+실행과정
+
+```
+❯ docker build -t nextjs-docker .
+[+] Building 16.0s (19/19) FINISHED
+ => [internal] load build definition from Dockerfile                                                                                 0.0s
+ => => transferring dockerfile: 967B                                                                                                 0.0s
+ => [internal] load .dockerignore                                                                                                    0.0s
+ => => transferring context: 2B                                                                                                      0.0s
+ => [internal] load metadata for docker.io/library/node:18-alpine                                                                    0.8s
+ => [internal] load build context                                                                                                    1.3s
+ => => transferring context: 3.14MB                                                                                                  1.2s
+ => [base 1/1] FROM docker.io/library/node:18-alpine@sha256:f605fcd5254d0e398e04d93c7b11e2aec2a6e1aeb7da1f99bc40cd101dd8cde4         0.0s
+ => CACHED [runner 1/6] WORKDIR /app                                                                                                 0.0s
+ => CACHED [runner 2/6] RUN addgroup --system --gid 1001 nodejs                                                                      0.0s
+ => CACHED [runner 3/6] RUN adduser --system --uid 1001 nextjs                                                                       0.0s
+ => CACHED [deps 1/4] RUN apk add --no-cache libc6-compat                                                                            0.0s
+ => CACHED [deps 2/4] WORKDIR /app                                                                                                   0.0s
+ => CACHED [deps 3/4] COPY package.json pnpm-lock.yaml ./                                                                            0.0s
+ => CACHED [deps 4/4] RUN npm install -g pnpm && pnpm install                                                                        0.0s
+ => CACHED [builder 2/4] COPY --from=deps /app/node_modules ./node_modules                                                           0.0s
+ => [builder 3/4] COPY . .                                                                                                           2.9s
+ => [builder 4/4] RUN yarn build                                                                                                    10.2s
+ => [runner 4/6] COPY --from=builder /app/public ./public                                                                            0.0s
+ => [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./                                                  0.1s
+ => [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static                                          0.0s
+ => exporting to image                                                                                                               0.1s
+ => => exporting layers                                                                                                              0.1s
+ => => writing image sha256:a76d375f14c08f8bde5c5ad7803c1903c6a93aecbbbd49bc898386d3630869a0                                         0.0s
+ => => naming to docker.io/library/nextjs-dock
+```
+
+최종적으로 nextjs-docker라는 이미지가 잘 만들어졌다.
+
+이제 만들어진 도커를 아래와 같이 실행하면 잘 동작하는 것을 확인할 수 있다.
+
+```sh
+❯ docker run -p 3000:3000 nextjs-docker
+info  - Loaded env from /app/.env.production
+Listening on port 3000 url: http://e94bfe211f46:3000
+```
+
+VSCode에서 docker extension을 설치하면 docker container 바로 확인할 수 있다.
+
+## 6. 도커 컴포즈 연동하기
+
+도커 컴포즈는 여러개의 도커 컨테이너를 띄우기 위해 사용되는 간단한 오케스트레이션 도구이다.
+
+- docker-compse + nextjs 참고 : [https://github.com/vercel/next.js/tree/canary/examples/with-docker-compose](https://github.com/vercel/next.js/tree/canary/examples/with-docker-compose)
+- 기본 설정 참고 : [https://nirsa.tistory.com/79](https://nirsa.tistory.com/79)
+
+그전에 현재 프로젝트 경로와 docker 파일 위치를 참고해서 적절한 경로를 지정해줘야 한다.  
+next.js 에서 작성된 가이드 코드이다.
+
+```sh
+version: '3'
+
+services:
+  next-app:
+    container_name: next-app
+		build:
+      context: ../
+      dockerfile: docker/prod.Dockerfile
+      args:
+        ENV_VARIABLE: ${ENV_VARIABLE}
+        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - my_network
+
+    # 아래 컨테이너 추가(nginx, postgres 등)
+
+# 컨테이너가 통신할 수 있도록 하는 네트워크 정의
+# 서로의 컨테이너 이름을 호스트 이름으로 사용하여
+networks:
+  my_network:
+    external: true
+```
+
+- container_name: 컨테이너의 이름으로 next-app이다.
+- build.context: 현재 프로젝트 위치를 가리켜야 한다.
+- build.dockerfile: prod.Dockerfile 을 실행 파일로 삼는다는 의미이다.
+- build.args: 빌드 시에만 사용 가능한 환경변수를 설정한다.
+- restart: always. 컨테이너가 멈추면 항상 다시 시작한다는 명령. 수동으로 중지된 경우 재시작되거나 컨테이너 자체가 수동으로 재시작될 때만 재시작 된다.
+- networks external : true로 세팅되면, network가 Compose 외부에서 생성되었음을 지정한다.
+
+문서에 실행 전에 network를 생성하는 명령이 있다.
+
+- 참고: [https://great-developer.tistory.com/289](https://great-developer.tistory.com/289)
+- 참고: [https://www.daleseo.com/docker-compose-networks/](https://www.daleseo.com/docker-compose-networks/)
+
+```sh
+# 서로의 컨테이너 이름을 호스트 이름으로 사용하여
+# 컨테이너가 통신할 수 있도록 네트워크를 만든다.
+docker network create my_network
+
+# docker network list 확인
+docker network ls
+```
+
+만약 생성을 안하면 아래와 같은 에러가 발생한다.
+
+```sh
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+network next-app-network declared as external, but could not be found
+```
+
+- 최종적으로 도커 컴포즈 실행해보기.
+
+`up -d`는 백그라운드로 실행하겠다는 뜻이다.  
+실행시 현재 경로에 따라 docker-compose.prod.yml은 맞춰줘야 한다.  
+실행 결과 성공적으로 되었습니다.
+
+```
+❯ docker-compose -f docker-compose.prod.yml up -d
+[+] Running 1/1
+ ⠿ Container next-app  Started
+```
+
+참고: [https://github.com/vercel/next.js/tree/canary/examples/with-docker-multi-env](https://github.com/vercel/next.js/tree/canary/examples/with-docker-multi-env)
+
+배포환경에 따라 development, staging, production을 구분해서 만드는 방법이다.
