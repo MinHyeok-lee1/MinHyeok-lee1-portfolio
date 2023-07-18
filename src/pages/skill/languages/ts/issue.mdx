@@ -1,42 +1,17 @@
 # TypeScript 이슈 정리
 
-## 코드 최적화 이슈
+## [TypeScript enum을 사용하지 않는 게 좋은 이유를 Tree-shaking 관점에서 소개합니다.](https://engineering.linecorp.com/ko/blog/typescript-enum-tree-shaking)
 
-### 반복문(for-of, for-in)
+## tsconfig
 
-1. iterable객체의 반복문
+생성
 
-배열과 객체의 내부에 접근할 때 단순 for문을 사용하는 것을 지양하고 자바스크립트에 기본 내장되어 있는 for..of, or..in문을 사용하면 명확하게 코드를 짤 수 있다.
-
-1-1. 배열은 for..of 문을 사용한다.
-
-```js
-const arr = ["A", "B", "C", "D", "E"];
-
-for (let i = 0; i < arr.length; i++) {
-  const element = arr[i];
-  console.log("1", element);
-}
-
-// 위 코드를 아래와 같이 변경해도 동일하게 동작한다.
-for (const element of arr) {
-  console.log("2", element);
-}
+```sh
+tsc --init
 ```
 
-출력결과
+- tsconfig 설정은 React & TypeScript 개발환경 설정 글에서 복사해서 생긴 문제
 
-```console filename="console"
-1 A
-1 B
-1 C
-1 D
-1 E
-2 A
-2 B
-2 C
-2 D
-2 E
-```
-
-<br />
+문제가 된 설정은 "noEmit": true다.  
+이 설정이 true라면 컴파일한 파일을 출력하지 않는다.  
+이 설정은 실질적인 컴파일은 babel같은 컴파일러가 담당하고 있고, TypeScript로는 타입 검사만 행하거나 할 때에 사용하는 옵션이다.

@@ -1,5 +1,8 @@
 {
   "basic": "기본내용 정리",
   "types": "타입",
-  "patterns": "패턴"
+  "patterns": "패턴",
+  "function": "함수",
+  "controlflow": "흐름 제어",
+  "errorhandling": "오류 제어"
 }

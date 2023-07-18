@@ -1,0 +1,339 @@
+import { Callout } from "nextra-theme-docs";
+
+# Control flow
+
+다음을 사용하여 Dart에서 제어 흐름을 조작할 수도 있다.
+
+- for, while와 같은 Loops
+- if, switch와 같은 Branching
+- try, catch, throw와 같은 Exceptions
+
+## Loops
+
+이 페이지는 루프와 지원 문을 사용하여 Dart 코드의 흐름을 제어하는 ​​방법을 보여준다.
+
+- for 루프
+- while 및 do while 루프
+- break 및 continue
+
+### For loops
+
+표준 `for` 루프를 사용하여 반복할 수 있다.  
+예를 들어:
+
+```dart
+var message = StringBuffer('Dart is fun');
+for (var i = 0; i < 5; i++) {
+  message.write('!');
+}
+```
+
+Dart의 for 루프 내부의 클로저는 인덱스 값을 캡처한다.  
+이렇게 하면 JavaScript에서 발견되는 일반적인 함정을 피할 수 있다.  
+예를 들어 다음을 고려하자.
+
+```dart
+var callbacks = [];
+for (var i = 0; i < 2; i++) {
+  callbacks.add(() => print(i));
+}
+
+for (final c in callbacks) {
+  c();
+}
+```
+
+출력은 예상대로 `0`과` 1`이다.  
+대조적으로, 예제는 JavaScript에서 `2`를 인쇄한 다음 `2`를 인쇄한다.
+
+`List` 또는 `Set`과 같은 [Iterable](https://api.dart.dev/stable/3.0.6/dart-core/Iterable-class.html) 유형을 반복할 때 현재 반복 카운터를 알 필요가 없는 경우가 있다.  
+이 경우 깔끔한 코드를 위해 `for-in` 루프를 사용하자.
+
+```dart
+for (final candidate in candidates) {
+  candidate.interview();
+}
+```
+
+iterable에서 얻은 값을 처리하기 위해 `for-in `루프에서 [패턴](./patterns)을 사용할 수도 있다.
+
+```dart
+for (final Candidate(:name, :yearsExperience) in candidates) {
+  print('$name has $yearsExperience of experience.');
+}
+```
+
+Iterable 클래스에는 또 다른 옵션으로 forEach() 메서드가 있다.
+
+```dart
+var collection = [1, 2, 3];
+collection.forEach(print); // 1 2 3
+```
+
+<br />
+
+### While and do-while
+
+`while` 루프는 루프 이전의 조건을 평가한다.
+
+```dart
+while (!isDone()) {
+  doSomething();
+}
+```
+
+`do-while` 루프는 루프 뒤의 조건을 평가한다.
+
+```dart
+do {
+  printLine();
+} while (!atEndOfPage());
+```
+
+<br />
+
+### Break and continue
+
+루프를 중지하려면 `break`를 사용하자.
+
+```dart
+while (true) {
+  if (shutDownRequested()) break;
+  processIncomingRequests();
+}
+```
+
+계속을 사용하여 다음 루프 반복으로 건너뛴다.
+
+```dart
+for (int i = 0; i < candidates.length; i++) {
+  var candidate = candidates[i];
+  if (candidate.yearsExperience < 5) {
+    continue;
+  }
+  candidate.interview();
+}
+```
+
+list나 set, 같은 [Iterable](https://api.dart.dev/stable/3.0.6/dart-core/Iterable-class.html)을 사용하는 경우 이전 예제를 작성하는 방법이 다를 수 있다.
+
+```dart
+candidates
+    .where((c) => c.yearsExperience >= 5)
+    .forEach((c) => c.interview());
+```
+
+## Branches
+
+이 페이지는 분기를 사용하여 Dart 코드의 흐름을 제어하는 ​​방법을 보여준다.
+
+- if 문 및 요소
+- if-case 문 및 요소
+- switch 문과 표현식
+
+### If
+
+Dart는 선택적 `else` 절이 있는 `if` 문을 지원한다.  
+if 뒤의 괄호 안의 조건은 부울로 평가되는 표현식이어야 한다.
+
+```dart
+if (isRaining()) {
+  you.bringRainCoat();
+} else if (isSnowing()) {
+  you.wearJacket();
+} else {
+  car.putTopDown();
+}
+```
+
+### If-case
+
+만약의 경우 Dart if 문은 다음과 같은 [패턴](./patterns)이 뒤따르는 case 절을 ​​지원한다.
+
+```dart
+if (pair case [int x, int y]) return Point(x, y);
+```
+
+패턴이 값과 일치하면 분기는 패턴이 범위에서 정의하는 변수로 실행된다.
+
+이전 예제에서 목록 패턴 `[int x, int y]`는 `값 쌍`과 일치하므로 `retun Point(x, y)`분기는 패턴이 정의한 변수 `x` 및 `y`로 실행된다.
+
+그렇지 않은 경우 제어 흐름은 실행을 위해 else 분기로 진행한다(있는 경우).
+
+```dart
+if (pair case [int x, int y]) {
+  print('Was coordinate array $x,$y');
+} else {
+  throw FormatException('Invalid coordinates.');
+}
+```
+
+if-case 문은 단일 패턴에 대해 일치시키고 구조를 해체하는 방법을 제공한다.  
+여러 패턴에 대해 값을 테스트하려면 switch를 사용하자.
+
+### Switch statements
+
+switch 문은 일련의 사례에 대해 값 식을 평가한다.  
+각 case 절은 일치시킬 값의 패턴이다.  
+사례에 대해 모든 종류의 패턴을 사용할 수 있다.
+
+값이 사례의 패턴과 일치하면 사례 본문이 실행된다.  
+비어 있지 않은 case 절은 완료 후 스위치의 끝으로 이동한다.  
+break 문이 필요하지 않는다.  
+비어 있지 않은 case 절을 ​​종료하는 다른 유효한 방법은 continue, throw 또는 return 문이다.
+
+일치하는 case 절이 없을 때 기본 또는 와일드카드 \_ 절을 사용하여 코드를 실행한다.
+
+```dart
+var command = 'OPEN';
+switch (command) {
+  case 'CLOSED':
+    executeClosed();
+  case 'PENDING':
+    executePending();
+  case 'APPROVED':
+    executeApproved();
+  case 'DENIED':
+    executeDenied();
+  case 'OPEN':
+    executeOpen();
+  default:
+    executeUnknown();
+}
+```
+
+빈 케이스는 다음 케이스로 넘어간다.  
+떨어지지 않는 빈 케이스의 경우 본체에 break를 사용하자.  
+비순차적 폴스루의 경우 continue 문과 레이블을 사용할 수 있다.
+
+```dart
+switch (command) {
+  case 'OPEN':
+    executeOpen();
+    continue newCase; // newCase 레이블에서 계속 실행한다.
+
+  case 'DENIED': // Empty case가 통과된다.
+  case 'CLOSED':
+    executeClosed(); // DENIED 및 CLOSED 모두에 대해 실행된다.
+
+  newCase:
+  case 'PENDING':
+    executeNowClosed(); // OPEN 및 PENDING 모두에 대해 실행된다.
+}
+```
+
+논리 또는 패턴을 사용하여 사례가 본문 또는 가드를 공유하도록 할 수 있다.  
+패턴 및 case 절에 대해 자세히 알아보려면 [Switch 문 및 식에 대한 패턴 설명서](./patterns#switch-문-및-표현식)를 확인하자.
+
+#### Switch expressions
+
+switch 표현식은 일치하는 케이스의 표현식 본문을 기반으로 값을 생성한다.  
+표현식 문의 시작 부분을 제외하고 Dart가 표현식을 허용하는 모든 위치에서 스위치 표현식을 사용할 수 있다.  
+예를 들어:
+
+```dart
+var x = switch (y) { ... };
+
+print(switch (x) { ... });
+
+return switch (x) { ... };
+```
+
+식 문의 시작 부분에 스위치를 사용하려면 switch 문을 사용하자.
+
+Switch 식을 사용하면 다음과 같이 switch 문을 다시 작성할 수 있다.
+
+```dart
+// 여기서 슬래시, 별표, 쉼표, 세미콜론 등은 상수 변수이다...
+switch (charCode) {
+  case slash || star || plus || minus: // Logical-or pattern
+    token = operator(charCode);
+  case comma || semicolon: // Logical-or pattern
+    token = punctuation(charCode);
+  case >= digit0 && <= digit9: // Relational and logical-and patterns
+    token = number();
+  default:
+    throw FormatException('Invalid');
+}
+```
+
+다음과 같은 식으로:
+
+```dart
+token = switch (charCode) {
+  slash || star || plus || minus => operator(charCode),
+  comma || semicolon => punctuation(charCode),
+  >= digit0 && <= digit9 => number(),
+  _ => throw FormatException('Invalid')
+};
+```
+
+switch 식의 구문은 switch 문 구문과 다르다.
+
+- 대/소문자는 대/소문자 키워드로 시작하지 않는다.
+- 대소문자 본문은 일련의 문 대신 단일 표현식이다.
+- 각 사례에는 본문이 있어야 한다. 빈 사례에는 암묵적인 오류가 없다.
+- 케이스 패턴은 : 대신 =>를 사용하여 본체와 분리된다.
+- 대소문자는 로 구분된다(및 옵션인 후행도 허용됨).
+- 기본 대소문자는 기본 및 \_을 모두 허용하는 대신 \_만 사용할 수 있다.
+
+### Exhaustiveness checking
+
+Exhaustiveness 검사는 값이 스위치에 들어갈 수 있지만 어떤 경우에도 일치하지 않는 경우 컴파일 시간 오류를 보고하는 기능이다.
+
+```dart
+// Non-exhaustive switch
+switch (nullableBool) {
+  case true:
+    print('yes');
+  case false:
+    print('no');
+}
+```
+
+기본 사례(기본값 또는 \_)는 스위치를 통해 흐를 수 있는 모든 가능한 값을 포함한다.  
+이것은 모든 유형의 스위치를 철저하게 만든다.
+
+열거형 및 봉인된 형식은 기본 사례가 없더라도 가능한 값을 알고 완전히 열거할 수 있기 때문에 스위치에 특히 유용하다.  
+해당 클래스의 하위 유형을 전환할 때 완전성 검사를 활성화하려면 클래스에 봉인된 수정자를 사용하자.
+
+```dart
+sealed class Shape {}
+
+class Square implements Shape {
+  final double length;
+  Square(this.length);
+}
+
+class Circle implements Shape {
+  final double radius;
+  Circle(this.radius);
+}
+
+double calculateArea(Shape shape) => switch (shape) {
+      Square(length: var l) => l * l,
+      Circle(radius: var r) => math.pi * r * r
+    };
+```
+
+누군가가 Shape의 새 하위 클래스를 추가하는 경우 이 스위치 식은 불완전하다.  
+Exhaustiveness 검사는 누락된 하위 유형을 알려준다.  
+이를 통해 다소 기능적인 대수 데이터 유형 스타일로 Dart를 사용할 수 있다.
+
+### Guard clause
+
+`case` 절 뒤에 선택적 guard clause를 설정하려면 `when` 키워드를 사용한다.  
+guard clause은 `if case`와 `switch` 문 및 표현식을 모두 뒤따를 수 있다.
+
+```dart
+switch (pair) {
+  case (int a, int b) when a > b:
+    print('First element greater');
+  case (int a, int b):
+    print('First element not greater');
+}
+```
+
+가드는 일치 후 임의의 부울 식을 평가한다.  
+이렇게 하면 사례 본문을 실행해야 하는지 여부에 대한 추가 제약 조건을 추가할 수 있다.  
+가드 절이 거짓으로 평가되면 전체 스위치를 종료하지 않고 다음 케이스로 실행이 진행된다.

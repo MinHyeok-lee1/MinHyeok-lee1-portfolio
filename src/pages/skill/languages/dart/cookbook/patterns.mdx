@@ -2,6 +2,8 @@
 
 ## 패턴의 역할
 
+- 패턴의 작동 방식, Dart에서 패턴을 사용할 수 있는 위치 및 일반적인 사용 사례에 대한 개요이다.
+
 일반적으로 패턴은 패턴의 컨텍스트와 모양에 따라 값과 일치하거나 값을 구성하거나 둘 다를 구성할 수 있다.  
 먼저 패턴 일치를 통해 지정된 값이 다음과 같은지 확인할 수 있다.
 
@@ -12,6 +14,8 @@
 
 그런 다음 패턴 파괴는 해당 값을 구성 요소로 분할할 수 있는 편리한 선언 구문을 제공한다.  
 또한 동일한 패턴을 사용하면 공정에서 변수를 해당 부품의 일부 또는 전부에 바인딩할 수 있다.
+
+<br />
 
 ### 매칭
 
@@ -131,7 +135,7 @@ print('$a $b'); // Prints "right left".
 
 ```dart
 switch (obj) {
-  // 1 == obj일 경우 일치합니다.
+  // 1 == obj일 경우 일치한다.
   case 1:
     print('one');
 
@@ -325,3 +329,389 @@ if (json case {'user': [String name, int age]}) {
 - 키 사용자는 두 개의 값 목록과 쌍을 이룬다.
 - 목록 값의 유형은 String과 int이다.
 - 값을 유지할 새 로컬 변수는 String 및 int이다.
+
+<br />
+
+## 패턴 타입
+
+패턴 우선 순위
+연산자 우선 순위와 유사하게 패턴 평가는 우선 순위 규칙을 준수한다.  
+괄호로 묶은 패턴을 사용하여 우선 순위가 낮은 패턴을 먼저 평가할 수 있다.
+
+이 문서에서는 패턴 유형을 우선순위가 높은 오름차순으로 나열한다.
+
+- 논리적 패턴은 논리적 패턴보다 우선 순위가 낮고 논리적 패턴과 패턴은 관계형 패턴보다 우선 순위가 낮다.
+- 수정 후 주기 패턴(캐스트, null-check 및 null-assert)은 동일한 수준의 우선 순위를 공유한다.
+- 나머지 기본 패턴은 가장 높은 우선 순위를 공유한다.
+- 수집 유형(레코드, 목록 및 맵) 및 개체 패턴은 다른 데이터를 포함하므로 먼저 외부 패턴으로 평가된다.
+
+다음은 다양한 종류의 패턴에 대한 참고이다.
+
+<br />
+
+### Logical-or
+
+`subpattern1 || subpattern2`
+
+논리적 or 패턴은 하위 패턴을 `||`로 구분한다.  
+분기 중 하나라도 일치하면 일치한다.  
+분기는 왼쪽에서 오른쪽으로 평가된다.  
+분기가 일치하면 나머지는 평가되지 않는다.
+
+```dart
+var isPrimary = switch (color) {
+  Color.red || Color.yellow || Color.blue => true,
+  _ => false
+};
+```
+
+논리적 or 패턴의 하위 패턴은 변수를 바인딩할 수 있지만 패턴이 일치할 때 하나의 분기만 평가되기 때문에 분기는 동일한 변수 집합을 정의해야 한다.
+
+<br />
+
+### Logical-and
+
+`subpattern1 && subpattern2`
+`&&`로 구분된 한 쌍의 패턴은 두 하위 패턴이 모두 일치하는 경우에만 일치한다.  
+왼쪽 분기가 일치하지 않으면 오른쪽 분기는 평가되지 않는다.
+
+논리 및 패턴의 하위 패턴은 변수를 바인딩할 수 있지만 각 하위 패턴의 변수는 패턴이 일치하는 경우 둘 다 바인딩되므로 겹치지 않아야 한다.
+
+```dart
+switch ((1, 2)) {
+  // 오류, 두 하위 패턴 모두 'b'를 바인딩하려고 시도한다.
+  case (var a, var b) && (var b, var c): // ...
+}
+```
+
+<br />
+
+### Relational
+
+`== expression`  
+`< expression`
+
+관계형 패턴은 `==,` `!=,` `<`, `>`, `<=` 및 `>=` 등호 또는 관계 연산자를 사용하여 일치하는 값을 지정된 상수와 비교한다.
+상수를 인수로 사용하여 일치하는 값에 대해 적절한 연산자를 호출하면 패턴이 일치하여 true를 반환한다.
+
+관계형 패턴은 특히 논리 및 패턴과 결합할 때 숫자 범위에서 일치하는 데 유용하다.
+
+```dart
+String asciiCharType(int char) {
+  const space = 32;
+  const zero = 48;
+  const nine = 57;
+
+  return switch (char) {
+    < space => 'control',
+    == space => 'space',
+    > space && < zero => 'punctuation',
+    >= zero && <= nine => 'digit',
+    _ => ''
+  };
+}
+```
+
+<br />
+
+### Cast
+
+`foo as String`  
+캐스트 패턴을 사용하면 값을 다른 하위 패턴에 전달하기 전에 구조 분해 중에 유형 캐스트를 삽입할 수 있다.
+
+```dart
+(num, Object) record = (1, 's');
+var (i as int, s as String) = record;
+```
+
+값에 명시된 유형이 없으면 캐스트 패턴이 발생한다.  
+null-assert 패턴과 마찬가지로 이것은 구조화되지 않은 일부 값의 예상 유형을 강제로 주장할 수 있게 한다.
+
+<br />
+
+### Null-check
+
+`subpattern?`  
+Null 검사 패턴은 값이 null이 아닌 경우 먼저 일치한 다음 동일한 값에 대해 내부 패턴을 일치시킨다.  
+일치하는 nullable 값의 nullable이 아닌 기본 유형인 변수를 바인딩할 수 있다.
+
+null 값을 throw하지 않고 일치 실패로 처리하려면 null 검사 패턴을 사용한다.
+
+```dart
+String? maybeString = 'nullable with base type String';
+switch (maybeString) {
+  case var s?:
+  // 여기서 's'는 null을 허용하지 않는 문자열 유형이다.
+}
+```
+
+값이 null일 때 일치시키려면 상수 패턴 null을 사용한다.
+
+<br />
+
+### Null-assert
+
+`subpattern!`  
+Null 어설션 패턴은 개체가 null이 아닌 경우 먼저 일치한 다음 값에서 일치한다.  
+null이 아닌 값이 통과하도록 허용하지만 일치하는 값이 null이면 throw한다.
+
+null 값이 자동으로 일치 실패로 처리되지 않도록 하려면 일치하는 동안 null-assert 패턴을 사용하자.
+
+```dart
+List<String?> row = ['user', null];
+switch (row) {
+  case ['user', var name!]: // ...
+  // 여기서 '이름'은 null을 허용하지 않는 문자열이다.
+}
+```
+
+변수 선언 패턴에서 null 값을 제거하려면 null-assert 패턴을 사용하자.
+
+```dart
+(int?, int?) position = (2, 3);
+
+var (x!, y!) = position;
+```
+
+값이 null일 때 일치시키려면 상수 패턴 null을 사용한다.
+
+<br />
+
+### Constant
+
+`123, null, 'string', math.pi, SomeClass.constant, const Thing(1, 2), const (1 + 2)`  
+상수 패턴은 값이 상수와 같을 때 일치한다.
+
+```dart
+switch (number) {
+  // number==1인 경우 일치한다.
+  case 1: // ...
+}
+```
+
+간단한 리터럴과 명명된 상수에 대한 참조를 상수 패턴으로 직접 사용할 수 있다.
+
+- Number literals (123, 45.56)
+- Boolean literals (true)
+- String literals ('string')
+- Named constants (someConstant, math.pi, double.infinity)
+- Constant constructors (const Point(0, 0))
+- Constant collection literals (const [], const {1, 2})
+
+더 복잡한 상수 식은 괄호 안에 const (const (1 + 2)) 접두사를 붙여야 한다.
+
+```dart
+// List or map pattern:
+case [a, b]: // ...
+
+// List or map literal:
+case const [a, b]: // ...
+```
+
+<br />
+
+### Variable
+
+`var bar, String str, final int _`  
+변수 패턴은 새 변수를 일치했거나 해체된 값에 바인딩한다.  
+그들은 일반적으로 구조화되지 않은 값을 캡처하기 위해 구조화 패턴의 일부로 발생한다.
+
+변수는 패턴이 일치할 때만 도달할 수 있는 코드 영역의 범위 내에 있다.
+
+```dart
+switch ((1, 2)) {
+  // 'var a'와 'var b'는 각각 1과 2에 바인딩되는 변수 패턴이다.
+  case (var a, var b): // ...
+  // 'a'와 'b'는 케이스 본문의 범위에 있다.
+}
+```
+
+유형이 지정된 변수 패턴은 일치하는 값에 선언된 유형이 있는 경우에만 일치하고 그렇지 않으면 실패한다.
+
+```dart
+switch ((1, 2)) {
+  // 일치하지 않는다.
+  case (int a, String b): // ...
+}
+```
+
+[와일드카드 패턴](#Wildcard)을 변수 패턴으로 사용할 수 있다.
+
+<br />
+
+### Identifier
+
+`foo, _`  
+식별자 패턴은 나타나는 컨텍스트에 따라 상수 패턴 또는 가변 패턴처럼 작동할 수 있다.
+
+- 선언 컨텍스트: 식별자 이름이 있는 새 변수 선언: var (a, b) = (1, 2);
+- 할당 컨텍스트: 식별자 이름이 있는 기존 변수에 할당: (a, b) = (3, 4);
+- 일치하는 컨텍스트: 명명된 상수 패턴으로 처리된다(이름이 \_인 경우 제외).
+
+```dart
+const c = 1;
+switch (2) {
+  case c:
+    print('match $c');
+  default:
+    print('no match'); // Prints "no match".
+}
+```
+
+모든 컨텍스트의 와일드카드 식별자: 모든 값과 일치하고 버린다.  
+`case [_, var y, _]: print('가운데 요소는 $y')`;
+
+<br />
+
+### Parenthesized
+
+`(subpattern)`  
+괄호로 묶은 표현식과 마찬가지로 패턴의 괄호를 사용하면 패턴 우선 순위를 제어하고 우선 순위가 더 높을 것으로 예상되는 위치에 우선 순위가 낮은 패턴을 삽입할 수 있다.  
+예를 들어 부울 상수 x, y 및 z가 각각 true, true 및 false와 같다고 가정한다.
+
+```dart
+// ...
+x || y && z => 'matches true',
+(x || y) && z => 'matches false',
+// ...
+```
+
+첫 번째 경우에는 논리 and 패턴이 논리 or보다 우선 순위가 높기 때문에 논리 and 패턴 `y && z`가 먼저 평가된다.  
+다음 경우에는 논리 또는 패턴이 괄호 안에 표시된다.  
+먼저 평가하여 다른 일치 결과를 얻는다.
+
+<br />
+
+### List
+
+`[subpattern1, subpattern2]`  
+목록 패턴은 [목록](./types#lists)을 구현하는 값과 일치한 다음 하위 패턴을 목록의 요소와 재귀적으로 일치시켜 위치별로 구조를 해제한다.
+
+```dart
+const a = 'a';
+const b = 'b';
+switch (obj) {
+  // List pattern [a, b] matches obj first if obj is a list with two fields,
+  // then if its fields match the constant subpatterns 'a' and 'b'.
+  case [a, b]:
+    print('$a, $b');
+}
+```
+
+목록 패턴에서는 패턴의 요소 수가 전체 목록과 일치해야 한다.  
+그러나 나머지 요소를 자리 표시자로 사용하여 목록의 요소 수를 설명할 수 있다.
+
+<br />
+
+#### Rest element
+
+목록 패턴은 임의 길이의 일치하는 목록을 허용하는 하나의 나머지 요소(...)를 포함할 수 있다.
+
+```dart
+var [a, b, ..., c, d] = [1, 2, 3, 4, 5, 6, 7];
+// Prints "1 2 6 7".
+print('$a $b $c $d');
+```
+
+나머지 요소는 목록의 다른 하위 패턴과 일치하지 않는 요소를 새 목록으로 수집하는 하위 패턴을 가질 수도 있다.
+
+```dart
+var [a, b, ...rest, c, d] = [1, 2, 3, 4, 5, 6, 7];
+// Prints "1 2 [3, 4, 5] 6 7".
+print('$a $b $rest $c $d');
+```
+
+<br />
+
+### Map
+
+`{"key": subpattern1, someConst: subpattern2}`  
+맵 패턴은 [맵](./types#maps)을 구현하는 값과 일치한 다음 하위 패턴을 맵의 키와 재귀적으로 일치시켜 구조를 해제한다.  
+맵 패턴은 패턴이 전체 맵과 일치할 필요가 없다.  
+맵 패턴은 패턴과 일치하지 않는 맵에 포함된 모든 키를 무시한다.
+
+<br />
+
+### Record
+
+`(subpattern1, subpattern2)`  
+`(x: subpattern1, y: subpattern2)`
+레코드 패턴은 레코드 개체와 일치하고 해당 필드를 분해한다.  
+값이 패턴과 모양이 같은 레코드가 아니면 일치가 실패한다.  
+그렇지 않으면 필드 하위 패턴이 레코드의 해당 필드와 일치한다.
+
+```dart
+var (myString: foo, myNumber: bar) = (myString: 'string', myNumber: 1);
+```
+
+getter 이름은 생략할 수 있으며 필드 하위 패턴의 [상수 패턴](#constant) 또는 [식별자 패턴](#identifier)에서 유추할 수 있다.  
+이러한 패턴 쌍은 각각 동일하다.
+
+```dart
+// variable subpatterns이 있는 Record pattern:
+var (untyped: untyped, typed: int typed) = record;
+var (:untyped, :int typed) = record;
+
+switch (record) {
+  case (untyped: var untyped, typed: int typed): // ...
+  case (:var untyped, :int typed): // ...
+}
+
+// null-check and null-assert subpattern이 있는 Record pattern:
+switch (record) {
+  case (checked: var checked?, asserted: var asserted!): // ...
+  case (:var checked?, :var asserted!): // ...
+}
+
+// cast subpattern이 있는 Record pattern:
+var (untyped: untyped as int, typed: typed as String) = record;
+var (:untyped as int, :typed as String) = record;
+```
+
+<br />
+
+### Object
+
+`SomeClass(x: subpattern1, y: subpattern2)`
+개체 패턴은 개체의 속성에 대한 게터를 사용하여 데이터를 분해하기 위해 지정된 명명된 유형에 대해 일치하는 값을 확인한다.  
+값의 유형이 동일하지 않으면 거부된다.
+
+```dart
+switch (shape) {
+  // 모양이 Rect 유형인 경우 일치하고 Rect의 속성과 일치한다.
+  case Rect(width: var w, height: var h): // ...
+}
+```
+
+getter 이름을 생략하고 필드 하위 패턴의 [상수 패턴](#constant) 또는 [식별자 패턴](#identifier)에서 유추할 수 있다.
+
+```dart
+// 새 변수 x 및 y를 Point의 x 및 y 속성 값에 바인딩한다.
+var Point(:x, :y) = Point(1, 2);
+```
+
+객체 패턴은 패턴이 전체 객체와 일치할 필요가 없다.  
+개체에 패턴이 분해하지 않는 추가 필드가 있는 경우 여전히 일치할 수 있다.
+
+<br />
+
+### Wildcard
+
+`_`
+
+이름이 \_인 패턴은 [상수 패턴](#constant) 또는 [식별자 패턴](#identifier)인 와일드카드로 어떤 변수에도 바인딩하거나 할당하지 않는다.  
+나중에 위치 값을 분해하기 위해 하위 패턴이 필요한 곳에서 자리 표시자로 유용하다.
+
+```dart
+var list = [1, 2, 3];
+var [_, two, _] = list;
+```
+
+유형 주석이 있는 와일드카드 이름은 값의 유형을 테스트하지만 값을 이름에 바인딩하지 않으려는 경우에 유용하다.
+
+```dart
+switch (record) {
+  case (int _, String _):
+    print('First field is int and second is String.');
+}
+```

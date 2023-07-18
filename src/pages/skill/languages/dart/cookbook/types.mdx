@@ -41,6 +41,176 @@ Dart의 모든 변수는 객체(클래스의 인스턴스)를 참조하기 때�
 
 ## Records
 
+레코드는 익명의 불변 집계 유형이다.  
+다른 컬렉션 유형과 마찬가지로 여러 개체를 단일 개체로 묶을 수 있다.  
+다른 컬렉션 유형과 달리 레코드는 크기가 고정되고 유형이 다르며 유형이 지정된다.
+
+레코드는 실제 값이다.  
+변수에 저장하고, 중첩하고, 함수에 전달하고, 목록, 맵, 집합과 같은 데이터 구조에 저장할 수 있다.
+
+### Record syntax
+
+레코드 식은 괄호로 묶인 명명된 필드 또는 위치 필드의 쉼표로 구분된 목록이다.
+
+```dart
+var record = ('first', a: 2, b: true, 'last');
+```
+
+레코드 유형 주석은 괄호로 묶인 쉼표로 구분된 유형 목록이다.
+레코드 유형 주석을 사용하여 반환 유형 및 매개변수 유형을 정의할 수 있다.  
+예를 들어 다음 `(int, int)` 문은 레코드 유형 주석이다.
+
+```dart
+(int, int) swap((int, int) record) {
+  var (a, b) = record;
+  return (b, a);
+}
+```
+
+레코드 표현식의 필드와 유형 주석은 [매개변수와 인수](./function#parameters)가 함수에서 작동하는 방식을 반영한다.  
+위치 필드는 괄호 안에 바로 들어간다.
+
+```dart
+// 변수 선언의 레코드 유형 주석
+(String, int) record;
+
+// 레코드 식으로 초기화한다.
+record = ('A string', 123);
+```
+
+레코드 유형 주석에서 명명된 필드는 모든 위치 필드 뒤에 있는 유형 및 이름 쌍의 중괄호로 구분된 섹션 내부에 있다.  
+레코드 식에서 이름은 각 필드 값 앞에 오고 뒤에 콜론이 붙는다.
+
+```dart
+// 변수 선언의 레코드 유형 주석:
+({int a, bool b}) record;
+
+// 레코드 식으로 초기화한다.
+record = (a: 123, b: true);
+```
+
+레코드 유형의 명명된 필드 이름은 [레코드의 유형 정의](##record-types) 또는 모양의 일부이다.  
+이름이 다른 명명된 필드가 있는 두 개의 레코드는 유형이 다릅니다.
+
+```dart
+({int a, int b}) recordAB = (a: 1, b: 2);
+({int x, int y}) recordXY = (x: 3, y: 4);
+
+// 컴파일 오류, 이러한 레코드에는 동일한 유형이 없다.
+// recordAB = recordXY;
+```
+
+레코드 유형 주석에서 위치 필드의 이름을 지정할 수도 있지만 이러한 이름은 순전히 문서화용이며 레코드 유형에 영향을 미치지 않는다.
+
+```dart
+(int a, int b) recordAB = (1, 2);
+(int x, int y) recordXY = (3, 4);
+
+recordAB = recordXY; // OK.
+```
+
+이는 함수 선언 또는 함수 typedef의 위치 매개변수가 이름을 가질 수 있는 방식과 유사하지만 이러한 이름은 함수의 서명에 영향을 미치지 않는다.
+
+<br />
+
+### Record fields
+
+내장 getter를 통해 레코드 필드에 액세스할 수 있다.  
+레코드는 변경할 수 없으므로 필드에 세터가 없다.
+
+명명된 필드는 동일한 이름의 게터를 노출한다.  
+위치 필드는 명명된 필드를 건너뛰고` $<position>` 이름의 게터를 노출한다.
+
+```dart
+var record = ('first', a: 2, b: true, 'last');
+
+print(record.$1); // Prints 'first'
+print(record.a); // Prints 2
+print(record.b); // Prints true
+print(record.$2); // Prints 'last'
+```
+
+레코드 필드 액세스를 더욱 간소화하려면 [패턴 페이지](./patterns#여러-returns을-분해)를 확인하세요.
+
+<br />
+
+### Record types
+
+개별 레코드 유형에 대한 유형 선언이 없다.  
+레코드는 필드 유형에 따라 구조적으로 유형이 지정된다.  
+레코드의 모양(필드 집합, 필드 유형 및 이름(있는 경우))은 레코드 유형을 고유하게 결정한다.
+
+레코드의 각 필드에는 고유한 유형이 있다.  
+필드 유형은 동일한 레코드 내에서 다를 수 있다.  
+유형 시스템은 레코드에서 액세스할 때마다 각 필드의 유형을 인식한다.
+
+```dart
+(num, Object) pair = (42, 'a');
+
+var first = pair.$1; // Static type `num`, runtime type `int`.
+var second = pair.$2; // Static type `Object`, runtime type `String`.
+```
+
+동일한 필드 세트로 레코드를 생성하는 두 개의 관련 없는 라이브러리를 고려하자.  
+유형 시스템은 라이브러리가 서로 결합되지 않은 경우에도 해당 레코드가 동일한 유형임을 이해한다.
+
+<br />
+
+### Record equality
+
+두 레코드의 모양(필드 집합)이 동일하고 해당 필드의 값이 동일한 경우 두 레코드가 동일하다.  
+명명된 필드 순서는 레코드 모양의 일부가 아니므로 명명된 필드의 순서는 동등성에 영향을 주지 않는다.
+
+예제:
+
+```dart
+(int x, int y, int z) point = (1, 2, 3);
+(int r, int g, int b) color = (1, 2, 3);
+
+print(point == color); // Prints 'true'.
+```
+
+```dart
+({int x, int y, int z}) point = (x: 1, y: 2, z: 3);
+({int r, int g, int b}) color = (r: 1, g: 2, b: 3);
+
+print(point == color); // Prints 'false'. Lint: 관계없는 유형과 동일하다.
+```
+
+레코드는 해당 필드의 구조에 따라 `hashCode` 및 `==` 메서드를 자동으로 정의한다.
+
+<br />
+
+### Multiple returns
+
+레코드를 사용하면 함수가 함께 묶인 여러 값을 반환할 수 있다.  
+반환에서 레코드 값을 검색하려면 [패턴 일치](./patterns#여러-returns을-분해)를 사용하여 값을 로컬 변수로 분해한다.
+
+```dart
+// 레코드에서 여러 값을 반환한다.
+(String, int) userInfo(Map<String, dynamic> json) {
+  return (json['name'] as String, json['age'] as int);
+}
+
+final json = <String, dynamic>{
+  'name': 'Dash',
+  'age': 10,
+  'color': 'blue',
+};
+
+// 레코드 패턴을 사용한 구조 분해:
+var (name, age) = userInfo(json);
+
+/* Equivalent to:
+  var info = userInfo(json);
+  var name = info.$1;
+  var age  = info.$2;
+*/
+```
+
+레코드가 없는 함수에서 여러 값을 반환할 수 있지만 다른 방법에는 단점이 있다.  
+예를 들어 클래스를 만드는 것은 훨씬 더 장황하며 `List` 또는 `Map`과 같은 다른 컬렉션 유형을 사용하면 유형 안전성이 손실된다.
+
 <br />
 
 ## Collections

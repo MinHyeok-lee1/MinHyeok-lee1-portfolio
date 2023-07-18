@@ -1,0 +1,416 @@
+import { Callout } from "nextra-theme-docs";
+
+# Functions
+
+Dart는 진정한 객체 지향 언어이므로 함수도 객체이며 유형이 Function이다.  
+이는 함수를 변수에 할당하거나 다른 함수에 인수로 전달할 수 있음을 의미한다.  
+마치 함수인 것처럼 Dart 클래스의 인스턴스를 호출할 수도 있다.
+
+다음은 함수 구현의 예이다.
+
+```dart
+bool isNoble(int atomicNumber) {
+  return _nobleGases[atomicNumber] != null;
+}
+```
+
+Effective Dart는 공개 API에 대한 유형 주석을 권장하지만 유형을 생략해도 함수는 계속 작동한다.
+
+```dart
+isNoble(atomicNumber) {
+  return _nobleGases[atomicNumber] != null;
+}
+```
+
+하나의 표현식만 포함하는 함수의 경우 단축 구문을 사용할 수 있다.
+
+```dart
+bool isNoble(int atomicNumber) => _nobleGases[atomicNumber] != null;
+```
+
+`=> expr` 구문은 `{ return expr; }`.  
+`=>` 표기법은 화살표 구문이라고도 한다.
+
+<Callout type="info">
+  화살표(=>)와 세미콜론(;) 사이에는 명령문이 아닌 표현식만 나타날 수 있다.
+  예를들어 if 문은 넣을 수 없지만 조건식은 사용할 수 있다.
+</Callout>
+
+<br />
+
+## Parameters
+
+함수는 필수 위치 매개변수를 얼마든지 가질 수 있다.  
+그 뒤에는 명명된 매개변수 또는 선택적 위치 매개변수가 올 수 있다(둘 다는 아니다).
+
+<Callout type="info">
+  일부 API, 특히 Flutter 위젯 생성자는 필수 매개변수인 경우에도 명명된
+  매개변수만 사용한다. 자세한 내용은 다음 섹션을 참조하자.
+</Callout>
+
+함수에 인수를 전달하거나 함수 매개 변수를 정의할 때 후행 쉼표를 사용할 수 있다.
+
+<br />
+
+### Named parameters
+
+명명된 매개변수는 명시적으로 필수로 표시되지 않는 한 선택 사항이다.
+
+함수를 정의할 때 `{param1, param2, …}`를 사용하여 명명된 매개변수를 지정한다.  
+기본값을 제공하지 않거나 명명된 매개변수를 `필수로` 표시하지 않으면 해당 유형은 기본값이 null이 되므로 null을 허용해야 한다.
+
+```dart
+/// [bold] 및 [hidden] 플래그 설정 ...
+void enableFlags({bool? bold, bool? hidden}) {...}
+```
+
+함수를 호출할 때 `paramName: value`를 사용하여 명명된 인수를 지정할 수 있다.  
+예를 들어:
+
+```dart
+enableFlags(bold: true, hidden: false);
+```
+
+null 이외의 명명된 매개 변수에 대한 기본값을 정의하려면 =를 사용하여 기본값을 지정한다.  
+지정된 값은 컴파일 타임 상수여야 한다.  
+예를 들어:
+
+```dart
+/// [bold] 및 [hidden] 플래그 설정 ...
+void enableFlags({bool bold = false, bool hidden = false}) {...}
+
+// bold will be true; hidden will be false.
+enableFlags(bold: true);
+```
+
+대신 이름이 지정된 매개변수를 필수로 지정하여 호출자가 매개변수에 대한 값을 제공하도록 요구하는 경우 required로 주석을 추가하자.
+
+```dart
+const Scrollbar({super.key, required Widget child});
+```
+
+누군가 자식 인수를 지정하지 않고 Scrollbar를 만들려고 하면 분석기가 문제를 보고한다.
+
+<Callout type="info">
+
+필수로 표시된 매개변수는 여전히 null을 허용할 수 있다.
+
+```dart
+const Scrollbar({super.key, required Widget? child});
+```
+
+</Callout>
+
+위치 인수를 먼저 배치하고 싶을 수 있지만 Dart는 이를 요구하지 않는다.  
+Dart는 API에 적합할 때 명명된 인수를 인수 목록의 아무 곳에나 배치할 수 있도록 허용한다.
+
+```dart
+repeat(times: 2, () {
+  ...
+});
+```
+
+<br />
+
+### Optional positional parameters
+
+함수 매개변수 세트를 []로 감싸면 선택적 위치 매개변수로 표시된다.  
+기본값을 제공하지 않으면 해당 유형은 기본값이 null이 되므로 null을 허용해야 한다.
+
+```dart
+String say(String from, String msg, [String? device]) {
+  var result = '$from says $msg';
+  if (device != null) {
+    result = '$result with a $device';
+  }
+  return result;
+}
+```
+
+다음은 선택적 매개변수 없이 이 함수를 호출하는 예이다.
+
+```dart
+assert(say('Bob', 'Howdy') == 'Bob says Howdy');
+```
+
+다음은 세 번째 매개변수를 사용하여 이 함수를 호출하는 예이다.
+
+```dart
+assert(say('Bob', 'Howdy', 'smoke signal') ==
+    'Bob says Howdy with a smoke signal');
+```
+
+null 이외의 선택적 위치 매개변수에 대한 기본값을 정의하려면 =를 사용하여 기본값을 지정한다.  
+지정된 값은 컴파일 타임 상수여야 한다.  
+예를 들어:
+
+```dart
+String say(String from, String msg, [String device = 'carrier pigeon']) {
+  var result = '$from says $msg with a $device';
+  return result;
+}
+
+assert(say('Bob', 'Howdy') == 'Bob says Howdy with a carrier pigeon');
+```
+
+<br />
+
+## The main() function
+
+모든 앱에는 앱의 진입점 역할을 하는 최상위 main() 함수가 있어야 한다.  
+main() 함수는 void를 반환하고 인수에 대한 선택적인 `List<String>` 매개 변수가 있다.
+
+다음은 간단한 main() 함수이다.
+
+```dart
+void main() {
+  print('Hello, World!');
+}
+```
+
+다음은 인수를 사용하는 명령줄 앱용 main() 함수의 예이다.
+
+```dart
+// Run the app like this: dart args.dart 1 test
+void main(List<String> arguments) {
+  print(arguments);
+
+  assert(arguments.length == 2);
+  assert(int.parse(arguments[0]) == 1);
+  assert(arguments[1] == 'test');
+}
+```
+
+[args 라이브러리](https://pub.dev/packages/args)를 사용하여 명령줄 인수를 정의하고 구문 분석할 수 있다.
+
+<br />
+
+## Functions as first-class objects
+
+함수를 매개변수로 다른 함수에 전달할 수 있다.  
+예를 들어:
+
+```dart
+void printElement(int element) {
+  print(element);
+}
+
+var list = [1, 2, 3];
+
+// printElement를 매개변수로 전달한다.
+list.forEach(printElement);
+```
+
+다음과 같이 변수에 함수를 할당할 수도 있다.
+
+```dart
+var loudify = (msg) => '!!! ${msg.toUpperCase()} !!!';
+assert(loudify('hello') == '!!! HELLO !!!');
+```
+
+이 예제에서는 익명 함수를 사용한다.  
+다음 섹션에서 이에 대해 자세히 알아보자.
+
+<br />
+
+## Anonymous functions
+
+대부분의 함수는 main() 또는 printElement()와 같이 이름이 지정된다.  
+익명 함수라고 하는 이름 없는 함수나 때로는 람다 또는 클로저를 만들 수도 있다.  
+예를 들어 컬렉션에서 익명 함수를 추가하거나 제거할 수 있도록 변수에 익명 함수를 할당할 수 있다.
+
+익명 함수는 명명된 함수와 비슷해 보인다.  
+0개 이상의 매개변수가 쉼표로 구분되고 선택적 유형 주석이 괄호 사이에 있다.
+
+다음 코드 블록에는 함수의 본문이 포함되어 있다.
+
+```dart
+([[Type] param1[, …]]) {
+  codeBlock;
+};
+```
+
+다음 예제에서는 형식화되지 않은 매개 변수 item을 사용하여 익명 함수를 정의하고 이를 map 함수에 전달한다.  
+목록의 각 항목에 대해 호출되는 이 함수는 각 문자열을 대문자로 변환한다.  
+그런 다음 forEach에 전달된 익명 함수에서 변환된 각 문자열이 길이와 함께 출력된다.
+
+```dart
+const list = ['apples', 'bananas', 'oranges'];
+list.map((item) {
+  return item.toUpperCase();
+}).forEach((item) {
+  print('$item: ${item.length}');
+});
+```
+
+함수에 단일 표현식 또는 return 문만 포함된 경우 화살표 표기법을 사용하여 단축할 수 있다.
+
+```dart
+list
+    .map((item) => item.toUpperCase())
+    .forEach((item) => print('$item: ${item.length}'));
+```
+
+<br />
+
+## Lexical scope
+
+Dart는 어휘 범위가 지정된 언어이다.  
+즉, 변수의 범위는 단순히 코드의 레이아웃에 따라 정적으로 결정된다.  
+"중괄호를 바깥쪽으로 따라가면" 변수가 범위에 있는지 확인할 수 있다.
+
+다음은 각 범위 수준에서 변수가 있는 중첩 함수의 예이다.
+
+```dart
+bool topLevel = true;
+
+void main() {
+  var insideMain = true;
+
+  void myFunction() {
+    var insideFunction = true;
+
+    void nestedFunction() {
+      var insideNestedFunction = true;
+
+      assert(topLevel);
+      assert(insideMain);
+      assert(insideFunction);
+      assert(insideNestedFunction);
+    }
+  }
+}
+```
+
+`nestedFunction()`이 어떻게 모든 수준에서 최상위 수준까지 변수를 사용할 수 있는지 확인하자.
+
+<br />
+
+## Lexical closures
+
+클로저는 함수가 원래 범위 밖에서 사용되는 경우에도 어휘 범위의 변수에 액세스할 수 있는 함수 개체이다.
+
+함수는 주변 범위에 정의된 변수를 닫을 수 있다.  
+다음 예제에서 makeAdder()는 변수 addBy를 캡처한다.  
+반환된 함수가 가는 곳마다 addBy를 기억한다.
+
+```dart
+/// [addBy]를 추가하는 함수를 반환한다.
+/// 함수의 인수.
+Function makeAdder(int addBy) {
+  return (int i) => addBy + i;
+}
+
+void main() {
+  // Create a function that adds 2.
+  var add2 = makeAdder(2);
+
+  // Create a function that adds 4.
+  var add4 = makeAdder(4);
+
+  assert(add2(3) == 5);
+  assert(add4(3) == 7);
+}
+```
+
+<br />
+
+## Testing functions for equality
+
+다음은 최상위 함수, 정적 메서드 및 인스턴스 메서드가 동일한지 테스트하는 예이다.
+
+```dart
+void foo() {} // A top-level function
+
+class A {
+  static void bar() {} // A static method
+  void baz() {} // An instance method
+}
+
+void main() {
+  Function x;
+
+  // Comparing top-level functions.
+  x = foo;
+  assert(foo == x);
+
+  // Comparing static methods.
+  x = A.bar;
+  assert(A.bar == x);
+
+  // Comparing instance methods.
+  var v = A(); // Instance #1 of A
+  var w = A(); // Instance #2 of A
+  var y = w;
+  x = w.baz;
+
+  // These closures refer to the same instance (#2),
+  // so they're equal.
+  assert(y.baz == x);
+
+  // These closures refer to different instances,
+  // so they're unequal.
+  assert(v.baz != w.baz);
+}
+```
+
+<br />
+
+## Return values
+
+모든 함수는 값을 반환한다.  
+반환 값이 지정되지 않은 경우 문은 null을 반환한다.  
+함수 본문에 암시적으로 추가된다.
+
+```dart
+foo() {}
+
+assert(foo() == null);
+```
+
+함수에서 여러 값을 반환하려면 [레코드](./types#multiple-returns)의 값을 집계한다.
+
+```dart
+(String, int) foo() {
+  return ('something', 42);
+}
+```
+
+<br />
+
+## Generators
+
+일련의 값을 느리게 생성해야 하는 경우 생성기 함수를 사용하는 것이 좋다.  
+Dart는 두 종류의 생성기 함수를 기본적으로 지원한다.
+
+- Synchronous 생성기: [Iterable](https://api.dart.dev/stable/3.0.6/dart-core/Iterable-class.html) 객체를 반환한다.
+- Asynchronous 생성기: [Stream](https://api.dart.dev/stable/3.0.6/dart-async/Stream-class.html) 개체를 반환한다.
+
+동기식 생성기 함수를 구현하려면 함수 본문을 sync\*로 표시하고 yield 문을 사용하여 값을 전달한다.
+
+```dart
+Iterable<int> naturalsTo(int n) sync* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+비동기 생성기 함수를 구현하려면 함수 본문을 async\*로 표시하고 yield 문을 사용하여 값을 전달한다.
+
+```dart
+Stream<int> asynchronousNaturalsTo(int n) async* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+```
+
+생성기가 재귀적이라면 yield\*를 사용하여 성능을 향상시킬 수 있다.
+
+```dart
+Iterable<int> naturalsDownFrom(int n) sync* {
+  if (n > 0) {
+    yield n;
+    yield* naturalsDownFrom(n - 1);
+  }
+}
+```
