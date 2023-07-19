@@ -1,3 +1,9 @@
 {
-  "index": "용어모음"
+  "index": "소프트웨어 공학용어(이론)",
+  "develop": "개발 용어(웹, 앱)",
+  "js": "JavaScript 용어",
+  "ts": "TypeScript 용어",
+  "backend": "백엔드 용어",
+  "db": "Database 용어",
+  "server": "서버 용어"
 }
