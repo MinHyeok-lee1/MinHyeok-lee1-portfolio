@@ -20,11 +20,18 @@ export default function AboutMe() {
             <div className="flex flex-col mx-16 pt-12 justify-between">
               <section className="flex flex-col items-center justify-center text-gray-600 body-font">
                 <div className="flex w-full justify-start container mx-auto items-start">
-                  <h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">
-                    기록하는 개발자 이민혁입니다.
-                    <br className="inline-block" />
-                    <b>이력서: </b>이민혁
+                  <h1 className="title-font sm:text-3xl text-2xl font-medium text-gray-900">
+                    기록하려 노력하는 개발자 이민혁입니다.
+                    <br />
                   </h1>
+                  <br className="inline-block" />
+                </div>
+                <div className="flex w-full justify-start container mx-auto items-start">
+                  <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
+                    <br />
+                    <br className="inline-block" />
+                    👦🏻 <b>About Me</b>
+                  </h3>
                 </div>
                 <div className="container mx-auto flex px-5 py-12 items-center">
                   <div className="flex flex-col w-full">
@@ -33,64 +40,59 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>인적사항</b>
+                          <b>Introduction</b>
                         </p>
                       </div>
                       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed pt-4 lg:pt-2 break-all">
-                          <b>성명: 이민혁</b>
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          ◦ 안녕하세요! 3년 차 백엔드 개발자 이민혁입니다.
                           <br />
-                          <strong>이메일: minhyeok.lee1@gmail.com</strong>
+                          ◦ 기록하지 못하여 잊었던 과거에 실수로 기록의 중요함을
+                          깨달았습니다.
+                          <br />
+                          ◦ 기록하는 것의 가치를 깨닫게 되어 블로그와 해당
+                          웹사이트에 기록합니다.
+                          <br />
+                          ◦ 개발 쪽으로 Clean Code와 Test에 대한 고민을 하고
+                          실제로 적용하고자 합니다.
+                          <br />◦ 커피와 운동 💪🏻, 그리고 좋은 사람과 함께하는
+                          모든 것에 관심이 많습니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>Contact & Channel</b>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <strong>◦ Email: minhyeok.lee1@gmail.com</strong>
                           <br />
                           <strong>
-                            깃허브: https://github.com/MinHyeok-lee1
+                            ◦ Github:&nbsp;
+                            <Link href="https://github.com/MinHyeok-lee1">
+                              https://github.com/MinHyeok-lee1
+                            </Link>
+                          </strong>
+                          <br />
+                          <strong>
+                            ◦ Blog:&nbsp;
+                            <Link href="https://kfdd6630.tistory.com/">
+                              https://kfdd6630.tistory.com
+                            </Link>
                           </strong>
                         </p>
                       </div>
                     </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>경력사항</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed pt-4 lg:pt-2 break-all">
-                          <strong>기간: 2021. 07. 01 - 현직</strong>
-                          <br />
-                          <strong>장소: (주)MK, 주식회사 엠케이</strong>
-                          <br />
-                          <strong>직급: 연구원(사원)</strong>
-                        </p>
-                      </div>
-                    </div>
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>학력사항</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed pt-4 lg:pt-2 break-all">
-                          <strong>2015. 03. 01 - 2021. 03. 01</strong>
-                          <br />
-                          <strong>한남대학교</strong>
-                          <br />
-                          컴퓨터통신무인기술학과(컴퓨터 트랙) 학사
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </section>
@@ -99,116 +101,9 @@ export default function AboutMe() {
             <div className="flex flex-col mx-16 pt-12 justify-between">
               <section className="flex flex-col items-center justify-center text-gray-600 body-font">
                 <div className="flex w-full justify-start container mx-auto items-start">
-                  <h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">
-                    저는 이런 개발자 입니다.
-                  </h1>
-                </div>
-                <div className="container mx-auto flex px-5 py-12 items-center">
-                  <div className="flex flex-col w-full">
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>불편한 것을 개선하는 개발자</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          반복적인 업무와 비효율적인 프로세스를 개선하는 데
-                          보람을 느낍니다. 주기적으로 오래된 백업 파일을
-                          삭제해야하는 일이 있었습니다. 어려운 일은 아니지만,
-                          단순하고 반복적인 업무라 자동화할 수 있는 방법을
-                          고민하다가 golang을 사용해 직접 파일 정리 프로그램을
-                          만들었습니다. 고객과 이메일, 전화로 소통하여 발생하는
-                          문제들을 헬프데스크 도입과 사내 메신저 연동으로 해결한
-                          경험도 있습니다. 이처럼 불편한 것에 안주하지 않고 항상
-                          개선방법을 고민한다.
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>시작은 칸반보드 만들기 부터하는 개발자</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          어떤 일을 시작하기 전에 항상 칸반보드로 계획을
-                          세웁니다. 일을 가장 작은 단위로 쪼개고, 작업 시간을
-                          예상하여 트렐로 보드에 카드로 정리한다. 그 날 일을
-                          시작하기 전에 어떤 카드를 해결할지 정하고, 하나씩
-                          해결하는 것에 보람을 느낍니다. 예상과 실제 작업 시간이
-                          다를 경우도 종종 생기지만, 이를 참고해서 앞으로 계획을
-                          더 정확하게 세울 수 있습니다.
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>전체적인 소프트웨어 생명주기를 경험한 개발자</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          비록 규모가 큰 프로젝트는 아니지만, 소프트웨어
-                          생명주기를 전체적으로 경험했습니다. 요구사항 분석,
-                          설계, 개발, 테스트, 운영의 각 단계별로 발생할 수 있는
-                          이슈와 그 해결 방법에 대한 나름의 노하우를 가지고
-                          있습니다. 경험해보지 않은 에러를 만날 때, 근본적인
-                          원인을 분석하고 관련 문서를 검색해 끝까지 해결하는
-                          고집이 있습니다.
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>목표가 있는 개발자</b>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          문제가 생겼을 때 가장 먼저 생각나는 사람, 신뢰를 주는
-                          개발자가 되고자 한다. 이를 위해 경계를 정해두지 않고
-                          다양한 분야에서 폭넓은 지식을 가지려고 노력한다. 책,
-                          뉴스, RSS, 팟캐스트 등 다양한 경로를 통해 정보를
-                          습득한다. 만약 문제를 해결하지 못하더라도, 함께 문제를
-                          고민하고 해결책을 찾아나가는 데 도움이 될 수 있는
-                          사람이 되는 것이 목표입니다.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <div className="flex flex-col mx-16 pt-12 justify-between">
-              <section className="flex flex-col items-center justify-center text-gray-600 body-font">
-                <div className="flex w-full justify-start container mx-auto items-start">
-                  <h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">
-                    기술 스택
-                  </h1>
+                  <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
+                    🔧 <b>Skills</b>
+                  </h3>
                 </div>
                 <div className="container mx-auto flex px-5 py-12 items-center">
                   <div className="flex flex-col w-full">
@@ -224,19 +119,17 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
-                          <b>Java</b>
-                          Spring MVC, Spring Boot, JPA, Hibernate, JDBC Spring을
-                          활용해 웹서비스, API 개발 및 DB와 연동을 할 수
-                          있습니다.
-                          <b>Node.js</b>
-                          NestJs, TypeORM NestJs를 활용해 웹서비스, API 개발 및
-                          DB와 연동을 할 수 있습니다.
-                          <b>DB</b>
-                          MySQL, Oracle, MongoDB RDB 테이블을 설계하고 join을
-                          활용해 데이터를 조회할 수 있습니다. MongoDB에서
-                          Document 단위로 데이터를 저장하고, 인덱스를 설정할 수
-                          있습니다. DB 설정을 변경하고 백업, 복구를 할 수
-                          있습니다.
+                          <b>◦ Node.js, NestJs, TypeORM NestJs</b>: API 개발 및
+                          DB 연동이 가능하고 whitelist와 같은 전역적인 수신
+                          데이터 설정과 Controller 별 수신 데이터에 대한
+                          여러가지에 대한 validation 설정 및 Swagger를 통한
+                          형상관리가 가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ MongoDB</b>: Document 단위로 데이터를 저장하고
+                          여러가지 종류의 인덱스를 상황별로 설정 가능 및
+                          데이터베이스 설정을 변경하고 dump 및 restore 명령어를
+                          통한 백업 및 복구 가능합니다.
                         </p>
                       </div>
                     </div>
@@ -253,17 +146,23 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          <b>JavaScript</b>
-                          ES6, jQuery, React, Vue, MobX ES6와 jQuery를 활용해
-                          DOM을 제어하고 AJAX로 데이터를 가져올 수 있습니다.
-                          React와 Vue를 활용해 SPA를 만들 수 있습니다. MobX를
-                          활용해 SPA의 상태를 관리할 수 있습니다.
-                          <b>HTML</b>
-                          HTML 구조와 DOM을 이해하고 HTML5 시멘틱 태그에 맞게
-                          작성할 수 있습니다.
-                          <b>CSS</b>
-                          CSS3, Bootstrap, Tailwind CSS CSS 프레임워크를 활용해
-                          레이아웃과 디자인을 구현할 수 있습니다.
+                          <b>◦ Next.js</b>: Reactquery를 활용한 상황 별 데이터
+                          송수신 가능, Redux, Recoil을 활용한 전역변수 관리 가능
+                          및 CSR, SSR Page를 따로 관리가 가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ JavaScript</b>: ES6, Next, React와 jQuery를
+                          활용해 DOM을 제어하고 AJAX로 데이터 송수신이
+                          가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ HTML</b>: HTML 구조와 DOM을 이해하고 HTML5 시멘틱
+                          태그에 맞게 작성할 수 있습니다.
+                          <br />
+                          <br />
+                          <b>◦ CSS</b>: CSS3, Bootstrap, Tailwind CSS CSS
+                          프레임워크를 활용해 레이아웃과 디자인을 구현할 수
+                          있습니다.
                         </p>
                       </div>
                     </div>
@@ -279,14 +178,14 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          <b>Kubernetes, Docker</b>
-                          개발 및 운영 환경을 정의하고 배포에 활용할 수
-                          있습니다.
-                          <b>AWS</b>
-                          EC2, EKS, S3, Lightsail, RDS, SQS EC2 인스턴스를
-                          생성하고 요청량에 따라 Auto Scaling 설정을 할 수
-                          있습니다. EKS 클러스터를 구축하고 네트워크 설정을 할
-                          수 있습니다.
+                          <b>◦ Kubernetes, Docker</b>: 개발 및 운영 환경을
+                          정의하고 배포에 활용이 가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ AWS</b>: EC2, EKS, S3, Lightsail, RDS, SQS EC2
+                          인스턴스를 생성하고 요청량에 따라 Auto Scaling 설정을
+                          할 수 있고 EKS 클러스터를 구축하고 네트워크 설정이
+                          가능합니다.
                         </p>
                       </div>
                     </div>
@@ -303,13 +202,13 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
-                          <b>Version Control</b>
-                          Git, GitHub, GitLab, SVN branch, rebase 등 명령어를
-                          활용해 소스코드를 관리할 수 있습니다.
-                          <b>CI/CD</b>
-                          Jenkins, GitHub Actions Git, SVN과 연동해 개발 및 운영
-                          환경에 배포할 수 있습니다. HTML 구조와 DOM을 이해하고
-                          HTML5 시멘틱 태그에 맞게 작성할 수 있습니다.
+                          <b>◦ Version Control</b>: Git, GitHub, GitLab, SVN
+                          branch, rebase 등 명령어를 활용해 소스코드를 관리가
+                          가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ CI/CD</b>: Jenkins, GitHub Actions Git, SVN과
+                          연동해 개발 및 운영 환경에 배포가 가능합니다.
                         </p>
                       </div>
                     </div>
@@ -321,9 +220,9 @@ export default function AboutMe() {
             <div className="flex flex-col mx-16 pt-12 justify-between">
               <section className="flex flex-col items-center justify-center text-gray-600 body-font">
                 <div className="flex w-full justify-start container mx-auto items-start">
-                  <h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">
-                    프로젝트
-                  </h1>
+                  <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
+                    💻 <b>Work Experience & Projects</b>
+                  </h3>
                 </div>
                 <div className="container mx-auto flex px-5 py-12 items-center">
                   <div className="flex flex-col w-full">
@@ -332,14 +231,35 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>프로젝트1</b>
+                          <b>CARYAK</b>
+                          <br />
+                          <span className="text-xs">
+                            2022-04-01 ~ 2023-07-31
+                          </span>
                         </p>
                       </div>
                       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>프로젝트 설명</b>
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 자동차 정비 예약(고객 및 정비소) 웹사이트</b>
+                          <br />
+                          &nbsp; ◦ front-end | 정비소 웹사이트 예약 및 설정
+                          페이지 제작
+                          <br />
+                          &nbsp; ◦ front-end | 접속 ip를 검사하여 접속자 파악 및
+                          qc 웹 사이트 배포 웹사이트로 반환
+                          <br />
+                          &nbsp; ◦ back-end | 페이지네이션 skip() 대신
+                          hasNext()와 next()를 사용하여 속도 향상
+                          <br />
+                          &nbsp; ◦ back-end | 위도, 좌표값인 Geospatial
+                          Queries를 사용하여 index로 설정
+                          <br />
+                          &nbsp; ◦ back-end | Transaction을 사용하여 자원
+                          임계구역 설정
+                          <br />
+                          &nbsp; ◦ Admin | front-end 및 back-end api 제작
                         </p>
                       </div>
                     </div>
@@ -351,12 +271,207 @@ export default function AboutMe() {
             <div className="flex flex-col mx-16 pt-12 justify-between">
               <section className="flex flex-col items-center justify-center text-gray-600 body-font">
                 <div className="flex w-full justify-start container mx-auto items-start">
-                  <h1 className="title-font sm:text-4xl text-3xl font-medium text-gray-900">
-                    기타사항
-                  </h1>
+                  <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
+                    📚 <b>Personal Experience & Projects</b>
+                  </h3>
                 </div>
                 <div className="container mx-auto flex px-5 py-12 items-center">
                   <div className="flex flex-col w-full">
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>개발새발</b>
+                          <br />
+                          <span className="text-xs">2023-01-27 ~ 현재</span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ minhyeok.lee 기록용 웹사이트</b>
+                          <br />
+                          &nbsp; ◦ front-end | Next.js를 사용하여 front-end 홈
+                          ui 제작
+                          <br />
+                          &nbsp; ◦ front-end | Nextra를 사용한 front-end 문서측
+                          ui제작
+                          <br />
+                          &nbsp; ◦ back-end | Notion Database를 사용한 프로젝트
+                          데이터 저장 및 수신
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>HelpU</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-12-01 ~ 2022-05-31
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>
+                            ◦ 한남대학교 학과 별 정보 모음 모바일 애플리케이션
+                          </b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 좌석
+                          예약 애플리케이션 제작
+                          <br />
+                          &nbsp; ◦ app | 휠체어: 전자석 및 브라켓을 이용하여
+                          노약자용 좌석에 부착
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>DuoBattleGame</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-10-10 ~ 2022-03-24
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 토이프로젝트용 게임 모바일 애플리케이션</b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Flutter를 사용한 간단한
+                          게임
+                          <br />
+                          &nbsp; ◦ app | Timer()를 활용한 일찍 터치하거나, 블록
+                          먼저 맞추는 쪽이 이기는 게임
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>use-AICamera</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-08-08 ~ 2022-02-08
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ AI 학습모델을 이용한 Camera 화재감지 시스템</b>
+                          <br />
+                          &nbsp; ◦ program | 불에 대한 사진 및 동영상을 학습하여
+                          AI 학습모델 추출
+                          <br />
+                          &nbsp; ◦ program | IPCamera 혹은 노트북 카메라로 불을
+                          감지하는 프로그램 제작
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>CHAMCHAM</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-09-01 ~ 2021-12-31
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 대전시 트램 노약좌석 예약 서비스</b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 좌석
+                          예약 애플리케이션 제작
+                          <br />
+                          &nbsp; ◦ app | 휠체어: 전자석 및 브라켓을 이용하여
+                          노약자용 좌석에 부착
+                          <br />
+                          &nbsp; ◦ app | 임산부: QR코드를 활용하여 예약된 좌석에
+                          태그 시 활성화
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div className="flex flex-col mx-16 pt-12 justify-between">
+              <section className="flex flex-col items-center justify-center text-gray-600 body-font">
+                <div className="flex w-full justify-start container mx-auto items-start">
+                  <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
+                    🧷 <b>Etc.</b>
+                  </h3>
+                </div>
+                <div className="container mx-auto flex px-5 py-12 items-center">
+                  <div className="flex flex-col w-full">
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>경력사항</b>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <strong>◦ 기간: 2021. 07. 01 - 2023. 07. 31</strong>
+                          <br />
+                          <strong>◦ 장소: (주)MK, 주식회사 엠케이</strong>
+                          <br />
+                          <strong>◦ 직급: 연구원(사원)</strong>
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>학력사항</b>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <strong>◦ 2015. 03. 01 - 2021. 03. 01</strong>
+                          <br />
+                          <strong>◦ 한남대학교</strong>
+                          <br />◦ 컴퓨터통신무인기술학과(컴퓨터 트랙) 학사
+                        </p>
+                      </div>
+                    </div>
+
                     <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
                     <div className="flex flex-col lg:flex-row w-full">
                       <div className="w-full lg:w-1/2">
@@ -368,12 +483,11 @@ export default function AboutMe() {
                       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed pt-4 lg:pt-2 break-all">
-                          <b>2017.06-2019.02</b>
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <b>◦ 2017.06-2019.02</b>
                           <br />
-                          <strong>20사단 62여단 109기보대대</strong>
-                          <br />
-                          무전통신운영병(중대통신병)
+                          <strong>◦ 20사단 62여단 109기보대대</strong>
+                          <br />◦ 무전통신운영병(중대통신병)
                         </p>
                       </div>
                     </div>
@@ -389,12 +503,18 @@ export default function AboutMe() {
                       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed pt-4 lg:pt-2 break-all">
-                          <strong>2021. 07</strong>
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <strong>◦ 2021. 07</strong>
                           <br />
-                          <strong>정보처리기사</strong>
+                          <strong>◦ 정보처리기사</strong>
                           <br />
-                          한국산업인력공단
+                          ◦ 한국산업인력공단
+                          <br />
+                          <br />
+                          <strong>◦ 2020. 06</strong>
+                          <br />
+                          <strong>◦ 리눅스마스터 2급</strong>
+                          <br />◦ KAIT 정보통신기술자격시험
                         </p>
                       </div>
                     </div>
