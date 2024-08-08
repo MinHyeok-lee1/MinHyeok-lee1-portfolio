@@ -48,7 +48,7 @@ export default function ProjectItem({ data }) {
           className="rounded t-xl"
           src={imgSrc}
           alt="cover image"
-          sizes="100vw"
+          sizes="auto"
           quality={100}
           // layout="fill"
           //   objectFit="contain" // Scale your image down to fit into the container
