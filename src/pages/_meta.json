@@ -5,13 +5,13 @@
   "home": {
     "title": "문서정리"
   },
-  "project": {
+  "projects": {
     "title": "개발문서"
   },
-  "skill": {
+  "skills": {
     "title": "기술문서"
   },
-  "terminology": {
+  "terminologys": {
     "title": "용어문서"
   }
 }
