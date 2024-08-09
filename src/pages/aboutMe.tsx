@@ -449,6 +449,13 @@ export default function AboutMe() {
                           <br />
                           <strong>◦ 직급: 연구원(사원)</strong>
                         </p>
+                        <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                          <strong>◦ 기간: 2023. 08. 01 - 현재</strong>
+                          <br />
+                          <strong>◦ 장소: 주식회사 아트와</strong>
+                          <br />
+                          <strong>◦ 직급: 소프트웨어팀 팀장</strong>
+                        </p>
                       </div>
                     </div>
 

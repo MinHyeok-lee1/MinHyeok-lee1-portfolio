@@ -2,12 +2,21 @@ import { FileTree } from "nextra-theme-docs";
 
 # CARYAK
 
+- [카약 바로가기](https://caryak.net/)
+- (주) MK에서 개발한 차량 정비관련 예약 플랫폼
+- 지역을 선택하여 차량 종류 및 정비 관련 일정을 예약함
+- 카카오 및 네이버 소셜 로그인 사용
+- Front-end 로그인 및 쿠키관리, 관리자 페이지 및 Back-end, database 부분을 담당
+
 ## 프로젝트 구성
+
+- CARYAK은 아래와 같은 프로젝트 구조로 이루어짐
 
 <FileTree>
   <FileTree.Folder name="servers" defaultOpen>
     <FileTree.Folder name="front-end" />
     <FileTree.Folder name="back-end" />
+    <FileTree.Folder name="database" />
     <FileTree.Folder name="model-builder" />
     <FileTree.Folder name="proxy-server" />
   </FileTree.Folder>
@@ -31,6 +40,10 @@ NextJS로 개발된 UI 제공용 서버
 #### back-end
 
 NestJS로 개발된 api 제공용 서버
+
+#### database
+
+MongoDB로 구성된 데이터베이스
 
 #### model-builder
 

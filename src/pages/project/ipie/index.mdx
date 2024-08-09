@@ -1,0 +1,41 @@
+import { FileTree } from "nextra-theme-docs";
+
+# I-PIE
+
+- (주) 아트와에서 현대와 협업한 배수로 탐사로봇
+- MAIN-MCU 부분에서 영상 처리 및 back-end, database 부분을 담당
+
+## 프로젝트 구성
+
+- I-PIE는 아래와 같은 프로젝트 구조로 이루어짐
+
+<FileTree>
+  <FileTree.Folder name="I-PIE" defaultOpen>
+    <FileTree.File name="MAIN-MCU" />
+    <FileTree.Folder name="servers" defaultOpen>
+      <FileTree.File name="front-end" />
+      <FileTree.File name="back-end" />
+      <FileTree.File name="database" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+### MAIN-MCU
+
+로봇 아이파이의 메인로직을 수행하는 부분
+
+### servers
+
+아이파이의 조작을 위한 front-end, back-end, database로 구성
+
+#### front-end
+
+Svelte 로 개발된 UI 제공용 서버
+
+#### back-end
+
+NestJS로 개발된 api 제공용 서버
+
+#### database
+
+MongoDB로 구성된 데이터베이스

@@ -1,7 +1,7 @@
 {
   "flutter": "Flutter",
   "expo": "Expo",
-  "firebase": {
+  "Firebase": {
     "display": "hidden"
   }
 }

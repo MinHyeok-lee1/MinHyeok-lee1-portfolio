@@ -7,7 +7,7 @@ import { FileTree } from "nextra-theme-docs";
 - 전체 문서정리의 컨텐츠는 문서정리, 개발문서, 기술문서 그리고 용어문서 4가지 서브폴더 구조로 구성되어 있다.
 - 문서정리는 해당 페이지로 전체 폴더에 대한 설명을 명시해놓은 폴더이다.
 - 개발문서는 실제 프로젝트 결과물과 그로인해 나온 형상등을 정리한 폴더이다.
-- 기술문서은 개인적으로 학습한 내용과 학습하며 기록이 필요하다고 느낀 것들을 정리한 폴더이다.
+- 기술문서는 개인적으로 학습한 내용과 학습하며 기록이 필요하다고 느낀 것들을 정리한 폴더이다.
 - 용어문서 폴더는 용어문서를 포함한 여러 SW관련 용어들을 정리한 폴더이다.
 - 서브폴더 내부는 각각 서브폴더 명에 해당하는 컨텐츠로 구성되어있고 세부 정보는 서브폴더 아래 소개에 정리되어있다.
 - 홈 화면으로 돌아가려면 좌측위에 `개발새발`을 클릭하면 홈 화면으로 넘어갈 수 있다.
@@ -32,7 +32,11 @@ import { FileTree } from "nextra-theme-docs";
     <FileTree.Folder name="model-builder" />
     <FileTree.Folder name="proxy-server" />
   </FileTree.Folder>
-  <FileTree.Folder name="Flutter" defaultOpen></FileTree.Folder>
+  <FileTree.Folder name="Flutter" defaultOpen>
+    <FileTree.File name="소개" />
+    <FileTree.File name="기술문서 정리" />
+    <FileTree.File name="발생이슈 정리" />
+  </FileTree.Folder>
 </FileTree.Folder>
 
 <FileTree.Folder name="기술문서" defaultOpen>
@@ -59,9 +63,21 @@ import { FileTree } from "nextra-theme-docs";
       <FileTree.File name="기술문서 정리" />
       <FileTree.File name="발생이슈 정리" />
     </FileTree.Folder>
-    <FileTree.Folder name="Dart" defaultOpen></FileTree.Folder>
-    <FileTree.Folder name="Java" defaultOpen></FileTree.Folder>
-    <FileTree.Folder name="Python" defaultOpen></FileTree.Folder>
+    <FileTree.Folder name="Dart" defaultOpen>
+      <FileTree.File name="소개" />
+      <FileTree.File name="기술문서 정리" />
+      <FileTree.File name="발생이슈 정리" />
+    </FileTree.Folder>
+    <FileTree.Folder name="Java" defaultOpen>
+      <FileTree.File name="소개" />
+      <FileTree.File name="기술문서 정리" />
+      <FileTree.File name="발생이슈 정리" />
+    </FileTree.Folder>
+    <FileTree.Folder name="Python" defaultOpen>
+      <FileTree.File name="소개" />
+      <FileTree.File name="기술문서 정리" />
+      <FileTree.File name="발생이슈 정리" />
+    </FileTree.Folder>
   </FileTree.Folder>
   <FileTree.Folder name="JS Frameworks" defaultOpen>
     <FileTree.Folder name="Nextra" defaultOpen>
@@ -130,14 +146,24 @@ import { FileTree } from "nextra-theme-docs";
     <FileTree.Folder name="Firebase" defaultOpen>
       <FileTree.File name="소개" />
       <FileTree.File name="개발환경 설정" />
-      <FileTree.Folder name="기술문서 정리" defaultOpen></FileTree.Folder>
+      <FileTree.File name="기술문서 정리" />
       <FileTree.File name="발생이슈 정리" />
     </FileTree.Folder>
   </FileTree.Folder>
 </FileTree.Folder>
 <FileTree.Folder name="Server" defaultOpen>
-  <FileTree.Folder name="Docker" defaultOpen></FileTree.Folder>
-  <FileTree.Folder name="K8S" defaultOpen></FileTree.Folder>
+  <FileTree.Folder name="Docker" defaultOpen>
+    <FileTree.File name="소개" />
+    <FileTree.File name="개발환경 설정" />
+    <FileTree.File name="기술문서 정리" />
+    <FileTree.File name="발생이슈 정리" />
+  </FileTree.Folder>
+  <FileTree.Folder name="K8S" defaultOpen>
+    <FileTree.File name="소개" />
+    <FileTree.File name="개발환경 설정" />
+    <FileTree.File name="기술문서 정리" />
+    <FileTree.File name="발생이슈 정리" />
+  </FileTree.Folder>
 </FileTree.Folder>
 <FileTree.Folder name="Database" defaultOpen>
   <FileTree.Folder name="MongoDB" defaultOpen>
