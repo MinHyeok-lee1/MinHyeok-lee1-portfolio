@@ -34,7 +34,7 @@ export default function Hero() {
           <br />
         </p>
         <div className="flex justify-center">
-          <Link href="/projects">
+          <Link href="/project">
             <button className="btn-project">프로젝트 보러가기</button>
           </Link>
           <Link href="/home">
