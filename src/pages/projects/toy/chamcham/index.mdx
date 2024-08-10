@@ -5,23 +5,21 @@ import { FileTree } from "nextra-theme-docs";
 - 한남대학교 IPD(Innovative Product Development) 프로젝트
 - CPD 이후 연계 프로젝트로 교통약자와 트램을 키워드로 대전시와 협업
 - 특허 등록 완료
-  - 임산부와 휠체어를 사용하는 승객을 위한 대중교통 좌석예약시스템 (Public transport seat reservation system for pregnant women and wheelchair-driven passengers)
 - CHAMCHAM-APP 및 MAIN-MCU 부분을 담당
 
 ## 프로젝트 구성
 
 <FileTree>
-  <FileTree.Folder name="CHAMCHAM-APP" />
-  <FileTree.Folder name="MAIN-MCU" />
+  <FileTree.Folder name="CHAMCHAM" defaultOpen>
+    <FileTree.File name="CHAMCHAM-APP" />
+    <FileTree.File name="MAIN-MCU" />
+  </FileTree.Folder>
 </FileTree>
 
 ### CHAMCHAM-APP
 
-- 임산부와 휠체어 이용자가 애플리케이션을 사용하여 좌석을 예약하는 앱개발
-- 임산부는 예약한 좌석을 QR코드를 이용하여 좌석을 내려오게 할 수 있음
+Android studio, java로 개발된 UI 제공용 서버
 
-#### MAIN-MCU
+### MAIN-MCU
 
-- 예약한 임산부나 휠체어 이용자가 탈 상황이 되면 상호작용(LED ON) 하는 메인 로직부분
-- 휠체어 이용자는 좌석에 부착하는 형식으로 사용
-- 임산부 및 휠체어 이용자가 올바르게 좌석을 사용할 시 상호작용함(LED OFF)
+CHAMCHAM 의자의 메인로직을 수행하는 부분

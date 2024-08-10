@@ -1,3 +1,25 @@
 import { FileTree } from "nextra-theme-docs";
 
 # CHAMCHAM
+
+- 다양한 과(경제학과, 멀티미디어 학과, 기계공학과 등)의 학생들이 참여한 캡스톤 디자인 프로젝트
+- 임산부와 휠체어를 사용하는 승객을 위한 대중교통 좌석예약시스템 (Public transport seat reservation system for pregnant women and wheelchair-driven passengers)
+- 대전시 2호선인 트램에 교통약자들을 위한 서비스로 구성
+
+## 구축 환경
+
+- CHAMCHAM-APP: Android studio에서 java를 사용하여 구성
+- MAIN-MCU: Arduino IDE를 사용하여 구성
+
+## 구성
+
+### CHAMCHAM-APP
+
+- 임산부와 휠체어 이용자가 애플리케이션을 사용하여 좌석을 예약하는 앱개발
+- 임산부는 예약한 좌석을 QR코드를 이용하여 좌석을 내려오게 할 수 있음
+
+### MAIN-MCU
+
+- 예약한 임산부나 휠체어 이용자가 탈 상황이 되면 상호작용(LED ON) 하는 메인 로직부분
+- 휠체어 이용자는 좌석에 부착하는 형식으로 사용
+- 임산부 및 휠체어 이용자가 올바르게 좌석을 사용할 시 상호작용함(LED OFF)

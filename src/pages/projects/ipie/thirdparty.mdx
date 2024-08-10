@@ -1,0 +1,23 @@
+# 사용 템플릿(혹은 추천 템플릿)
+
+## AWS
+
+### AWS MQTT
+
+- AWS IoT Core에서 지원하는 프로토콜
+- MQTT(Message Queuing Telemetry Transport)는 제약된 디바이스 용으로 설계된 경량 메시징 프로토콜
+- 이 프로토콜을 통해 로봇과 서버간 메시지를 주고 받으며 통신함
+
+### AWS KVS
+
+- AMAZON Kinesis Video Streams를 통해 로봇에서 촬영한 영상을 실시간 송신함
+- MAIN-MCU에서 AWS KVS로 영상을 송출함과 동시에 로봇과 연결된 저장장치에 저장함
+- Front-end에서 직접 key를 가지고 접근하여 촬영된 영상을 사용자에게 보여줌
+
+- 영상을 저장하는 것도 AWS에서 지원하지만 특정 지역만 아직 지원하였기에 사용하지 않음
+
+## Tailwind CSS
+
+- 현재 이 repository의 개발환경은 Tailwind CSS에 맞춰진 상태
+- 공식문서 : https://tailwindcss.com/
+- 기본환경은 구축되어 있으나 customization을 위해서는 https://tailwindcss.com/docs/configuration 링크 참조

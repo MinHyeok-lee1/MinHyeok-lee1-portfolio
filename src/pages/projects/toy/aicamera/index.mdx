@@ -2,9 +2,8 @@ import { FileTree } from "nextra-theme-docs";
 
 # AI-CAM
 
-- ip-cam을 사용하여 화재를 감지하는 시스템
-- 화재 사진을 학습시킨 모델을 사용하여 ip-cam으로 화재를 감지
-- google-colab을 사용하여 ai모델을 학습시키고 이를 python으로 제작한 프로그램에 적용
+- Ai 모델을 가지고 화재를 학습시키고 해당 학습된 모델로 Python으로 사용자에게 알려주는 프로그램 제작
+- Ai 모델을 제작하는 것을 제외하고 나머지 참여
 
 ## 프로젝트 구성
 
@@ -12,7 +11,20 @@ import { FileTree } from "nextra-theme-docs";
 
 <FileTree>
   <FileTree.Folder name="AI-CAM" defaultOpen>
+    <FileTree.File name="AI-Modeling" />
+    <FileTree.File name="AI-Learning" />
     <FileTree.File name="pythonPart" />
-    <FileTree.File name="AI-MODEL" />
   </FileTree.Folder>
 </FileTree>
+
+### AI-Modeling
+
+학습시키는 AI 모델 구성 (담당하지 않음)
+
+### AI-Learning
+
+AI모델을 학습시킴
+
+### pythonPart
+
+AI모델을 가지고 만든 프로그램

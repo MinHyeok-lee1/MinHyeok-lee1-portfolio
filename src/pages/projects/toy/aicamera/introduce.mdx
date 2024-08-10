@@ -1,3 +1,33 @@
 import { FileTree } from "nextra-theme-docs";
 
 # Ai-camera
+
+- IP-CAMERA에 화재가 감지되면 사용자에게 알림
+- 화재 사진을 학습시킨 모델을 사용하여 ip-cam으로 화재를 감지
+- google-colab을 사용하여 ai모델을 학습시키고 이를 python으로 제작한 프로그램에 적용
+
+## 구축 환경
+
+- AI-Learning: Google의 Colab을 사용하여 학습시킴
+- pythonPart: VSC에서 python으로 프로그램을 추출함
+
+## 구성
+
+Ai-camera 프로젝트는 다음과 같이 3종의 모듈로 구성된다.
+
+- AI-Modeling: 실제로 학습시키는 AI 모델
+- AI-Learning : Colab에서 AI모델을 딥러닝 시킴
+- pythonPart: 딥러닝된 결과물을 가지고 만든 프로젝트
+
+## AI-Modeling
+
+화재를 감지하는 AI모델을 제작, 경찰과 도둑 AI를 제작하여 화재 데이터를 생성 및 화재가 맞으면 점수 추가 수행
+화재와 비슷한 붉은 김치, 고무장갑등은 화재가 아닌 데이터로 계속하여 학습시켜야 김치를 보고 화재라고 판단하지 않음
+
+### AI-Learning
+
+AI-Modeling에서 나온 결과물 Model을 가지고 여러 하이퍼파라미터를 수정해가며 딥러닝 시켜 화재 정답률이 높은 모델 계속 학습시킴
+
+### pythonPart
+
+AI-Learning에서 나온 결과물 모델을 가지고 프로그램을 제작하여 IP-CAMERA에서 화재를 감지하면 사용자에게 알림

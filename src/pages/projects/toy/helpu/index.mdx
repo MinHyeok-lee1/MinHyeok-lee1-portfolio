@@ -2,10 +2,8 @@ import { FileTree } from "nextra-theme-docs";
 
 # HelpU
 
-- 한남대학교에서 과를 선택하여 과와 관련된 정보를 볼 수 있는 앱
-- 한남대학교는 과사 홈페이지, 장학금 홈페이지, 메인 홈페이지등 정보가 너무 나뉘어져 있었음
-- 과별로 정보를 크롤링하여 본인에게 맞는 과의 정보를 보여줌
-- pythonPart에서 selenium을 사용하여 데이터를 크롤링하고 HelpU-APP에서 데이터를 받아오는 부분을 담당
+- 본인의 과에 맞는 정보를 제공하는 애플리케이션
+- pythonPart에서 Selenium을 사용하여 데이터를 크롤링하고 HelpU-APP에서 데이터를 받아오는 부분을 담당
 
 ## 프로젝트 구성
 
@@ -17,3 +15,11 @@ import { FileTree } from "nextra-theme-docs";
     <FileTree.File name="pythonPart" />
   </FileTree.Folder>
 </FileTree>
+
+### HelpU-App
+
+Android studio, java로 개발된 UI 제공용 서버
+
+### pythonPart
+
+앱에서 제공하는 각 과의 정보들을 크롤링하여 저장하는 프로그램
