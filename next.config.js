@@ -38,4 +38,6 @@ const nextConfig = {
   },
 };
 
-module.exports = withNextra(nextConfig);
+const withVideos = require("next-videos");
+
+module.exports = withNextra(withVideos(nextConfig));
