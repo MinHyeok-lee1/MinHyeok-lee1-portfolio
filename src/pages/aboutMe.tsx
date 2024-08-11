@@ -166,6 +166,7 @@ export default function AboutMe() {
                         </p>
                       </div>
                     </div>
+
                     <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
                     <div className="flex flex-col lg:flex-row w-full">
                       <div className="w-full lg:w-1/2">
@@ -185,6 +186,13 @@ export default function AboutMe() {
                           <b>◦ AWS</b>: EC2, EKS, S3, Lightsail, RDS, SQS EC2
                           인스턴스를 생성하고 요청량에 따라 Auto Scaling 설정을
                           할 수 있고 EKS 클러스터를 구축하고 네트워크 설정이
+                          가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ CloudFlare</b>: A, CNAME 등 전반적인 도메인 관리
+                          및 도메인에 대한 네트워크 연결 및 리버스 프록시등의
+                          설정이 가능하고 Zero Trust Policies를 사용하여
+                          도메인에 접근에 대한 적절한 보안 설정 및 관리등이
                           가능합니다.
                         </p>
                       </div>
@@ -209,6 +217,36 @@ export default function AboutMe() {
                           <br />
                           <b>◦ CI/CD</b>: Jenkins, GitHub Actions Git, SVN과
                           연동해 개발 및 운영 환경에 배포가 가능합니다.
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>Embedded</b>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
+                          <b>◦ FreeRTOS</b>: FreeRTOS에서 관심사를 Task 단위로
+                          분리하여 효과적인 작업관리 및
+                          uxTaskGetStackHighWaterMark() 함수등을 사용하여 최적의
+                          StackOptimization 등 자원의 관리가 가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ Arduino</b>: Interrupt핀을 사용하여 중요한 작업의
+                          Interrupt처리를 포함한 전반적인 Arduino 툴 및 함수를
+                          프로젝트에 적용가능합니다.
+                          <br />
+                          <br />
+                          <b>◦ LasberryPi</b>: 프로젝트에 따른 적절한 OS 설치 및
+                          c, python 프로그램등을 개발하여 process layer에서의
+                          운용 및 관리가 가능합니다.
                         </p>
                       </div>
                     </div>
@@ -245,7 +283,7 @@ export default function AboutMe() {
                           <b>◦ 자동차 정비 예약(고객 및 정비소) 웹사이트</b>
                           <br />
                           &nbsp; ◦ front-end | 정비소 웹사이트 예약 및 설정
-                          페이지 제작
+                          페이지 개발
                           <br />
                           &nbsp; ◦ front-end | 접속 ip를 검사하여 접속자 파악 및
                           qc 웹 사이트 배포 웹사이트로 반환
@@ -259,7 +297,81 @@ export default function AboutMe() {
                           &nbsp; ◦ back-end | Transaction을 사용하여 자원
                           임계구역 설정
                           <br />
-                          &nbsp; ◦ Admin | front-end 및 back-end api 제작
+                          &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
+                          수신 및 저장
+                          <br />
+                          &nbsp; ◦ Admin | front-end 및 back-end api 개발
+                          <br />
+                          &nbsp; ◦ DevOps 관리 및 유지보수 담당
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>Botbox</b>
+                          <br />
+                          <span className="text-xs">
+                            2023-12-01 ~ 2024-08-31
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 리모컨 사용자를 따라다니는 추종 로봇</b>
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | FreeRTOS를 사용하여 MAIN-MCU에서
+                          리모컨 신호 수신에 따른 동작 개발
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | 초음파 동작에 따른 로봇의 정지 및
+                          회피 개발
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | 수신된 UWB 신호를 받아 리모컨을
+                          추종하는 로직 개발
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | 각 상황 별 OUTPUT 신호 및 예외처리
+                          관리 및 개발
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>I-PIE</b>
+                          <br />
+                          <span className="text-xs">
+                            2023-08-01 ~ 2023-12-31
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 무선 배수로 탐사로봇</b>
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | AWS KVS를 사용하여 front-end로
+                          영상을 송신
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | MQTT를 사용하여 back-end로 로봇의
+                          상태 및 제어명령을 송신
+                          <br />
+                          &nbsp; ◦ back-end | 회원가입, 로그인등 Authorization
+                          관련 api 개발
+                          <br />
+                          &nbsp; ◦ back-end | MQTT로 수신된 로봇의 상태 및
+                          제어명령등을 front-end에서 요청을 받을 시 송신
+                          <br />
+                          &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
+                          수신 및 저장
                         </p>
                       </div>
                     </div>
@@ -294,13 +406,16 @@ export default function AboutMe() {
                           <b>◦ minhyeok.lee 기록용 웹사이트</b>
                           <br />
                           &nbsp; ◦ front-end | Next.js를 사용하여 front-end 홈
-                          ui 제작
+                          ui 개발
                           <br />
                           &nbsp; ◦ front-end | Nextra를 사용한 front-end 문서측
-                          ui제작
+                          ui 개발
                           <br />
-                          &nbsp; ◦ back-end | Notion Database를 사용한 프로젝트
-                          데이터 저장 및 수신
+                          &nbsp; ◦ front-end | 서버리스 홈페이지로 database를
+                          가져오기 위한 api 존재
+                          <br />
+                          &nbsp; ◦ database | Notion Database를 사용한 프로젝트
+                          데이터 저장 및 송신
                         </p>
                       </div>
                     </div>
@@ -325,11 +440,14 @@ export default function AboutMe() {
                             ◦ 한남대학교 학과 별 정보 모음 모바일 애플리케이션
                           </b>
                           <br />
-                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 좌석
-                          예약 애플리케이션 제작
+                          &nbsp; ◦ app | 크롤링한 데이터를 HelpU-APP에서
+                          데이터를 받아오는 부분을 담당
                           <br />
-                          &nbsp; ◦ app | 휠체어: 전자석 및 브라켓을 이용하여
-                          노약자용 좌석에 부착
+                          &nbsp; ◦ app | 받아온 데이터를 보여주는 ui 레이아웃
+                          개발
+                          <br />
+                          &nbsp; ◦ program | pythonPart에서 Selenium을 사용하여
+                          데이터를 크롤링
                         </p>
                       </div>
                     </div>
@@ -355,8 +473,8 @@ export default function AboutMe() {
                           &nbsp; ◦ app | AndroidStudio와 Flutter를 사용한 간단한
                           게임
                           <br />
-                          &nbsp; ◦ app | Timer()를 활용한 일찍 터치하거나, 블록
-                          먼저 맞추는 쪽이 이기는 게임
+                          &nbsp; ◦ app | Timer()를 활용한 일찍 터치하거나,
+                          블록을 먼저 맞추는 쪽이 이기는 게임
                         </p>
                       </div>
                     </div>
@@ -379,11 +497,11 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ AI 학습모델을 이용한 Camera 화재감지 시스템</b>
                           <br />
-                          &nbsp; ◦ program | 불에 대한 사진 및 동영상을 학습하여
-                          AI 학습모델 추출
+                          &nbsp; ◦ AI-Learning | 불에 대한 사진 및 동영상을
+                          학습하여 AI 학습모델 추출
                           <br />
                           &nbsp; ◦ program | IPCamera 혹은 노트북 카메라로 불을
-                          감지하는 프로그램 제작
+                          감지하는 프로그램 개발
                         </p>
                       </div>
                     </div>
@@ -407,13 +525,52 @@ export default function AboutMe() {
                           <b>◦ 대전시 트램 노약좌석 예약 서비스</b>
                           <br />
                           &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 좌석
-                          예약 애플리케이션 제작
+                          예약 애플리케이션 개발
                           <br />
                           &nbsp; ◦ app | 휠체어: 전자석 및 브라켓을 이용하여
                           노약자용 좌석에 부착
                           <br />
                           &nbsp; ◦ app | 임산부: QR코드를 활용하여 예약된 좌석에
                           태그 시 활성화
+                          <br />
+                          &nbsp; ◦ arduino | 앱, 좌석과 상호작용하는 메인로직
+                          전체 개발
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>IM (Insulin Manager)</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-03-01 ~ 2021-06-30
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>
+                            ◦ 인슐린 투여 환자를 위한 약통 케이스 및
+                            애플리케이션
+                          </b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 인슐린
+                          투여 알림 앱 개발
+                          <br />
+                          &nbsp; ◦ app | 인슐린을 투여해야 하는 시간을 설정하고
+                          알리는 기능
+                          <br />
+                          &nbsp; ◦ app | 인슐린을 투여해야 하는 시간이 되면
+                          인슐린 케이스로 신호를 보냄
+                          <br />
+                          &nbsp; ◦ arduino | 앱에서 신호가 도착하면 부저 및
+                          LED가 동작하며 약통을 열면 해제됌
                         </p>
                       </div>
                     </div>
