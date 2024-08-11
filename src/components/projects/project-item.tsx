@@ -3,7 +3,7 @@ import { TypeFlags } from "typescript";
 
 export default function ProjectItem({ data }) {
   const projectTitle = data.properties.이름.title[0].plain_text;
-  const githubLink = data.properties.깃허브.url;
+  const githubLink = data.properties.개발문서.url;
   const documentLink = data.properties.깃허브.url;
   const description = data.properties.설명.rich_text[0].plain_text;
   const imgSrc = data.cover.file?.url || data.cover.external.url;
