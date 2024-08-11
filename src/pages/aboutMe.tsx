@@ -535,7 +535,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>Sereal</b>
+                          <b>Seareal</b>
                           <br />
                           <span className="text-xs">
                             2021-12-31 ~ 2022-03-01
