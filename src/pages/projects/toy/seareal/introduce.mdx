@@ -1,0 +1,24 @@
+import { FileTree } from "nextra-theme-docs";
+
+# SeaReal
+
+- 다양한 과(전기, 전자공학과, 멀티미디어 공학과, 기계공학과 등)의 학생들이 참여한 캡스톤 디자인 경진대회
+
+## 구축 환경
+
+- SeaReal-App: Android studio에서 java를 사용하여 구성
+- MAIN-MCU: Arduino IDE를 사용하여 구성
+
+## 구성
+
+### SeaReal-App
+
+- 사용자의 SmartGlasses의 설정하는 앱
+  - app | Google의 Speech-to-Text API를 사용하여 말을 글로 변환하여 Smart Glasses에 표시
+  - app | 사용자의 이름이나 별명등 본인이 물리는 별칭을 저장
+  - app | 앱이 백그라운드에서 수행되다 해당 이름이 불리게되면 스마트 글래스에서 진동으로 알림
+
+### MAIN-MCU
+
+- SmartGalsses의 MCU 메인로직 부분
+  - MAIN-MCU | 앱에서의 신호를 받아 글을 화면에 띄우거나 인터랙트 액션으로 진동 동작 수행
