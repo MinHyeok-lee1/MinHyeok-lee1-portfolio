@@ -269,49 +269,6 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>CARYAK</b>
-                          <br />
-                          <span className="text-xs">
-                            2022-04-01 ~ 2023-07-31
-                          </span>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
-                          <b>◦ 자동차 정비 예약(고객 및 정비소) 웹사이트</b>
-                          <br />
-                          &nbsp; ◦ front-end | 정비소 웹사이트 예약 및 설정
-                          페이지 개발
-                          <br />
-                          &nbsp; ◦ front-end | 접속 ip를 검사하여 접속자 파악 및
-                          qc 웹 사이트 배포 웹사이트로 반환
-                          <br />
-                          &nbsp; ◦ back-end | 페이지네이션 skip() 대신
-                          hasNext()와 next()를 사용하여 속도 향상
-                          <br />
-                          &nbsp; ◦ back-end | 위도, 좌표값인 Geospatial
-                          Queries를 사용하여 index로 설정
-                          <br />
-                          &nbsp; ◦ back-end | Transaction을 사용하여 자원
-                          임계구역 설정
-                          <br />
-                          &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
-                          수신 및 저장
-                          <br />
-                          &nbsp; ◦ Admin | front-end 및 back-end api 개발
-                          <br />
-                          &nbsp; ◦ DevOps 관리 및 유지보수 담당
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
                           <b>Botbox</b>
                           <br />
                           <span className="text-xs">
@@ -324,6 +281,9 @@ export default function AboutMe() {
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ 리모컨 사용자를 따라다니는 추종 로봇</b>
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | VSC(VisualStudioCode)와 FreeRTOS를
+                          사용하여 개발
                           <br />
                           &nbsp; ◦ MAIN-MCU | FreeRTOS를 사용하여 MAIN-MCU에서
                           리모컨 신호 수신에 따른 동작 개발
@@ -358,11 +318,17 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ 무선 배수로 탐사로봇</b>
                           <br />
+                          &nbsp; ◦ MAIN-MCU | OrangePI에서 Python 프로그램으로
+                          동작할 수 있게 개발
+                          <br />
                           &nbsp; ◦ MAIN-MCU | AWS KVS를 사용하여 front-end로
                           영상을 송신
                           <br />
                           &nbsp; ◦ MAIN-MCU | MQTT를 사용하여 back-end로 로봇의
                           상태 및 제어명령을 송신
+                          <br />
+                          &nbsp; ◦ VSC(VisualStudioCode)와 NestJS를 사용하여
+                          개발
                           <br />
                           &nbsp; ◦ back-end | 회원가입, 로그인등 Authorization
                           관련 api 개발
@@ -372,6 +338,55 @@ export default function AboutMe() {
                           <br />
                           &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
                           수신 및 저장
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>CARYAK</b>
+                          <br />
+                          <span className="text-xs">
+                            2022-04-01 ~ 2023-07-31
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>◦ 자동차 정비 예약(고객 및 정비소) 웹사이트</b>
+                          <br />
+                          &nbsp; ◦ front-end | VSC(VisualStudioCode)와 Next.js를
+                          사용하여 개발
+                          <br />
+                          &nbsp; ◦ front-end | 정비소 웹사이트 예약 및 설정
+                          페이지 개발
+                          <br />
+                          &nbsp; ◦ front-end | 접속 ip를 검사하여 접속자 파악 및
+                          qc 웹 사이트 배포 웹사이트로 반환
+                          <br />
+                          &nbsp; ◦ back-end | VSC(VisualStudioCode)와 NestJS를
+                          사용하여 개발
+                          <br />
+                          &nbsp; ◦ back-end | 페이지네이션 skip() 대신
+                          hasNext()와 next()를 사용하여 속도 향상
+                          <br />
+                          &nbsp; ◦ back-end | 위도, 좌표값인 Geospatial
+                          Queries를 사용하여 index로 설정
+                          <br />
+                          &nbsp; ◦ back-end | Transaction을 사용하여 자원
+                          임계구역 설정
+                          <br />
+                          &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
+                          수신 및 저장
+                          <br />
+                          &nbsp; ◦ Admin | front-end 및 back-end api 개발
+                          <br />
+                          &nbsp; ◦ DevOps 관리 및 유지보수 담당
                         </p>
                       </div>
                     </div>
@@ -440,6 +455,9 @@ export default function AboutMe() {
                             ◦ 한남대학교 학과 별 정보 모음 모바일 애플리케이션
                           </b>
                           <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 정보
+                          모음 앱 개발
+                          <br />
                           &nbsp; ◦ app | 크롤링한 데이터를 HelpU-APP에서
                           데이터를 받아오는 부분을 담당
                           <br />
@@ -470,8 +488,8 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ 토이프로젝트용 게임 모바일 애플리케이션</b>
                           <br />
-                          &nbsp; ◦ app | AndroidStudio와 Flutter를 사용한 간단한
-                          게임
+                          &nbsp; ◦ app | AndroidStudio와 Flutter, Dart를 사용한
+                          개임 앱 개발
                           <br />
                           &nbsp; ◦ app | Timer()를 활용한 일찍 터치하거나,
                           블록을 먼저 맞추는 쪽이 이기는 게임
@@ -497,8 +515,14 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ AI 학습모델을 이용한 Camera 화재감지 시스템</b>
                           <br />
+                          &nbsp; ◦ AI-Learning | Google의 Colab 및 Jupitor
+                          notebook 사용
+                          <br />
                           &nbsp; ◦ AI-Learning | 불에 대한 사진 및 동영상을
                           학습하여 AI 학습모델 추출
+                          <br />
+                          &nbsp; ◦ program | VisualStudio와 Phyton을 사용하여
+                          개발
                           <br />
                           &nbsp; ◦ program | IPCamera 혹은 노트북 카메라로 불을
                           감지하는 프로그램 개발
@@ -532,6 +556,8 @@ export default function AboutMe() {
                           <br />
                           &nbsp; ◦ app | 임산부: QR코드를 활용하여 예약된 좌석에
                           태그 시 활성화
+                          <br />
+                          &nbsp; ◦ arduino | ArduinoIDE를 사용하여 개발
                           <br />
                           &nbsp; ◦ arduino | 앱, 좌석과 상호작용하는 메인로직
                           전체 개발
@@ -569,8 +595,50 @@ export default function AboutMe() {
                           &nbsp; ◦ app | 인슐린을 투여해야 하는 시간이 되면
                           인슐린 케이스로 신호를 보냄
                           <br />
+                          &nbsp; ◦ arduino | ArduinoIDE를 사용하여 개발
+                          <br />
                           &nbsp; ◦ arduino | 앱에서 신호가 도착하면 부저 및
                           LED가 동작하며 약통을 열면 해제됌
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>Sereal</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-12-31 ~ 2022-03-01
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>
+                            ◦ 시각장애인을 위한 Smart Glasses 및 애플리케이션
+                          </b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 Smart
+                          Glasses 앱 개발
+                          <br />
+                          &nbsp; ◦ app | Google의 Speech-to-Text API를 사용하여
+                          말을 글로 변환하여 Smart Glasses에 표시
+                          <br />
+                          &nbsp; ◦ app | 사용자의 이름이나 별명등 본인이 물리는
+                          별칭을 저장
+                          <br />
+                          &nbsp; ◦ app | 해당 이름이 불리게되면 스마트
+                          글래스에서 진동으로 알림
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | ArduinoIDE를 사용하여 개발
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | 앱에서의 신호를 받아 글을 화면에
+                          띄우거나 인터랙트 액션으로 진동 동작 수행
                         </p>
                       </div>
                     </div>
