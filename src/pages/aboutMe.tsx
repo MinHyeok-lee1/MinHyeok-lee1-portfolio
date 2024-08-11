@@ -350,7 +350,7 @@ export default function AboutMe() {
                           <b>CARYAK</b>
                           <br />
                           <span className="text-xs">
-                            2022-04-01 ~ 2023-07-31
+                            2022-02-01 ~ 2023-07-31
                           </span>
                         </p>
                       </div>
@@ -515,7 +515,7 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                           <b>◦ AI 학습모델을 이용한 Camera 화재감지 시스템</b>
                           <br />
-                          &nbsp; ◦ AI-Learning | Google의 Colab 및 Jupitor
+                          &nbsp; ◦ AI-Learning | Google의 Colab과 Jupitor
                           notebook 사용
                           <br />
                           &nbsp; ◦ AI-Learning | 불에 대한 사진 및 동영상을
@@ -526,6 +526,46 @@ export default function AboutMe() {
                           <br />
                           &nbsp; ◦ program | IPCamera 혹은 노트북 카메라로 불을
                           감지하는 프로그램 개발
+                        </p>
+                      </div>
+                    </div>
+
+                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                    <div className="flex flex-col lg:flex-row w-full">
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                          <b>Sereal</b>
+                          <br />
+                          <span className="text-xs">
+                            2021-12-31 ~ 2022-03-01
+                          </span>
+                        </p>
+                      </div>
+                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                      <div className="w-full lg:w-1/2">
+                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                          <b>
+                            ◦ 시각장애인을 위한 Smart Glasses 및 애플리케이션
+                          </b>
+                          <br />
+                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 Smart
+                          Glasses 앱 개발
+                          <br />
+                          &nbsp; ◦ app | Google의 Speech-to-Text API를 사용하여
+                          말을 글로 변환하여 Smart Glasses에 표시
+                          <br />
+                          &nbsp; ◦ app | 사용자의 이름이나 별명등 본인이 물리는
+                          별칭을 저장
+                          <br />
+                          &nbsp; ◦ app | 해당 이름이 불리게되면 스마트
+                          글래스에서 진동으로 알림
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | ArduinoIDE를 사용하여 개발
+                          <br />
+                          &nbsp; ◦ MAIN-MCU | 앱에서의 신호를 받아 글을 화면에
+                          띄우거나 인터랙트 액션으로 진동 동작 수행
                         </p>
                       </div>
                     </div>
@@ -599,46 +639,6 @@ export default function AboutMe() {
                           <br />
                           &nbsp; ◦ arduino | 앱에서 신호가 도착하면 부저 및
                           LED가 동작하며 약통을 열면 해제됌
-                        </p>
-                      </div>
-                    </div>
-
-                    <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
-                    <div className="flex flex-col lg:flex-row w-full">
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
-                        <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>Sereal</b>
-                          <br />
-                          <span className="text-xs">
-                            2021-12-31 ~ 2022-03-01
-                          </span>
-                        </p>
-                      </div>
-                      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                      <div className="w-full lg:w-1/2">
-                        <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
-                        <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
-                          <b>
-                            ◦ 시각장애인을 위한 Smart Glasses 및 애플리케이션
-                          </b>
-                          <br />
-                          &nbsp; ◦ app | AndroidStudio와 Java를 사용하여 Smart
-                          Glasses 앱 개발
-                          <br />
-                          &nbsp; ◦ app | Google의 Speech-to-Text API를 사용하여
-                          말을 글로 변환하여 Smart Glasses에 표시
-                          <br />
-                          &nbsp; ◦ app | 사용자의 이름이나 별명등 본인이 물리는
-                          별칭을 저장
-                          <br />
-                          &nbsp; ◦ app | 해당 이름이 불리게되면 스마트
-                          글래스에서 진동으로 알림
-                          <br />
-                          &nbsp; ◦ MAIN-MCU | ArduinoIDE를 사용하여 개발
-                          <br />
-                          &nbsp; ◦ MAIN-MCU | 앱에서의 신호를 받아 글을 화면에
-                          띄우거나 인터랙트 액션으로 진동 동작 수행
                         </p>
                       </div>
                     </div>
