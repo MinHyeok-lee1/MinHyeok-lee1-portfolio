@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 # 소프트웨어 공학용어
 
 ## 동적 계획법(Dynamic Programming, DP), 분할 정복(Divide and Conquer)의 정의와 차이점
@@ -109,7 +111,13 @@ console.log(factorial(10));
 2. 소수를 찾는 알고리즘 중에 하나로 2부터 찾고자하는 숫자의 범위 n의 값이 크면 클수록 효과적이다.
 3. 알고리즘은 아래 사진과 같다.
 
-![에라토스테네스의 체](/eratos.gif)
+<Image
+  src="/eratos.gif"
+  alt="에라토스테네스의 체"
+  unoptimized={true}
+  width={445}
+  height={445}
+/>
 
 - 알고리즘
   1. 2부터 소수를 구하고자 하는 모든 수를 나열한다. 그림에서 회색 사각형으로 다른 수들이 여기에 해당한다.
