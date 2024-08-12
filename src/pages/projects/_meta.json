@@ -1,5 +1,7 @@
 {
-  "index": "소개",
+  "index": {
+    "display": "hidden"
+  },
   "botbox": "Botbox",
   "ipie": "I-PIE",
   "caryak": "CARYAK",
