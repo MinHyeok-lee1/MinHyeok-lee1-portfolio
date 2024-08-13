@@ -135,7 +135,7 @@ export default function Header() {
           홈
         </Link>
         <Link
-          href="/projects"
+          href="/project"
           className={`router.pathname === "/"
               ? "mr-5 text-gray-900"
               : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm`}

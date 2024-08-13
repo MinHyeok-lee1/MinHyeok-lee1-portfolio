@@ -1,10 +1,29 @@
 import "../styles/globals.css";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { ThemeProvider } from "next-themes";
 
 export default function App({ Component, pageProps }) {
-  return (
-    <ThemeProvider attribute="class">
-      <Component {...pageProps} />
-    </ThemeProvider>
-  );
-}
+  const router = useRouter();
+
+useEffect(() => {
+const handleRouteChange = () => {
+document.body.style.overflow = 'auto'; // Ensure scrolling is enabled globally
+};
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+
+}, [router.events]);
+
+return (
+
+<ThemeProvider attribute="class">
+  <Component {...pageProps} />
+</ThemeProvider>
+); }
