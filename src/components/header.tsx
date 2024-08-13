@@ -1,16 +1,35 @@
 import Link from "next/link";
 import DarkModeToggleButton from "./darkToggelButton";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 import { useTheme } from "nextra-theme-docs";
 
 export default function Header() {
-  const { resolvedTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
-
   // 현재 경로 취득
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setMenuOpen(false); // 메뉴 외부 클릭 시 메뉴 닫기
+    }
+  };
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       <header className="text-gray-600 body-font">
@@ -76,8 +95,8 @@ export default function Header() {
 
             {/* mobile menu */}
             <div className="md:hidden pt-2">
-              <button onClick={() => setIsOpen(!isOpen)}>
-                {isOpen ? (
+              <button onClick={() => setMenuOpen(!menuOpen)}>
+                {menuOpen ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -117,49 +136,64 @@ export default function Header() {
         </div>
         <hr />
       </header>
-      <div
-        className={classNames(
-          resolvedTheme === "dark"
-            ? "md:hidden fixed flex flex-col bg-black w-full"
-            : "md:hidden fixed flex flex-col bg-gray-50 w-full",
-          {
-            hidden: !isOpen,
-          }
-        )}
-      >
-        <Link
-          href="/"
-          className={`router.pathname === "/"
-              ? "mr-5 text-gray-900"
-              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm`}
+      {menuOpen && (
+        <nav
+          className={`md:hidden fixed flex flex-col  w-full z-10 ${
+            resolvedTheme === "dark" ? "bg-black" : "bg-gray-50"
+          }`}
         >
-          홈
-        </Link>
-        <Link
-          href="/project"
-          className={`router.pathname === "/"
+          <div ref={menuRef}>
+            <Link
+              href="/"
+              className={`router.pathname === "/"
+            ? "mr-5 text-gray-900"
+            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
+              resolvedTheme === "dark"
+                ? "hover:bg-neutral-900"
+                : "hover:bg-gray-200"
+            }`}
+            >
+              홈
+            </Link>
+            <Link
+              href="/project"
+              className={`router.pathname === "/"
               ? "mr-5 text-gray-900"
-              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm`}
-        >
-          프로젝트
-        </Link>
-        <Link
-          href="/aboutMe"
-          className={`router.pathname === "/"
-              ? "mr-5 text-gray-900"
-              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm`}
-        >
-          이력서
-        </Link>
-        <Link
-          href="/home"
-          className={`router.pathname === "/"
-              ? "mr-5 text-gray-900"
-              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm`}
-        >
-          문서정리
-        </Link>
-      </div>
+              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
+                resolvedTheme === "dark"
+                  ? "hover:bg-neutral-900"
+                  : "hover:bg-gray-200"
+              }`}
+            >
+              프로젝트
+            </Link>
+            <Link
+              href="/aboutMe"
+              className={`router.pathname === "/"
+            ? "mr-5 text-gray-900"
+            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
+              resolvedTheme === "dark"
+                ? "hover:bg-neutral-900"
+                : "hover:bg-gray-200"
+            }`}
+            >
+              이력서
+            </Link>
+            <Link
+              href="/home"
+              className={`router.pathname === "/"
+            ? "mr-5 text-gray-900"
+            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
+              resolvedTheme === "dark"
+                ? "hover:bg-neutral-900"
+                : "hover:bg-gray-200"
+            }`}
+            >
+              문서정리
+            </Link>
+          </div>
+        </nav>
+      )}
     </>
   );
 }
