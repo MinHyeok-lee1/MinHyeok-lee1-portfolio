@@ -3,12 +3,11 @@ import DarkModeToggleButton from "./darkToggelButton";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import classNames from "classnames";
+import { useTheme } from "nextra-theme-docs";
 
 export default function Header() {
+  const { resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const toggleSide = () => {
-    setIsOpen(true);
-  };
 
   // 현재 경로 취득
   const router = useRouter();
@@ -120,7 +119,9 @@ export default function Header() {
       </header>
       <div
         className={classNames(
-          "md:hidden fixed flex flex-col bg-gray-50 w-full",
+          resolvedTheme === "dark"
+            ? "md:hidden fixed flex flex-col bg-black w-full"
+            : "md:hidden fixed flex flex-col bg-gray-50 w-full",
           {
             hidden: !isOpen,
           }
