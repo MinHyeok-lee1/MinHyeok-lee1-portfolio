@@ -10,6 +10,7 @@ export default function Header() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(null);
 
   const menuRef = useRef(null);
   const handleClickOutside = (event) => {
@@ -138,60 +139,112 @@ export default function Header() {
       </header>
       {menuOpen && (
         <nav
-          className={`md:hidden fixed flex flex-col  w-full z-10 ${
-            resolvedTheme === "dark" ? "bg-black" : "bg-gray-50"
-          }`}
+          className={`md:hidden fixed top-0 left-0 flex flex-col w-full z-10 ${
+            resolvedTheme === "dark"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          } overflow-y-auto`}
         >
-          <div ref={menuRef}>
+          <div ref={menuRef} className="space-y-2 py-2">
             <Link
               href="/"
-              className={`router.pathname === "/"
-            ? "mr-5 text-gray-900"
-            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
-              resolvedTheme === "dark"
-                ? "hover:bg-neutral-900"
-                : "hover:bg-gray-200"
-            }`}
+              style={
+                router.pathname === "/" && resolvedTheme === "dark"
+                  ? {
+                      backgroundColor: "#1a1d24",
+                      color: isHovered === "/" ? "white" : "#3ea6ff",
+                      fontWeight: "bold",
+                    }
+                  : {}
+              }
+              onMouseEnter={() => setIsHovered("/")}
+              onMouseLeave={() => setIsHovered(null)}
+              className={`block py-2 px-4 text-sm rounded ${
+                router.pathname === "/" && resolvedTheme !== "dark"
+                  ? "bg-blue-100 text-blue-700 font-bold"
+                  : resolvedTheme === "dark"
+                  ? "hover:bg-neutral-900 hover:text-white"
+                  : "hover:bg-gray-100 hover:text-black"
+              }`}
             >
               홈
             </Link>
             <Link
               href="/project"
-              className={`router.pathname === "/"
-              ? "mr-5 text-gray-900"
-              : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
-                resolvedTheme === "dark"
-                  ? "hover:bg-neutral-900"
-                  : "hover:bg-gray-200"
+              style={
+                router.pathname === "/project" && resolvedTheme === "dark"
+                  ? {
+                      backgroundColor: "#1a1d24",
+                      color: isHovered === "/project" ? "white" : "#3ea6ff",
+                      fontWeight: "bold",
+                    }
+                  : {}
+              }
+              onMouseEnter={() => setIsHovered("/project")}
+              onMouseLeave={() => setIsHovered(null)}
+              className={`block py-2 px-4 text-sm rounded ${
+                router.pathname === "/project" && resolvedTheme !== "dark"
+                  ? "bg-blue-100 text-blue-700 font-bold"
+                  : resolvedTheme === "dark"
+                  ? "hover:bg-neutral-900 hover:text-white"
+                  : "hover:bg-gray-100 hover:text-black"
               }`}
             >
               프로젝트
             </Link>
             <Link
               href="/aboutMe"
-              className={`router.pathname === "/"
-            ? "mr-5 text-gray-900"
-            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
-              resolvedTheme === "dark"
-                ? "hover:bg-neutral-900"
-                : "hover:bg-gray-200"
-            }`}
+              style={
+                router.pathname === "/aboutMe" && resolvedTheme === "dark"
+                  ? {
+                      backgroundColor: "#1a1d24",
+                      color: isHovered === "/aboutMe" ? "white" : "#3ea6ff",
+                      fontWeight: "bold",
+                    }
+                  : {}
+              }
+              onMouseEnter={() => setIsHovered("/aboutMe")}
+              onMouseLeave={() => setIsHovered(null)}
+              className={`block py-2 px-4 text-sm rounded ${
+                router.pathname === "/aboutMe" && resolvedTheme !== "dark"
+                  ? "bg-blue-100 text-blue-700 font-bold"
+                  : resolvedTheme === "dark"
+                  ? "hover:bg-neutral-900 hover:text-white"
+                  : "hover:bg-gray-100 hover:text-black"
+              }`}
             >
               이력서
             </Link>
             <Link
               href="/home"
-              className={`router.pathname === "/"
-            ? "mr-5 text-gray-900"
-            : "mr-5 hover:text-gray-900" block py-2 px-4 text-sm ${
-              resolvedTheme === "dark"
-                ? "hover:bg-neutral-900"
-                : "hover:bg-gray-200"
-            }`}
+              style={
+                router.pathname === "/home" && resolvedTheme === "dark"
+                  ? {
+                      backgroundColor: "#1a1d24",
+                      color: isHovered === "/home" ? "white" : "#3ea6ff",
+                      fontWeight: "bold",
+                    }
+                  : {}
+              }
+              onMouseEnter={() => setIsHovered("/home")}
+              onMouseLeave={() => setIsHovered(null)}
+              className={`block py-2 px-4 text-sm rounded ${
+                router.pathname === "/home" && resolvedTheme !== "dark"
+                  ? "bg-blue-100 text-blue-700 font-bold"
+                  : resolvedTheme === "dark"
+                  ? "hover:bg-neutral-900 hover:text-white"
+                  : "hover:bg-gray-100 hover:text-black"
+              }`}
             >
               문서정리
             </Link>
           </div>
+
+          <hr
+            className={`${
+              resolvedTheme === "dark" ? "border-gray-900" : "border-gray-200"
+            } border-t-1`}
+          />
         </nav>
       )}
     </>
