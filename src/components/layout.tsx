@@ -8,7 +8,7 @@ export default function Layout({ children }: ComponentWithChildProps) {
     <>
       <div className="bg-priamry">
         <Header />
-        <div>{children}</div>
+        <div className="pt-16">{children}</div>
         <Footer />
       </div>
     </>
