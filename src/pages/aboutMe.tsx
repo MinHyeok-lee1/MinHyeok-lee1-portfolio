@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Layout from "../components/layout";
 import Link from "next/link";
+import { useState } from "react";
+import { useTheme } from "next-themes";
 
 export default function AboutMe() {
+  const { resolvedTheme } = useTheme();
+  const [isHovered, setIsHovered] = useState(null);
+
   return (
     <>
       <Layout>
@@ -79,16 +84,86 @@ export default function AboutMe() {
                           <br />
                           <strong>
                             ◦ Github:&nbsp;
-                            <Link href="https://github.com/MinHyeok-lee1">
-                              https://github.com/MinHyeok-lee1
-                            </Link>
+                            <div
+                              style={{
+                                position: "relative",
+                                display: "inline-block",
+                                cursor: "pointer",
+                              }}
+                              onMouseEnter={() => setIsHovered("/github")}
+                              onMouseLeave={() => setIsHovered(null)}
+                            >
+                              <span
+                                style={{
+                                  textDecoration: "underline",
+                                  color:
+                                    resolvedTheme === "dark"
+                                      ? isHovered === "/github"
+                                        ? "#94A3B8"
+                                        : "#A9A9A9"
+                                      : resolvedTheme === "light" &&
+                                        isHovered === "/github"
+                                      ? "#64748B"
+                                      : "#008AE6",
+                                  position: "relative",
+                                }}
+                              >
+                                https://github.com/MinHyeok-lee1
+                              </span>
+                              <Link
+                                href="https://github.com/MinHyeok-lee1"
+                                style={{
+                                  position: "absolute",
+                                  left: 0,
+                                  top: 0,
+                                  width: "100%",
+                                  height: "100%",
+                                  opacity: 0,
+                                }}
+                              ></Link>
+                            </div>
                           </strong>
                           <br />
                           <strong>
                             ◦ Blog:&nbsp;
-                            <Link href="https://kfdd6630.tistory.com/">
-                              https://kfdd6630.tistory.com
-                            </Link>
+                            <div
+                              style={{
+                                position: "relative",
+                                display: "inline-block",
+                                cursor: "pointer",
+                              }}
+                              onMouseEnter={() => setIsHovered("/blog")}
+                              onMouseLeave={() => setIsHovered(null)}
+                            >
+                              <span
+                                style={{
+                                  textDecoration: "underline",
+                                  color:
+                                    resolvedTheme === "dark"
+                                      ? isHovered === "/blog"
+                                        ? "#94A3B8"
+                                        : "#A9A9A9"
+                                      : resolvedTheme === "light" &&
+                                        isHovered === "/blog"
+                                      ? "#64748B"
+                                      : "#008AE6",
+                                  position: "relative",
+                                }}
+                              >
+                                https://kfdd6630.tistory.com
+                              </span>
+                              <Link
+                                href="https://kfdd6630.tistory.com"
+                                style={{
+                                  position: "absolute",
+                                  left: 0,
+                                  top: 0,
+                                  width: "100%",
+                                  height: "100%",
+                                  opacity: 0,
+                                }}
+                              ></Link>
+                            </div>
                           </strong>
                         </p>
                       </div>
@@ -668,14 +743,14 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          <strong>◦ 기간: 2021. 07. 01 - 2023. 07. 31</strong>
+                          <strong>◦ 기간: 2021-07-01 ~ 2023-07-31</strong>
                           <br />
                           <strong>◦ 장소: (주)MK, 주식회사 엠케이</strong>
                           <br />
                           <strong>◦ 직급: 연구원(사원)</strong>
                         </p>
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          <strong>◦ 기간: 2023. 08. 01 - 현재</strong>
+                          <strong>◦ 기간: 2023-08-01 ~ 현재</strong>
                           <br />
                           <strong>◦ 장소: 주식회사 아트와</strong>
                           <br />
@@ -696,7 +771,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          <strong>◦ 2015. 03. 01 - 2021. 03. 01</strong>
+                          <strong>◦ 2015-03-01 ~ 2021-03-01</strong>
                           <br />
                           <strong>◦ 한남대학교</strong>
                           <br />◦ 컴퓨터통신무인기술학과(컴퓨터 트랙) 학사
@@ -716,7 +791,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          <b>◦ 2017.06-2019.02</b>
+                          <b>◦ 2017.06 ~ 2019.02</b>
                           <br />
                           <strong>◦ 20사단 62여단 109기보대대</strong>
                           <br />◦ 무전통신운영병(중대통신병)
@@ -736,14 +811,14 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          <strong>◦ 2021. 07</strong>
+                          <strong>◦ 2021.07</strong>
                           <br />
                           <strong>◦ 정보처리기사</strong>
                           <br />
                           ◦ 한국산업인력공단
                           <br />
                           <br />
-                          <strong>◦ 2020. 06</strong>
+                          <strong>◦ 2020.06</strong>
                           <br />
                           <strong>◦ 리눅스마스터 2급</strong>
                           <br />◦ KAIT 정보통신기술자격시험
