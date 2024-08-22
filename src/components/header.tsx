@@ -10,12 +10,7 @@ export default function Header() {
   const { resolvedTheme } = useTheme();
   const [isHovered, setIsHovered] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const menuRef = useRef(null);
-
-  useEffect(() => {
-    setMounted(true); // 컴포넌트가 마운트되었을 때 설정
-  }, []);
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -34,9 +29,6 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen]);
-
-  // 다크 모드 상태가 로드되기 전까지는 렌더링을 지연
-  if (!mounted) return null;
 
   return (
     <>
