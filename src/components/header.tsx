@@ -38,7 +38,7 @@ export default function Header() {
             resolvedTheme === "dark" ? "bg-[#111111]" : "bg-white"
           } z-40`}
         >
-          <div className="container mx-auto flex flex-wrap p-4 flex-row items-center">
+          <div className="md:container pl-2 pr-6 mx-auto flex flex-wrap pt-3 pb-3.5 flex-row items-center">
             <Link
               href="/"
               className="flex title-font font-medium items-center text-gray-900 mb-0"
@@ -57,7 +57,7 @@ export default function Header() {
             </svg> */}
               <span
                 onClick={router.pathname === "/" ? closeMenu : undefined} // "/"일 때만 메뉴를 닫음
-                className={"ml-4 text-l"}
+                className={"ml-4 text-l text-[#667180]"}
               >
                 <strong>개발새발</strong>
               </span>
@@ -146,7 +146,12 @@ export default function Header() {
               <DarkModeToggleButton />
             </span>
           </div>
-          <hr />
+
+          <hr
+            className={`${
+              resolvedTheme === "dark" ? "border-[#202020]" : "border[##EDEDED]"
+            } border-t-1`}
+          />
         </header>
         {menuOpen && (
           <nav
@@ -261,7 +266,9 @@ export default function Header() {
 
             <hr
               className={`${
-                resolvedTheme === "dark" ? "border-gray-900" : "border-gray-200"
+                resolvedTheme === "dark"
+                  ? "border-[#202020]"
+                  : "border[##EDEDED]"
               } border-t-1`}
             />
           </nav>
