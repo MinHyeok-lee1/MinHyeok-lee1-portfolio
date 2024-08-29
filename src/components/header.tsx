@@ -263,7 +263,7 @@ export default function Header() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="visible dark:invisible w-4 h-4 dark:h-0 dark:w-0"
+                    className="visible w-4 h-4 dark:invisible dark:h-0 dark:w-0"
                   >
                     <path
                       strokeLinecap="round"
@@ -278,7 +278,7 @@ export default function Header() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="visible dark:invisible w-4 h-4 dark:h-0 dark:w-0"
+                    className="invisible w-0 h-0 dark:visible dark:h-4 dark:w-4"
                   >
                     <path
                       strokeLinecap="round"
