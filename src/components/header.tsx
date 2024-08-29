@@ -33,11 +33,7 @@ export default function Header() {
   return (
     <>
       <div ref={menuRef}>
-        <header
-          className={`text-gray-600 body-font fixed top-0 left-0 w-full ${
-            theme === "dark" ? "bg-[#111111]" : "bg-white"
-          } z-40`}
-        >
+        <header className="text-gray-600 body-font fixed top-0 left-0 w-full bg-white z-40 dark:bg-[#111111]">
           <div className="md:container pl-2 pr-6 mx-auto flex flex-wrap pt-3 pb-3.5 flex-row items-center">
             <Link
               href="/"
@@ -147,17 +143,13 @@ export default function Header() {
             </span>
           </div>
 
-          <hr
-            className={`${
-              theme === "dark" ? "border-[#202020]" : "border[##EDEDED]"
-            } border-t-1`}
-          />
+          <hr className="dark:border-[#202020] border[##EDEDED] border-t-1" />
         </header>
         {menuOpen && (
           <nav
-            className={`mt-16 md:hidden fixed top-0 left-0 flex flex-col w-full z-50 ${
-              theme === "dark" ? "bg-black text-white" : "bg-white text-black"
-            } overflow-y-auto`}
+            className={
+              "mt-16 md:hidden fixed top-0 left-0 flex flex-col w-full z-50 bg-white text-black overflow-y-auto dark:bg-black dark:text-white"
+            }
           >
             <div className="space-y-1 py-1">
               <Link
@@ -178,9 +170,7 @@ export default function Header() {
                 className={`block py-2 px-4 text-sm rounded ${
                   router.pathname === "/" && theme !== "dark"
                     ? "bg-blue-100 text-blue-700 font-bold"
-                    : theme === "dark"
-                    ? "hover:bg-zinc-900 hover:text-white rounded-md"
-                    : "hover:bg-gray-100 hover:text-black rounded-md"
+                    : "hover:bg-gray-100 hover:text-black rounded-md dark:hover:bg-zinc-900 dark:hover:text-white"
                 }`}
               >
                 홈
@@ -203,9 +193,7 @@ export default function Header() {
                 className={`block py-2 px-4 text-sm rounded ${
                   router.pathname === "/project" && theme !== "dark"
                     ? "bg-blue-100 text-blue-700 font-bold"
-                    : theme === "dark"
-                    ? "hover:bg-zinc-900 hover:text-white rounded-md"
-                    : "hover:bg-gray-100 hover:text-black rounded-md"
+                    : "hover:bg-gray-100 hover:text-black rounded-md dark:hover:bg-zinc-900 dark:hover:text-white"
                 }`}
               >
                 프로젝트
@@ -228,9 +216,7 @@ export default function Header() {
                 className={`block py-2 px-4 text-sm rounded ${
                   router.pathname === "/aboutMe" && theme !== "dark"
                     ? "bg-blue-100 text-blue-700 font-bold"
-                    : theme === "dark"
-                    ? "hover:bg-zinc-900 hover:text-white rounded-md"
-                    : "hover:bg-gray-100 hover:text-black rounded-md"
+                    : "hover:bg-gray-100 hover:text-black rounded-md dark:hover:bg-zinc-900 dark:hover:text-white"
                 }`}
               >
                 이력서
@@ -253,36 +239,22 @@ export default function Header() {
                 className={`block py-2 px-4 text-sm rounded ${
                   router.pathname === "/home" && theme !== "dark"
                     ? "bg-blue-100 text-blue-700 font-bold"
-                    : theme === "dark"
-                    ? "hover:bg-zinc-900 hover:text-white rounded-md"
-                    : "hover:bg-gray-100 hover:text-black rounded-md"
+                    : "hover:bg-gray-100 hover:text-black rounded-md dark:hover:bg-zinc-900 dark:hover:text-white"
                 }`}
               >
                 문서정리
               </Link>
               <div className="h-0.5"></div>
-              <hr
-                className={`${
-                  theme === "dark" ? "border-[#202020]" : "border[##EDEDED]"
-                } border-t-1 mt-10`}
-              />
-              <div
-                className="border-0 py-2 px-3 w-full dark:bg-black bg-white
-                  inline-flex items-center rounded my-4 md:mt-0"
-              >
+              <hr className="dark:border-[#202020] border[##EDEDED] border-t-1 mt-10" />
+              <div className="border-0 py-2 px-3 w-full bg-white inline-flex items-center rounded my-4 md:mt-0 dark:bg-black">
                 <button
                   onClick={() =>
                     theme === "light" ? setTheme("dark") : setTheme("light")
                   }
-                  className="flex items-center space-x-1
-                          bg-white dark:bg-black
-                          hover:bg-gray-100 dark:hover:bg-zinc-900
-                            py-1 rounded transition-colors duration-200 ease-in-out w-full
-                            focus:outline-none text-base
-                          text-gray-600
-                          hover:text-red-500
-                          dark:text-slate-400
-                          dark:hover:text-yellow-500"
+                  className="flex items-center space-x-1 py-1 rounded transition-colors 
+                            duration-200 ease-in-out w-full focus:outline-none text-base
+                          bg-white hover:bg-gray-100 text-gray-600 hover:text-red-500
+                          dark:bg-black dark:hover:bg-zinc-900 dark:text-slate-400 dark:hover:text-yellow-500"
                 >
                   {/* dark mode */}
                   <svg
@@ -291,7 +263,7 @@ export default function Header() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="visible dark:invisible dark:h-0 dark:w-0 w-4 h-4"
+                    className="visible dark:invisible w-4 h-4 dark:h-0 dark:w-0"
                   >
                     <path
                       strokeLinecap="round"
@@ -306,7 +278,7 @@ export default function Header() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="invisible dark:visible dark:w-4 dark:h-4 h-0 w-0"
+                    className="visible dark:invisible w-4 h-4 dark:h-0 dark:w-0"
                   >
                     <path
                       strokeLinecap="round"
@@ -314,15 +286,13 @@ export default function Header() {
                       d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
                     />
                   </svg>
-                  <span className="pb-0.5">Dark</span>
+                  <span className="pb-0.5">
+                    {theme === "dark" ? "Dark" : "Light"}
+                  </span>
                 </button>
               </div>
             </div>
-            <hr
-              className={`${
-                theme === "dark" ? "border-[#202020]" : "border[##EDEDED]"
-              } border-t-1`}
-            />
+            <hr className="border[##EDEDED] border-t-1 dark:border-[#202020]" />
           </nav>
         )}
       </div>
