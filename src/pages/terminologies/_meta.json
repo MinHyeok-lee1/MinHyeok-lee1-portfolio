@@ -8,5 +8,6 @@
   "ts": "TypeScript 용어",
   "backend": "백엔드 용어",
   "db": "Database 용어",
-  "server": "서버 용어"
+  "server": "서버 용어",
+  "embedded": "임베디드 용어"
 }
