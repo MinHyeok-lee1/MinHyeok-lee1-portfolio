@@ -1,7 +1,4 @@
 {
   "flutter": "Flutter",
-  "expo": "Expo",
-  "Firebase": {
-    "display": "hidden"
-  }
+  "expo": "Expo"
 }
