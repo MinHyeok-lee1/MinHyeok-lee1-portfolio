@@ -148,7 +148,7 @@ module.exports = {
 };
 ```
 
-그러면 `.next/standalone`에 폴더가 생성되고 node_modules를 설치하지 않고도 자체적으로 배포할 수 있고 다음 시작 대신 사용할 수 있는 최소 server.js 파일도 출력됩니다.
+그러면 `.next/standalone`에 폴더가 생성되고 node_modules를 설치하지 않고도 자체적으로 배포할 수 있고 다음 시작 대신 사용할 수 있는 최소 server.js 파일도 출력된다.
 
 - standalone를 사용하는 이유는 이미지 사이즈를 줄일 수 있다.
 
@@ -184,7 +184,7 @@ docker build -t nextjs-docker .
 
 근데 현재 Dockerfile 경로는 docker 폴더 아래 있다.  
 그래서 그런지 저렇게 실행하면 `failed to read dockerfile` 이라는 오류가 나면서 실행이 안된다.  
-Dockerfile을 밖으로 빼면 잘 됩니다.
+Dockerfile을 밖으로 빼면 잘 된다.
 
 `-f` 옵션을 통해 Dockerfile 경로를 강제로 지정해줄 수 있다.
 
