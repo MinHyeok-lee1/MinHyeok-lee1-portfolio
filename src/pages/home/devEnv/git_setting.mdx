@@ -1,0 +1,136 @@
+# Git Settings
+
+SSH 키를 생성하여 Github의 repository에 접근하는 방법을 기술한 문서이다.
+
+## SSH 키 생성 및 GitHub에 등록하는 방법
+
+### 1. SSH 키 생성
+
+#### 1.1 Mac에서 SSH 키 생성
+
+- SSH 키 생성 명령어 실행
+  로컬 머신에서 SSH 키를 생성하기 위해 아래 명령어를 터미널에 입력한다.
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+- `ed25519`는 최신 암호화 방식의 SSH 키 유형이다.
+- `"your_email@example.com"`은 GitHub 계정에 등록된 이메일 주소로 대체해야 한다.
+
+- 생성된 키 파일 확인  
+  명령어를 입력한 후 경로를 지정하거나 기본 경로를 사용할 수 있다.  
+  기본적으로 `~/.ssh/id_ed25519` 경로에 키 파일이 생성된다.
+
+```bash
+Enter file in which to save the key (/Users/you/.ssh/id_ed25519): [Press enter]
+```
+
+- 키에 대한 패스프레이즈 입력 (선택 사항)  
+  보안을 위해 패스프레이즈를 설정할 수 있다.  
+  패스프레이즈를 입력하면 SSH 키를 사용할 때마다 입력해야 하며, 설정하지 않으려면 그냥 Enter를 누른다.
+
+```bash
+Enter passphrase (empty for no passphrase): [Type a passphrase]
+Enter same passphrase again: [Type passphrase again]
+```
+
+#### 1.2 Windows에서 SSH 키 생성
+
+- SSH 키 생성 명령어 실행
+  Windows에서 Git Bash를 열고 아래 명령어를 입력한다.
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+- `"your_email@example.com"`은 GitHub 계정에 등록된 이메일 주소로 대체해야 한다.
+
+- 생성된 키 파일 확인  
+  명령어를 입력한 후 경로를 지정하거나 기본 경로를 사용할 수 있다.  
+  기본적으로 `C:\Users\YourUserName\.ssh\id_ed25519` 경로에 키 파일이 생성된다.
+
+```bash
+Enter file in which to save the key (C:\Users\YourUserName\.ssh\id_ed25519): [Press enter]
+```
+
+- 키에 대한 패스프레이즈 입력 (선택 사항)  
+  보안을 위해 패스프레이즈를 설정할 수 있다.  
+  패스프레이즈를 입력하면 SSH 키를 사용할 때마다 입력해야 하며, 설정하지 않으려면 그냥 Enter를 누른다.
+
+```bash
+Enter passphrase (empty for no passphrase): [Type a passphrase]
+Enter same passphrase again: [Type passphrase again]
+```
+
+### 2. SSH 에이전트에 키 추가
+
+#### 2.1 Mac에서 SSH 에이전트에 키 추가
+
+SSH 키를 생성한 후, SSH 에이전트에 키를 추가한다. 아래 명령어를 터미널에 입력한다.
+
+```bash
+eval "$(ssh-agent -s)"
+```
+
+이후, 다음 명령어로 SSH 키를 에이전트에 추가한다.
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+
+#### 2.2 Windows에서 SSH 에이전트에 키 추가
+
+Git Bash에서 SSH 에이전트를 시작한 후, 키를 추가한다.
+
+```bash
+eval "$(ssh-agent -s)"
+```
+
+이후, 다음 명령어로 SSH 키를 에이전트에 추가한다.
+
+```bash
+ssh-add C:\Users\YourUserName\.ssh\id_ed25519
+```
+
+### 3. GitHub에 SSH 키 등록
+
+#### 3.1 Mac에서 SSH 공개 키 복사
+
+SSH 키를 GitHub에 등록하기 위해 공개 키를 클립보드에 복사한다. 아래 명령어를 사용한다.
+
+```bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+#### 3.2 Windows에서 SSH 공개 키 복사
+
+Windows에서는 Git Bash에서 다음 명령어를 사용하여 공개 키를 클립보드에 복사한다.
+
+```bash
+cat ~/.ssh/id_ed25519.pub | clip
+```
+
+#### GitHub에 SSH 키 추가
+
+1. [GitHub 웹사이트](https://github.com)로 이동하여 로그인한다.
+2. 오른쪽 상단 프로필 아이콘을 클릭하고 **Settings**를 선택한다.
+3. **SSH and GPG keys** 메뉴로 이동한 후, **New SSH key** 버튼을 클릭한다.
+4. **Title**에 키의 이름을 입력하고, **Key**에 클립보드에 복사한 공개 키를 붙여넣는다.
+5. **Add SSH key** 버튼을 클릭하여 키를 추가한다.
+
+### 4. SSH 키 연결 테스트
+
+SSH 키가 정상적으로 등록되었는지 확인하기 위해 아래 명령어로 GitHub에 연결을 테스트한다.
+
+```bash
+ssh -T git@github.com
+```
+
+정상적으로 연결되었다면 다음과 같은 메시지를 볼 수 있다.
+
+```
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+이제 SSH 키를 사용하여 GitHub와 안전하게 통신할 수 있다.

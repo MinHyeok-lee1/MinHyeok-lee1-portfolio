@@ -1,0 +1,341 @@
+# VSCode 사용환경 세팅
+
+VSCode 사용환경을 구축하는 방법을 기술한 문서이다.
+
+## VSCode Install
+
+설치는 하단 링크에서 가능한다.  
+[VSCode Install Link](https://code.visualstudio.com/download)
+
+## Extensions
+
+### 배포
+
+- Docker
+
+### MCU 개발
+
+- PlatformIO IDE
+
+### ROS 개발
+
+- ROS
+- Remote-SSH (Window 환경일 경우)
+
+### 편의성
+
+- Clang-Format : C/C++ 코드의 자동 포매팅 도구
+- Material Icon Theme : 파일과 폴더를 위한 Material 디자인 아이콘 세트
+- Tabnine : AI 기반 코드 자동 완성 기능
+- Auto Close Tag : HTML/XML 태그를 자동으로 닫아주는 기능
+- Auto Rename Tag : HTML/XML 태그를 동시에 수정해주는 기능
+- Color Highlight : 코드 내 색상 코드에 대한 색상 미리보기 제공
+- Commit Message Editor : 커밋 메시지 작성 시 도움을 주는 기능
+- Error Lens : 코드의 오류를 강조 표시하여 가시성을 높임
+- ESLint : JavaScript 및 TypeScript 코드의 linting과 오류 검출
+- GitLens : Git 저장소의 히스토리와 통계 시각화
+- Highlight Matching Tag : HTML/XML에서 태그 쌍을 강조 표시
+- Image Preview : 코드 내 이미지 파일을 미리보기할 수 있는 기능
+- IntelliCode : AI 기반 코드 추천 및 인사이트 제공
+- markdownlint : Markdown 파일의 문법 오류를 검사하고 수정
+- MDX : MDX 파일을 지원하여 Markdown과 JSX를 함께 사용 가능
+- Path Intellisense : 파일 경로 자동 완성과 제안 기능
+- Prettier : 코드의 일관된 스타일을 유지하는 자동 포매터
+
+#### Commit Message Editor 추가 설정
+
+Commit Message Editor에서 커밋 메세지 추가 및 이모지 사용을 위해 하단 코드 추가 필요
+
+```json
+"commit-message-editor.dynamicTemplate": [
+    "{emogi} {type}{scope}: {description}",
+    "",
+    "{body}",
+    "",
+    "{breaking_change}{footer}"
+  ],
+  "commit-message-editor.tokens": [
+    {
+      "label": "Type",
+      "name": "type",
+      "type": "enum",
+      "options": [
+        {
+          "label": "feat",
+          "description": "A new feature is introduced in the codebase."
+        },
+        {
+          "label": "fix",
+          "description": "A bug in the codebase is fixed."
+        },
+        {
+          "label": "docs",
+          "description": "Documentation is added or updated, without affecting code functionality."
+        },
+        {
+          "label": "style",
+          "description": "Code formatting or style changes are made, such as indentation or white spaces, that do not affect functionality."
+        },
+        {
+          "label": "refactor",
+          "description": "The code structure is improved without altering its functionality, typically through reorganization or simplification."
+        },
+        {
+          "label": "test",
+          "description": "New tests are added or existing tests are modified to ensure code quality and correctness."
+        },
+        {
+          "label": "chore",
+          "description": "Minor updates are made that do not modify the actual functionality, such as updating build scripts or tools."
+        },
+        {
+          "label": "perf",
+          "description": "Code changes are made to improve performance, such as optimizing algorithms or memory usage."
+        },
+        {
+          "label": "modify",
+          "description": "Simple code modification."
+        },
+        {
+          "label": "rename",
+          "description": "Renaming repositoy, files and folders."
+        },
+        {
+          "label": "ci",
+          "description": "Changes are made related to Continuous Integration (CI) configurations, automating the build and testing processes."
+        },
+        {
+          "label": "build",
+          "description": "Modifications are made to the build system or external dependencies, such as updating npm or webpack configurations."
+        },
+        {
+          "label": "remove",
+          "description": "Files or functionality is removed from the codebase."
+        },
+        {
+          "label": "ver",
+          "description": "Determine the version of the code."
+        },
+      ],
+      "description": "Type of changes"
+    },
+    {
+      "label": "Emogi",
+      "name": "emogi",
+      "type": "enum",
+      "combobox": true,
+      "options": [
+        {
+          "label": "🎉 Initial commit",
+          "value": "🎉",
+          "description": "This is the initial commit of a new project, setting up the basic structure and necessary files."
+        },
+        {
+          "label": "🔖 Version tag",
+          "value": "🔖",
+          "description": "Used to tag a specific release or version of the project, typically used for version control."
+        },
+        {
+          "label": "✨ New feature",
+          "value": "✨",
+          "description": "Introducing a new feature or functionality in the project, enhancing the capabilities of the codebase."
+        },
+        {
+          "label": "🐛 Bugfix",
+          "value": "🐛",
+          "description": "Fixes an existing bug in the code, resolving issues that have been identified."
+        },
+        {
+          "label": "🗃️ Metadata",
+          "value": "🗃️",
+          "description": "Updates to metadata files such as package configurations or settings files, not affecting the core functionality."
+        },
+        {
+          "label": "📚 Documentation",
+          "value": "📚",
+          "description": "Additions or updates to project documentation, providing information on how to use or understand the code."
+        },
+        {
+          "label": "💡 Documenting source code",
+          "value": "💡",
+          "description": "Adds or updates comments and documentation within the source code itself, improving code readability."
+        },
+        {
+          "label": "🏎️ Performance",
+          "value": "🏎️",
+          "description": "Improves the performance of the code, optimizing execution speed or resource usage."
+        },
+        {
+          "label": "💄 Cosmetic",
+          "value": "💄",
+          "description": "Changes related to the visual appearance of the user interface, such as styles, layout, and aesthetics."
+        },
+        {
+          "label": "✅ Tests",
+          "value": "✅",
+          "description": "Adds new tests or updates existing tests to ensure code quality and correctness."
+        },
+        {
+          "label": "🔨 Make a test pass",
+          "value": "🔨",
+          "description": "Fixes or updates code to make sure it passes existing tests, ensuring that the code meets expected conditions."
+        },
+        {
+          "label": "⚡️ General update",
+          "value": "⚡️",
+          "description": "General updates to the code, which might include minor improvements, cleanup, or dependency updates."
+        },
+        {
+          "label": "🎨 Improve format/structure",
+          "value": "🎨",
+          "description": "Refactors code to improve its structure, format, or overall organization without changing functionality."
+        },
+        {
+          "label": "♻️ Refactor code",
+          "value": "♻️",
+          "description": "Rewrites or restructures existing code to improve its readability, maintainability, or efficiency without altering its behavior."
+        },
+        {
+          "label": "🔥 Removing code/files",
+          "value": "🔥",
+          "description": "Removes obsolete or unnecessary code, files, or resources from the project."
+        },
+        {
+          "label": "💚 Continuous Integration",
+          "value": "💚",
+          "description": "Fixes issues or updates related to Continuous Integration (CI) processes, ensuring automated builds and tests run smoothly."
+        },
+        {
+          "label": "🔒 Security",
+          "value": "🔒",
+          "description": "Implements or improves security measures in the codebase, addressing vulnerabilities and enhancing protection."
+        },
+        {
+          "label": "⬆️ Upgrading dependencies",
+          "value": "⬆️",
+          "description": "Upgrades project dependencies to newer versions, potentially introducing new features or improvements."
+        },
+        {
+          "label": "⬇️ Downgrading dependencies",
+          "value": "⬇️",
+          "description": "Downgrades project dependencies to older versions, usually to address compatibility issues or bugs."
+        },
+        {
+          "label": "👕 Lint",
+          "value": "👕",
+          "description": "Fixes linting issues in the code, ensuring adherence to coding standards and style guidelines."
+        },
+        {
+          "label": "👽 Translation",
+          "value": "👽",
+          "description": "Adds or updates translations within the project, improving internationalization and localization support."
+        },
+        {
+          "label": "✏️ Text",
+          "value": "✏️",
+          "description": "Updates or corrects text literals within the code, such as typos or content changes."
+        },
+        {
+          "label": "🚑 Critical hotfix",
+          "value": "🚑",
+          "description": "Applies a critical fix that needs to be addressed immediately, often used in emergency situations."
+        },
+        {
+          "label": "🚀 Deploying stuff",
+          "value": "🚀",
+          "description": "Deploys the project or specific changes to a production environment, making the code live."
+        },
+        {
+          "label": "🍏 Fixing on MacOS",
+          "value": "🍏",
+          "description": "Fixes issues specifically related to the macOS platform, ensuring compatibility and stability."
+        },
+        {
+          "label": "🐧 Fixing on Linux",
+          "value": "🐧",
+          "description": "Fixes issues specifically related to the Linux platform, ensuring compatibility and stability."
+        },
+        {
+          "label": "🏁 Fixing on Windows",
+          "value": "🏁",
+          "description": "Fixes issues specifically related to the Windows platform, ensuring compatibility and stability."
+        },
+        {
+          "label": "🚧 Work in progress",
+          "value": "🚧",
+          "description": "Indicates that the code is a work in progress and not yet complete, often used for committing intermediate changes."
+        },
+        {
+          "label": "👷 Adding CI build system",
+          "value": "👷",
+          "description": "Adds or updates Continuous Integration (CI) build systems to automate testing and deployment."
+        },
+        {
+          "label": "📈 Analytics or tracking code",
+          "value": "📈",
+          "description": "Adds or updates analytics or tracking code to monitor the performance and usage of the project."
+        },
+        {
+          "label": "➖ Removing a dependency",
+          "value": "➖",
+          "description": "Removes an unnecessary or obsolete dependency from the project, reducing bloat or conflicts."
+        },
+        {
+          "label": "➕ Adding a dependency",
+          "value": "➕",
+          "description": "Adds a new dependency to the project, enabling new features or capabilities."
+        },
+        {
+          "label": "🐋 Docker",
+          "value": "🐋",
+          "description": "Adds or updates Docker configurations, ensuring the project can be containerized and run consistently across environments."
+        },
+        {
+          "label": "🔧 Configuration files",
+          "value": "🔧",
+          "description": "Adds or updates configuration files, such as settings or environment variables, to control the project's behavior."
+        },
+        {
+          "label": "📦 Package.json in JS",
+          "value": "📦",
+          "description": "Adds or updates package.json or other package management files in JavaScript projects, managing dependencies and scripts."
+        },
+        {
+          "label": "🔀 Merging branches",
+          "value": "🔀",
+          "description": "Merges branches in version control, combining different lines of development."
+        },
+        {
+          "label": "💩 Bad code / need improv.",
+          "value": "💩",
+          "description": "Writes or commits code that is acknowledged as needing improvement, usually as a temporary measure."
+        },
+        {
+          "label": "⏪ Reverting changes",
+          "value": "⏪",
+          "description": "Reverts previous changes, undoing commits or rollbacks in the version control."
+        },
+        {
+          "label": "💥 Breaking changes",
+          "value": "💥",
+          "description": "Introduces changes that break backward compatibility, requiring careful integration or updating of dependent systems."
+        },
+        {
+          "label": "👌 Code review changes",
+          "value": "👌",
+          "description": "Applies changes based on code review feedback, improving the code's quality or adherence to best practices."
+        },
+        {
+          "label": "♿️ Accessibility",
+          "value": "♿️",
+          "description": "Improves the accessibility of the project, making it more usable for people with disabilities."
+        },
+        {
+          "label": "🚚 Move/rename repository",
+          "value": "🚚",
+          "description": "Moves or renames files, directories, or other resources within the project, often for organizational purposes."
+        }
+    ],
+      "description": "Type of changes"
+    },
+```
