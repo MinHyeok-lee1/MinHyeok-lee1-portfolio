@@ -52,7 +52,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          ◦ 안녕하세요! 3년 차 백엔드 개발자 이민혁입니다.
+                          ◦ 안녕하세요! 4년 차 백엔드 개발자 이민혁입니다.
                           <br />
                           ◦ 기록하지 못하여 잊었던 과거에 실수로 기록의 중요함을
                           깨달았습니다.
@@ -438,14 +438,27 @@ export default function AboutMe() {
                           &nbsp; ◦ front-end | VSC(VisualStudioCode)와 Next.js를
                           사용하여 개발
                           <br />
-                          &nbsp; ◦ front-end | 정비소 웹사이트 예약 및 설정
-                          페이지 개발
+                          &nbsp; ◦ front-end | ADMIN 페이지 개발
+                          <br />
+                          &nbsp; ◦ front-end | 예약 페이지 개발
+                          <br />
+                          &nbsp; ◦ front-end | 로그인, 회원가입 페이지 개발
+                          <br />
+                          &nbsp; ◦ front-end | 내 정보 관리 페이지 개발
                           <br />
                           &nbsp; ◦ front-end | 접속 ip를 검사하여 접속자 파악 및
                           qc 웹 사이트 배포 웹사이트로 반환
                           <br />
                           &nbsp; ◦ back-end | VSC(VisualStudioCode)와 NestJS를
                           사용하여 개발
+                          <br />
+                          &nbsp; 회원가입 및 로그인 로그아웃 관련 Auth api 개발
+                          <br />
+                          &nbsp; ◦ back-end | basic CRUD를 기반으로 하는 예약,
+                          회원 정보 CRUD api 개발
+                          <br />
+                          &nbsp; ◦ back-end | 인덱싱 알고리즘 개선을 통한 속도
+                          향상 (100만 개의 데이터에서 탐색 시간 기존 대비 1/10)
                           <br />
                           &nbsp; ◦ back-end | 페이지네이션 skip() 대신
                           hasNext()와 next()를 사용하여 속도 향상
@@ -459,9 +472,10 @@ export default function AboutMe() {
                           &nbsp; ◦ database | mongoDB를 사용하여 데이터를 송,
                           수신 및 저장
                           <br />
-                          &nbsp; ◦ Admin | front-end 및 back-end api 개발
-                          <br />
                           &nbsp; ◦ DevOps 관리 및 유지보수 담당
+                          <br />
+                          &nbsp; ◦ QC, TEST | 웹사이트 QC 및 테스트 (반응형
+                          테스트, 버그 발견 및 픽스)
                         </p>
                       </div>
                     </div>
