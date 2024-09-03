@@ -761,7 +761,7 @@ export default function AboutMe() {
                           <br />
                           <strong>◦ 장소: (주)MK, 주식회사 엠케이</strong>
                           <br />
-                          <strong>◦ 직급: 연구원(사원)</strong>
+                          <strong>◦ 직급: 선임 연구원</strong>
                         </p>
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
                           <strong>◦ 기간: 2023-08-01 ~ 현재</strong>
