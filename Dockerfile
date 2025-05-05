@@ -22,7 +22,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
-RUN pnpm build && pnpm export
+RUN pnpm build
 
 # 3단계: nginx에 정적 파일 복사
 FROM nginx:alpine AS runner
