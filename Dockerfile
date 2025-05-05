@@ -28,7 +28,7 @@ COPY . .
 # 🔥 pnpm 버전 고정 후 빌드 실행 🔥
 RUN npm install -g pnpm@latest && \
   export PATH="$PATH:/usr/local/bin" && \
-  if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+  if [ -f pnpm-lock.yaml ]; then pnpm install --force; \
   elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
   else echo "Lockfile not found. Installing anyway..." && pnpm install --no-frozen-lockfile; \
