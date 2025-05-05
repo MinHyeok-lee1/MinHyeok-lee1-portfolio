@@ -10,11 +10,12 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 # 🔥 pnpm 최신 버전 설치 🔥
-RUN npm install -g pnpm@latest && pnpm install --force --frozen-lockfile && export PATH="$PATH:/usr/local/bin" && \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+RUN npm install -g pnpm@latest && \
+  export PATH="$PATH:/usr/local/bin" && \
+  if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+  elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+  else echo "Lockfile not found. Installing anyway..." && pnpm install --no-frozen-lockfile; \
   fi
 
 # Rebuild the source code only when needed
@@ -24,11 +25,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # 🔥 pnpm 버전 고정 후 빌드 실행 🔥
-RUN npm install -g pnpm@latest && pnpm install --force --frozen-lockfile && export PATH="$PATH:/usr/local/bin" && \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
+RUN npm install -g pnpm@latest && \
+  export PATH="$PATH:/usr/local/bin" && \
+  if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+  elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  else echo "Lockfile not found. Installing anyway..." && pnpm install --no-frozen-lockfile; \
   fi
 
 # Production image, copy all the files and run next
