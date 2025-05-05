@@ -3,12 +3,12 @@ const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.jsx",
   defaultShowCopyCode: true,
-  output: "export",
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const baseConfig = {
   reactStrictMode: true,
+  output: "export", // ✅ 반드시 여기로 이동 (Next.js 최상위 설정)
   images: {
     remotePatterns: [
       {
@@ -19,7 +19,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: 'images.unsplash.com"',
+        hostname: "images.unsplash.com", // ✅ 따옴표 수정
         port: "",
         pathname: "/**",
       },
@@ -30,15 +30,9 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-    // domains: [
-    //   "www.notion.so",
-    //   "images.unsplash.com",
-    //   "prod-files-secure.s3.us-west-2.amazonaws.com",
-    //   // "s3.us-west-2.amazonaws.com",
-    // ],
   },
 };
 
 const withVideos = require("next-videos");
 
-module.exports = withNextra(withVideos(nextConfig));
+module.exports = withNextra(withVideos(baseConfig));

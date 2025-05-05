@@ -9,16 +9,15 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npm install -g pnpm@8 && pnpm install --frozen-lockfile
 
-# 3단계: 빌드 및 정적 export
+# 3단계: 빌드 및 정적 HTML 생성
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 🔥 빌드 및 export 수행 → /app/out 생성
-RUN pnpm build && pnpm export
+RUN pnpm build  # ✅ next.config.js의 output: 'export'가 /out 생성
 
-# 4단계: S3 또는 정적 웹 호스팅용 NGINX 경량 이미지
+# 4단계: S3 업로드 또는 테스트용 nginx 서버
 FROM nginx:alpine AS runner
 COPY --from=builder /app/out /usr/share/nginx/html
 
