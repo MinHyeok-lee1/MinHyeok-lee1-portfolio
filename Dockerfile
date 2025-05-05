@@ -29,7 +29,7 @@ COPY . .
 # 🔥 정적 HTML 빌드 (out 디렉터리 생성)
 RUN npm install -g pnpm@8 && \
   pnpm build && \
-  pnpm export
+  pnpm run export
 
 # 4단계: 최종 산출물만 포함한 경량 이미지
 FROM nginx:alpine AS runner
