@@ -10,13 +10,14 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 # 🔥 pnpm 최신 버전 설치 🔥
-RUN npm install -g pnpm@latest && \
-  export PATH="$PATH:/usr/local/bin" && \
-  if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
-  elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  else echo "Lockfile not found. Installing anyway..." && pnpm install --no-frozen-lockfile; \
-  fi
+RUN npm install -g pnpm@8 && \
+export PATH="$PATH:/usr/local/bin" && \
+if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile; \
+elif [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+elif [ -f package-lock.json ]; then npm ci; \
+else echo "Lockfile not found. Installing..." && pnpm install; \
+fi
+
 
 # Rebuild the source code only when needed
 FROM base AS builder
