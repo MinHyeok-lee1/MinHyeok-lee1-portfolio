@@ -8,9 +8,7 @@ const withNextra = require("nextra")({
 /** @type {import('next').NextConfig} */
 const baseConfig = {
   reactStrictMode: true,
-  output: "export", // ✅ 반드시 여기로 이동 (Next.js 최상위 설정)
   images: {
-    unoptimized: true, // ✅ static export 시 필수
     remotePatterns: [
       {
         protocol: "https",
