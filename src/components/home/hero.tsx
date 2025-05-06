@@ -35,10 +35,10 @@ export default function Hero() {
         </p>
         <div className="flex justify-center">
           <Link href="/project">
-            <button className="btn-project"> 🗂️ 프로젝트 </button>
+            <button className="btn-project">🗂️ 프로젝트</button>
           </Link>
           <Link href="/home">
-            <button className="ml-8 btn-project"> 📚 문서정리 </button>
+            <button className="ml-8 btn-project">📚 문서정리</button>
           </Link>
           {/* <button className="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Button
