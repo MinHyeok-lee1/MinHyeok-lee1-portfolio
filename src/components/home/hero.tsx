@@ -11,7 +11,7 @@ export default function Hero() {
         <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
           안녕하세요!
           <br className="inline-block" />
-          minhyeok.lee1의 웹사이트 입니다.
+          개발자 이민혁의 웹사이트 입니다.
         </h1>
         <p className="mb-8 leading-relaxed">
           <strong>사람은 망각의 동물이다.</strong>
@@ -35,10 +35,10 @@ export default function Hero() {
         </p>
         <div className="flex justify-center">
           <Link href="/project">
-            <button className="btn-project">🗂️ 프로젝트</button>
+            <button className="btn-project">🗂️ 프로젝트 바로가기</button>
           </Link>
           <Link href="/home">
-            <button className="ml-8 btn-project">📚 문서정리</button>
+            <button className="ml-8 btn-project">📚 문서정리 바로가기</button>
           </Link>
           {/* <button className="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
                 Button
