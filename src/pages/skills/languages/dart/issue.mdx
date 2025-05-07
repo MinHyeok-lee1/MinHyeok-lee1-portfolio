@@ -1,298 +1,127 @@
-# ❗ Dart에서 자주 발생하는 오류 및 이슈 모음
+# ❗ Dart 이슈 정리
 
 ## 1. Null check operator used on a null value
-- `!` 연산자를 null인 변수에 사용하면 발생
-  ```dart
-  String? name;
-  print(name!); // ❌ 런타임 오류
-  ```
-
-- 해결: null 확인 후 접근
-  ```dart
-  if (name != null) {
-    print(name!);
-  }
-  ```
+- `!` 연산자를 null인 값에 사용하면 런타임 오류 발생
+```dart
+String? name;
+print(name!); // ❌ 오류
+```
+- ✅ 해결: null 확인 후 접근
+```dart
+if (name != null) {
+  print(name);
+}
+```
 
 ---
 
-## 2. LateInitializationError: Field has not been initialized
-- `late` 변수 선언 후 초기화를 하지 않으면 발생
-  ```dart
-  late String name;
-  print(name); // ❌
-  ```
-
-- 해결: 선언 후 반드시 초기화하거나 생성자에서 초기화
+## 2. LateInitializationError
+- `late`로 선언하고 초기화 없이 사용 시 오류
+```dart
+late String name;
+print(name); // ❌ 오류
+```
+- ✅ 생성자 또는 함수에서 초기화
 
 ---
 
 ## 3. NoSuchMethodError
-- 정의되지 않은 메서드 호출 시
-  ```dart
-  var s = "hello";
-  s.add(1); // ❌
-  ```
+- 정의되지 않은 메서드 호출 시 발생
+```dart
+var s = "hello";
+s.add(1); // ❌
+```
 
 ---
 
-## 4. RangeError (index out of range)
-- 리스트 등에서 인덱스 범위를 벗어남
-  ```dart
-  var list = [1, 2, 3];
-  print(list[5]); // ❌
-  ```
+## 4. RangeError
+- 리스트 인덱스 초과
+```dart
+var list = [1, 2, 3];
+print(list[5]); // ❌ 오류
+```
 
 ---
 
 ## 5. TypeError / CastError
-- 타입 캐스팅이 잘못됐을 때 발생
-  ```dart
-  dynamic x = 'hello';
-  int y = x as int; // ❌
-  ```
-
-- 해결: `is` 키워드로 타입 확인 후 캐스팅
+- 타입 캐스팅이 잘못되었을 때
+```dart
+dynamic x = 'hello';
+int y = x as int; // ❌
+```
 
 ---
 
-## 6. StateError: Bad state
-- 예: `Stream`을 두 번 listen할 때
-  ```dart
-  var stream = getStream();
-  stream.listen(...);
-  stream.listen(...); // ❌
-  ```
+## 6. StateError
+- `Stream` 중복 listen 시 등
+```dart
+var stream = getStream();
+stream.listen(...);
+stream.listen(...); // ❌
+```
 
 ---
 
 ## 7. FormatException
-- JSON 파싱, 숫자 변환 등에서 잘못된 형식
-  ```dart
-  int.parse('abc'); // ❌
-  ```
+- `int.parse('abc')`, 잘못된 JSON 등
 
 ---
 
 ## 8. Missing required parameter
-- 필수 파라미터를 빼먹고 함수 호출 시
-  ```dart
-  void greet({required String name}) => print(name);
-  greet(); // ❌
-  ```
+```dart
+void greet({required String name}) => print(name);
+greet(); // ❌ 누락
+```
 
 ---
 
 ## 9. Unhandled Exception
-- try-catch 없이 예외가 발생할 경우
-  ```dart
-  throw Exception("Oops"); // ❌ 처리 안됨
-  ```
+- try-catch 누락
+```dart
+throw Exception("Oops");
+```
 
 ---
 
-## 10. WidgetsBinding.ensureInitialized() 누락 (Flutter)
-- Flutter에서 `runApp()` 이전에 async 작업 수행 시 필요
-  ```dart
-  void main() async {
-    WidgetsFlutterBinding.ensureInitialized(); // ✅
-    await Firebase.initializeApp();
-    runApp(MyApp());
-  }
-  ```
+## 10. The argument type X can't be assigned to the parameter type Y
+```dart
+void printInt(int x) {}
+printInt('hello'); // ❌
+```
 
 ---
 
-## 11. setState() called after dispose()
-- 위젯 dispose 후 비동기 처리에서 `setState` 호출 시 발생
-
-- 해결: `mounted` 체크
-  ```dart
-  if (!mounted) return;
-  setState(() {});
-  ```
+## 11. async/await 잘못 사용
+- `await` 누락 또는 동기 코드 오해
 
 ---
 
-## 12. The argument type X can't be assigned to the parameter type Y
-- 타입 미스매치 시 컴파일 에러
-  ```dart
-  void printInt(int x) {}
-  printInt('hello'); // ❌
-  ```
+## 12. ambiguous / unused import
+- import 충돌 시 `as` 키워드 사용 권장
 
 ---
 
-## 13. Infinite Build() loop
-- `build()`에서 `setState()`를 호출할 경우 무한 루프 발생
+## 13. Circular dependency
+- 상호 import로 무한 루프
 
 ---
 
-## 14. async/await 잘못된 사용
-- `await` 없이 비동기 함수 호출, 또는 `async` 함수 내에서 동기 로직 착각
+## 14. JSON 구조 예상과 불일치
+- `Map` 또는 `List` 기대했는데 반대가 올 경우
 
 ---
 
-## 15. Unused imports / ambiguous imports
-- 같은 클래스가 두 패키지에서 import 될 때 충돌
-  ```dart
-  import 'package:a/button.dart';
-  import 'package:b/button.dart'; // ❌ 충돌
-  ```
-
-- 해결: `as` alias 사용
+## 15. 타입 추론 실패
+- 명시적 타입 선언으로 해결
 
 ---
 
-## 16. BuildContext 사용 시점 오류
-- `initState()` 또는 `constructor`에서 `context` 사용 시 발생
-
-- 해결: `didChangeDependencies()` 또는 `build()`에서 사용
+## 16. 무거운 main() 함수
+- Firebase, Hive 등 많은 초기화 → 함수 분리로 정리
 
 ---
 
-## 17. Missing MaterialApp or WidgetsApp
-- `Scaffold`를 직접 사용했지만 `MaterialApp`으로 감싸지 않음
-
----
-
-## 18. Hot reload 동작하지 않음
-- `const` 값 수정, `main()` 변경 등은 hot reload 불가
-
----
-
-## 19. PlatformException (Flutter)
-- 플랫폼 채널 통신 실패, 예: 권한 문제, 메서드 누락 등
-
----
-
-## 20. Circular dependency
-- 파일 간 서로 import하고 있으면 발생 (`import cycle`)
-
----
-
-## 21. setState() or markNeedsBuild() called during build
-- `build()` 중에 다시 `setState()`를 호출할 경우 발생
-- 해결: `addPostFrameCallback()`으로 프레임 이후 실행
-  ```dart
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    setState(() {});
-  });
-  ```
-
----
-
-## 22. Navigator operation requested with a context that does not include a Navigator
-- `context`가 `MaterialApp` 위젯 범위 밖일 경우 발생
-- 해결: 올바른 위치에서 `Navigator.push()` 등 호출
-
----
-
-## 23. Timer or Future not cancelled in dispose
-- 위젯이 dispose되었는데 타이머나 Future 콜백이 호출되면서 오류 발생
-
----
-
-## 24. Incorrect usage of GlobalKey
-- 여러 위젯에서 동일한 `GlobalKey`를 공유하거나 재사용 시 오류
-- 해결: 각 위젯에 고유의 Key 부여
-
----
-
-## 25. Scaffold.of(context) called with a context that does not contain a Scaffold
-- context가 `Scaffold`보다 먼저 생성되어 해당 위젯을 찾을 수 없을 때 발생
-- 해결: `Builder` 또는 `ScaffoldMessenger.of(context)` 사용
-
----
-
-## 26. setState() in StatelessWidget
-- `StatelessWidget`에서는 `setState()`를 사용할 수 없음
-
----
-
-## 27. jsonDecode() returns Map\<String, dynamic>, but List expected
-- JSON 구조가 예상과 다를 때 타입 불일치
-- 해결: 실제 구조 확인 후 처리
-  ```dart
-  var data = jsonDecode(jsonString);
-  if (data is List) {
-    ...
-  }
-  ```
-
----
-
-## 28. context used after widget disposed (async 호출 시)
-- `await` 이후 위젯이 dispose되었는데 context 사용 시 발생
-- 해결: `mounted` 체크
-
----
-
-## 29. Flutter Web에서 file path 관련 이슈
-- `dart:io` 사용 불가
-- 해결: `universal_io`, `flutter_web_plugins` 등 플랫폼별 대응 필요
-
----
-
-## 30. Dependencies not resolved (pubspec.yaml)
-- 패키지 버전 충돌, pubspec 파일 오류
-- 해결: `flutter clean && flutter pub get`
-
----
-
-## 31. Illegal reflective access operation
-- Java 환경에서 flutter build 시 발생 (JDK17+)
-- 해결: JDK 11 사용 권장
-
----
-
-## 32. Unstable Widget Tree: Keys not used
-- 동적 리스트에서 `Key` 없이 위젯 재사용 시 잘못된 상태 유지
-- 해결: `ValueKey`, `UniqueKey` 등 명시적으로 설정
-
----
-
-## 33. Infinite loop in FutureBuilder or StreamBuilder
-- `future`나 `stream`이 `build()` 내에서 계속 생성되어 재호출 발생
-- 해결: 변수로 캐싱하여 유지
-
----
-
-## 34. PlatformView not supported in web
-- Flutter Web에서 `GoogleMap`, `WebView` 등 일부 네이티브 뷰 사용 불가
-
----
-
-## 35. Flutter test에서 async widget 상태 테스트 실패
-- 비동기 setState 테스트 시 `tester.pumpAndSettle()` 누락
-
----
-
-## 36. setState called after async gap
-- 비동기 작업 후 위젯이 이미 dispose된 상태에서 `setState()` 호출
-- 해결: `if (!mounted) return;`
-
----
-
-## 37. Type inference 실패
-- 제네릭 또는 nullable 타입 추론에 실패해 에러 발생
-- 해결: 명시적 타입 지정
-
----
-
-## 38. `main()`이 너무 무거움
-- Firebase, Hive 등 초기화가 많을 경우 main이 길어지고 불안정해짐
-- 해결: 분리된 async init 함수로 정리
-
----
-
-## 39. Wrong assets path
-- `pubspec.yaml`에 지정된 경로와 실제 파일 위치가 다르면 로딩 실패
-
----
-
-## 40. Circular reference in provider (Flutter Riverpod 등)
-- Provider 의존관계가 순환될 때 발생
-- 해결: 구조 재설계
+## 17. assets 경로 오류
+- `pubspec.yaml` 경로 불일치 시 에셋 로드 실패
 
 ---
