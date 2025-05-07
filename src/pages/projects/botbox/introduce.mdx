@@ -1,6 +1,6 @@
 import { FileTree } from "nextra-theme-docs";
 
-# Botbox
+# botbox
 
 - UWB를 이용해 추종 가능한 운반로봇
 - 작업자를 따라다니고 작업자가 필요한 장소로 수확물 및 기자재를 옮겨줌
@@ -13,19 +13,19 @@ import { FileTree } from "nextra-theme-docs";
 
 ## 구성
 
-Botbox 프로젝트는 다음과 같이 2종의 모듈로 구성된다.
+botbox 프로젝트는 다음과 같이 2종의 모듈로 구성된다.
 
-- Botbox: Botbox 자체 메인로직을 담당
-- UWB : Botbox 추종 역할의 데이터를 송수신 하는 3개의 UWB 로직을 담당
+- botbox: botbox 자체 메인로직을 담당
+- UWB : botbox 추종 역할의 데이터를 송수신 하는 3개의 UWB 로직을 담당
 
 ## 모듈별 메뉴얼
 
-### Botbox
+### botbox
 
-Botbox 내에는 자체적으로 제작한 2개의 라이브러리가 존재
+botbox 내에는 자체적으로 제작한 2개의 라이브러리가 존재
 
 - Motor
-  - Botbox의 모터 감, 가속을 포함한 모터의 움직임을 담당
+  - botbox의 모터 감, 가속을 포함한 모터의 움직임을 담당
   - 감, 가속의 속도 그래프를 조정할 수 있음
   - 급정거 혹은 메인로직에서 수행하는 모터 동작의 오류를 처리
 - Ultrasonic
@@ -50,4 +50,4 @@ Botbox 내에는 자체적으로 제작한 2개의 라이브러리가 존재
 
 ### UWB
 
-Botbox의 메인로직에서 로봇이 추종을 할 때 필요한 값을 계산하여 로봇으로 송신함
+botbox의 메인로직에서 로봇이 추종을 할 때 필요한 값을 계산하여 로봇으로 송신함

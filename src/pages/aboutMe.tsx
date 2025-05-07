@@ -344,7 +344,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>Botbox</b>
+                          <b>botbox</b>
                           <br />
                           <span className="text-xs">
                             2023-12-01 ~ 2024-08-31
@@ -380,7 +380,7 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                         <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
-                          <b>I-PIE</b>
+                          <b>i-PiE</b>
                           <br />
                           <span className="text-xs">
                             2023-08-01 ~ 2023-12-31
