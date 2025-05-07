@@ -9,9 +9,9 @@ export default function Hero() {
       </div>
       <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
         <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
-          안녕하세요!
+          안녕하세요! 이곳은
           <br className="inline-block" />
-          개발자 이민혁의 웹사이트 입니다.
+          개발자 lmh의 웹사이트에요!
         </h1>
         <p className="mb-8 leading-relaxed">
           <strong>사람은 망각의 동물이다.</strong>
