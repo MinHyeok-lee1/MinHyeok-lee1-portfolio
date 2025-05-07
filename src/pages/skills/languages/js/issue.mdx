@@ -1,6 +1,326 @@
-# JavaScript 이슈 정리
+# ❗ JavaScript 이슈 정리
 
-## 코드 최적화 이슈
+## 1. `undefined` 변수 접근
+
+```js
+console.log(x); // ❌ ReferenceError
+```
+
+➡ 선언 전에 접근하면 에러 발생 (`var`는 hoisting 됨, `let`, `const`는 아님)
+
+---
+
+## 2. `==` vs `===` 혼동
+
+```js
+0 == "0"   // true
+0 === "0"  // false
+```
+
+➡ 가능한 `===` (strict equality) 사용 권장
+
+---
+
+## 3. NaN 처리
+
+```js
+parseInt("abc")  // NaN
+NaN === NaN      // false
+```
+
+➡ `Number.isNaN(value)`로 확인해야 정확
+
+---
+
+## 4. 변수 호이스팅
+
+```js
+console.log(a); // undefined (var만 hoisting)
+var a = 5;
+```
+
+➡ `let`/`const`는 호이스팅은 되지만 초기화 전 접근 시 ReferenceError 발생
+
+---
+
+## 5. 객체 비교는 참조
+
+```js
+{} === {}  // false
+```
+
+➡ 객체 비교는 `JSON.stringify()` 또는 `lodash.isEqual()` 사용
+
+---
+
+## 6. 배열 복사 오류 (얕은 복사 vs 깊은 복사)
+
+```js
+let a = [1, 2];
+let b = a;
+b[0] = 9;
+console.log(a); // [9, 2]
+```
+
+➡ 깊은 복사는 `structuredClone()` 또는 라이브러리 사용
+
+---
+
+## 7. `this` 바인딩 오류
+
+```js
+const obj = {
+  name: "JS",
+  getName() {
+    setTimeout(function () {
+      console.log(this.name);  // undefined
+    }, 1000);
+  }
+};
+```
+
+➡ `function` 대신 **화살표 함수** 또는 `bind(this)` 사용
+
+---
+
+## 8. async/await 사용 오류
+
+```js
+async function getData() {
+  let res = fetch("url");  // ❌ await 누락
+}
+```
+
+➡ 비동기 함수 앞에는 항상 `await` 필요
+
+---
+
+## 9. 콜백 지옥 (callback hell)
+
+```js
+getData(function(a) {
+  process(a, function(b) {
+    finish(b, function(c) {
+      // ...
+    });
+  });
+});
+```
+
+➡ **Promise** 또는 **async/await**로 대체 권장
+
+---
+
+## 10. setTimeout 루프 누락
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 1000);  // 3, 3, 3
+}
+```
+
+➡ `let` 사용 또는 클로저로 해결
+
+---
+
+## 11. 객체 키 중복 선언
+
+```js
+const obj = {
+  a: 1,
+  a: 2  // 나중 값으로 덮어씀
+};
+```
+
+➡ 코드 가독성 및 버그 유발 가능성 있음
+
+---
+
+## 12. truthy / falsy 혼동
+
+```js
+if ("0") console.log("참");  // "0"은 truthy
+if ([]) console.log("참");   // []도 truthy
+```
+
+➡ `Boolean(value)` 또는 명확한 조건문 사용
+
+---
+
+## 13. `typeof null` === "object"
+
+➡ 오래된 JS 버그. `null`은 **null**, 하지만 typeof는 "object" 반환
+
+---
+
+## 14. Array와 객체 혼동
+
+```js
+typeof []         // "object"
+Array.isArray([]) // true
+```
+
+➡ 배열 여부 확인 시 반드시 `Array.isArray()` 사용
+
+---
+
+## 15. 객체 속성 삭제
+
+```js
+const obj = { a: 1 };
+delete obj.a;  // OK
+```
+
+➡ 불변성 유지가 필요한 경우엔 spread 연산자로 새 객체 생성
+
+---
+
+## 16. 프로토타입 오염
+
+- 외부 입력을 통해 `__proto__`나 `constructor`를 수정하는 경우 보안 문제 발생 가능
+
+---
+
+## 17. 전역 변수 오염
+
+```js
+x = 5;  // var, let, const 없이 선언 시 전역 오염
+```
+
+➡ `"use strict"` 모드에서 방지 가능
+
+---
+
+## 18. 문자열 + 숫자 연산 혼동
+
+```js
+1 + "2"  // "12"
+"5" - 1  // 4
+```
+
+➡ 타입 일치 확인 필요
+
+---
+
+## 19. undefined와 null 혼동
+
+- `null`은 의도적 "없음"
+- `undefined`는 "정의되지 않음"
+
+---
+
+## 20. for-in vs for-of 혼동
+
+```js
+for (let key in [1, 2, 3]) { ... }  // 인덱스 반복
+for (let val of [1, 2, 3]) { ... }  // 값 반복
+```
+
+---
+
+## 21. JSON.parse() 예외 처리 안 함
+
+```js
+JSON.parse("{bad json}")  // 에러
+```
+
+➡ 항상 try/catch로 감싸야 안전
+
+---
+
+## 22. parseInt 사용 시 기수 미지정
+
+```js
+parseInt("08")  // 결과: 0 (ES5 이전 환경)
+```
+
+➡ 두 번째 인자로 10을 명시: `parseInt("08", 10)`
+
+---
+
+## 23. 함수 오버로딩 불가능
+
+```js
+function sum(a, b) { ... }
+function sum(a, b, c) { ... }  // 이전 sum 덮어씀
+```
+
+➡ 인자 수에 따른 분기 처리 필요
+
+---
+
+## 24. 값이 비었는지 확인 오류
+
+```js
+if (value) { ... }  // 0, "", false, null, undefined 모두 false로 평가됨
+```
+
+➡ 상황에 맞게 명확한 조건식 사용
+
+---
+
+## 25. 클로저 메모리 누수
+
+- 함수 내부에서 외부 변수 참조가 계속 유지되면 가비지 컬렉션 안됨
+
+---
+
+## 26. DOM 요소가 아직 없는데 접근
+
+```js
+document.getElementById("app").innerText = "Hello";  // ❌
+```
+
+➡ `DOMContentLoaded` 이벤트 후 접근
+
+---
+
+## 27. 이벤트 리스너 제거 누락
+
+```js
+window.addEventListener("scroll", handle);  // 제거 안 하면 메모리 누수
+```
+
+➡ 필요 시 `removeEventListener` 호출
+
+---
+
+## 28. 변수 재선언
+
+```js
+var x = 1;
+var x = 2;  // 허용됨, 의도치 않은 덮어쓰기 발생 가능
+```
+
+➡ `let`, `const` 사용 권장
+
+---
+
+## 29. 비동기 루프에서 값 유지 실패
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);  // 3, 3, 3
+}
+```
+
+➡ `let` 또는 즉시 실행 함수 사용
+
+---
+
+## 30. 데이터 정렬 오류
+
+```js
+[1, 10, 2].sort()  // ["1", "10", "2"]
+```
+
+➡ 숫자 정렬 시 compare 함수 제공
+
+```js
+arr.sort((a, b) => a - b);
+```
+
+## 32. 코드 최적화 이슈
 
 ### 반복문(for-of, for-in)
 
@@ -277,4 +597,4 @@ console.log("name = ", name,"name2 = ", name2,
 3. user.name이 nullish값이 아닌 falsy값이면 name, name2, name3에 Anonymous가 할당되고 name4에는 fasly값이 할당된다.
 4. user.name을 받아왔을 때, 존재하지 않을 수도 있지만 아직 값이 받아지지 않았을 수 있기 때문에 ??, ||와 같은 연산자를 적절하게 사용해야한다.
 
-<br />
+---
