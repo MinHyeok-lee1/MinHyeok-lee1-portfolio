@@ -1,0 +1,558 @@
+# ❗ Java에서 자주 발생하는 오류 및 이슈 사항
+
+## 1. NullPointerException (NPE)
+
+```java
+String name = null;
+System.out.println(name.length());  // NPE 발생
+```
+
+- 원인: null 객체의 메서드/필드 접근
+- 해결: null 체크, Optional 사용, @NonNull 처리
+
+---
+
+## 2. ArrayIndexOutOfBoundsException
+
+```java
+int[] arr = new int[3];
+System.out.println(arr[3]);  // 0~2 인덱스만 가능
+```
+
+- 원인: 배열 범위를 벗어난 접근
+- 해결: 배열 길이 확인 후 접근
+
+---
+
+## 3. ClassCastException
+
+```java
+Object obj = "Hello";
+Integer num = (Integer) obj;  // 런타임 에러
+```
+
+- 원인: 잘못된 타입 캐스팅
+- 해결: `instanceof`로 타입 확인 후 캐스팅
+
+---
+
+## 4. NumberFormatException
+
+```java
+String s = "abc";
+int num = Integer.parseInt(s);  // 에러
+```
+
+- 원인: 숫자 변환 시 비정상 문자열
+- 해결: try-catch 또는 정규식으로 숫자 검증
+
+---
+
+## 5. StackOverflowError
+
+```java
+public void recur() {
+    recur();  // 무한 재귀
+}
+```
+
+- 원인: 무한 재귀 호출
+- 해결: 종료 조건 추가, 반복문으로 대체
+
+---
+
+## 6. ConcurrentModificationException
+
+```java
+List<String> list = new ArrayList<>();
+list.add("a"); list.add("b");
+for (String s : list) {
+    list.remove(s);  // 에러
+}
+```
+
+- 원인: 반복문 중 리스트 수정
+- 해결: `Iterator.remove()` 사용 또는 `CopyOnWriteArrayList`
+
+---
+
+## 7. ClassNotFoundException / NoClassDefFoundError
+
+- 원인: 필요한 클래스가 클래스패스에 없음
+- 차이점:
+  - `ClassNotFoundException`: 동적으로 로딩할 때 (`Class.forName`)
+  - `NoClassDefFoundError`: 컴파일 됐지만 런타임에 찾지 못함
+- 해결: 의존성 확인, 빌드 설정 확인
+
+---
+
+## 8. IllegalArgumentException / IllegalStateException
+
+- `IllegalArgumentException`: 잘못된 매개변수 전달
+- `IllegalStateException`: 메서드 호출 시점이 잘못됨
+- 해결: 매개변수 유효성 검사, 상태 점검
+
+---
+
+## 9. OutOfMemoryError
+
+- 원인: 힙 메모리 부족 (대용량 데이터, 메모리 누수 등)
+- 해결:
+  - `-Xmx`로 힙 크기 증가
+  - 객체 참조 해제 (`null`)
+  - 메모리 프로파일링 도구 사용
+
+---
+
+## 10. UnsupportedOperationException
+
+```java
+List<String> list = Arrays.asList("a", "b");
+list.add("c");  // 수정 불가
+```
+
+- 원인: 고정된 크기의 리스트에 수정 시도
+- 해결: `new ArrayList<>(...)`로 감싸서 사용
+
+---
+
+## 11. FileNotFoundException
+
+- 원인: 경로에 파일이 없음
+- 해결: 상대/절대 경로 확인, 파일 존재 여부 확인
+
+---
+
+## 12. InputMismatchException
+
+```java
+Scanner sc = new Scanner(System.in);
+int x = sc.nextInt();  // 문자 입력 시 에러
+```
+
+- 원인: 입력된 데이터 형식 불일치
+- 해결: 입력값 검증 후 파싱
+
+---
+
+## 13. Lambda 관련 에러
+
+```java
+List<String> list = null;
+list.forEach(System.out::println);  // NPE
+```
+
+- 원인: null 객체에서 람다 호출
+- 해결: NullSafe Stream 처리 또는 Optional
+
+---
+
+## 14. 접근 제어자 관련 에러
+
+```java
+// 다른 패키지에서 default 접근자 클래스 사용 시
+MyPackageClass obj = new MyPackageClass();  // 에러
+```
+
+- 해결: `public`으로 변경하거나 같은 패키지로 구성
+
+---
+
+## 15. equals() vs == 혼동
+
+```java
+String a = new String("hi");
+String b = new String("hi");
+System.out.println(a == b);      // false (주소 비교)
+System.out.println(a.equals(b)); // true (내용 비교)
+```
+
+- 해결: 문자열 비교는 항상 `equals()`
+
+---
+
+## 16. Thread.sleep() vs wait() 혼동
+
+- `Thread.sleep(ms)`  
+  → **현재 스레드를 지정된 시간만큼 일시 정지** (잠들었다가 자동 재개)  
+  → **어떤 객체에도 종속되지 않음**
+
+- `wait(ms)`  
+  → **synchronized 블록 안에서 호출해야 하며**, 호출한 객체의 모니터 락을 **반납하고 기다림**
+  → `notify()` 또는 `notifyAll()` 호출 시 깨움
+
+```java
+synchronized(obj) {
+    obj.wait();     // wait은 synchronized 블록 내부에서만
+}
+```
+
+- 혼동 방지 팁:  
+  `sleep()`은 단순 대기,  
+  `wait()`은 다른 스레드의 **신호를 기다리는 협업 도구**
+
+---
+
+## 17. static context에서 non-static 접근 불가
+
+```java
+public class Test {
+    int number = 10;
+
+    public static void main(String[] args) {
+        System.out.println(number);  // ❌ 컴파일 에러
+    }
+}
+```
+
+- 원인: `main()`은 static 메서드이고, `number`는 인스턴스 변수
+- 해결: 인스턴스를 생성한 뒤 접근해야 함
+
+```java
+Test t = new Test();
+System.out.println(t.number);
+```
+
+---
+
+## 18. final은 객체 참조만 고정됨 (내부 값은 변경 가능)
+
+```java
+final List<String> list = new ArrayList<>();
+list.add("hi");     // ✅ 가능
+list = new ArrayList<>();  // ❌ 불가능
+```
+
+- `final`은 변수 자체(참조)를 변경할 수 없다는 뜻
+- **내부 상태는 변경 가능**
+- 불변 컬렉션을 만들고 싶다면 `Collections.unmodifiableList()` 등 사용
+
+---
+
+## 19. HashMap vs ConcurrentHashMap (동기화 이슈)
+
+### HashMap
+- 단일 스레드 환경에서는 빠르고 효율적
+- **멀티스레드 환경에서는 충돌 위험** → ConcurrentModificationException 발생 가능
+
+### ConcurrentHashMap
+- 멀티스레드 환경에서 안전
+- 내부적으로 Segment 또는 CAS 기반 락으로 병렬 처리
+
+| 항목                  | HashMap         | ConcurrentHashMap       |
+|---------------------|----------------|--------------------------|
+| 쓰레드 안전성         | ❌ 아님         | ✅ 안전함                 |
+| 성능                | 빠름            | 약간 느림 (락 사용)       |
+| 반복 중 변경         | 에러 발생       | 안전하게 처리 가능        |
+
+- 멀티스레드 환경에서는 항상 `ConcurrentHashMap` 사용 권장
+
+
+---
+
+## 20. equals()와 == 혼동
+
+- `==`는 **주소값(참조)** 비교  
+- `equals()`는 **내용** 비교 (단, 오버라이딩 안 된 경우 `==`와 같음)
+
+```java
+String a = new String("hello");
+String b = new String("hello");
+
+System.out.println(a == b);         // false
+System.out.println(a.equals(b));    // true
+```
+
+- 사용자 정의 클래스에서는 `equals()`와 `hashCode()`를 꼭 같이 오버라이딩해야 함
+
+---
+
+## 21. NullPointerException (NPE)
+
+- 객체가 `null`인 상태에서 메서드나 필드를 호출하면 발생
+- 대표 사례:
+  - 배열 초기화 안 하고 사용
+  - return 값이 null인 메서드의 체이닝
+  - Map에서 `get()` 결과 바로 사용
+
+```java
+String str = null;
+System.out.println(str.length());  // NullPointerException
+```
+
+- 방어 코드 습관화 필요 (`if (obj != null)`, `Objects.requireNonNull`, Optional 등)
+
+---
+
+## 22. IndexOutOfBoundsException
+
+- 리스트나 배열의 범위를 초과할 때 발생
+- 특히 `list.get(list.size())` 호출 시 주의 (`size() - 1`까지만 유효)
+
+```java
+List<String> list = new ArrayList<>();
+list.add("hi");
+System.out.println(list.get(1));  // IndexOutOfBoundsException
+```
+
+---
+
+## 23. NumberFormatException
+
+- 문자열을 숫자로 바꿀 때 올바르지 않은 포맷이면 발생
+
+```java
+String num = "abc";
+int val = Integer.parseInt(num);  // NumberFormatException
+```
+
+- 해결: 정규식 또는 `try-catch`로 검증
+
+---
+
+## 24. ClassCastException
+
+- 잘못된 다운캐스팅 시 발생
+
+```java
+Object obj = "Hello";
+Integer num = (Integer) obj;  // ClassCastException
+```
+
+- instanceof 확인 또는 제네릭 활용으로 방지
+
+---
+
+## 25. StackOverflowError
+
+- 재귀 호출이 무한히 계속될 때 발생
+
+```java
+public void recur() {
+    recur();
+}
+```
+
+- 종료 조건 반드시 필요 (`if`, `return` 등)
+
+---
+
+## 26. ConcurrentModificationException
+
+- 컬렉션을 반복 중 동시에 수정할 때 발생
+
+```java
+for (String s : list) {
+    list.remove(s);  // ConcurrentModificationException
+}
+```
+
+- 해결: `Iterator`의 `remove()` 사용 또는 `CopyOnWriteArrayList` 등 병렬 안전 컬렉션 활용
+
+---
+
+## 27. ArrayStoreException
+
+- 배열 타입에 맞지 않는 객체 저장 시 발생
+
+```java
+Object[] arr = new String[3];
+arr[0] = 100;  // ArrayStoreException
+```
+
+---
+
+## 28. Missing return statement
+
+- 모든 조건에서 return하지 않을 때 컴파일 에러 발생
+
+```java
+int getValue(int x) {
+    if (x > 0) return 1;
+    // return 빠짐
+}
+```
+
+---
+
+## 29. 변수 shadowing (변수 숨김)
+
+- 지역 변수 이름이 멤버 변수 이름과 같을 때 혼동 발생
+
+```java
+class MyClass {
+    int value = 10;
+
+    void setValue(int value) {
+        value = value;  // 멤버 변수에 할당 안 됨
+    }
+}
+```
+
+- 해결: `this.value = value;`로 명확히 구분
+
+---
+
+## 30. primitive 타입과 래퍼 클래스 비교
+
+```java
+int a = 10;
+Integer b = 10;
+System.out.println(a == b);  // true (auto-unboxing)
+```
+
+- `Integer a = 128; Integer b = 128;` → `a == b`는 `false` (new 객체 생성)
+
+---
+
+## 31. Optional 사용 오남용
+
+- `Optional<T>`는 null을 대체하기 위한 컨테이너
+- 잘못된 예:
+  ```java
+  Optional<String> name = null;  // ❌ 절대 null로 만들지 말 것
+  ```
+- 정석:
+  ```java
+  Optional<String> name = Optional.ofNullable(user.getName());
+  name.ifPresent(System.out::println);
+  ```
+
+- `.get()` 남용 주의 (null과 비슷해짐)
+- `.orElse()`는 무조건 실행됨, `.orElseGet()`은 지연 실행
+
+---
+
+## 32. try-with-resources 자동 close
+
+- `AutoCloseable`을 구현한 객체는 try 구문에서 자동으로 `close()` 호출됨
+  ```java
+  try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+      br.readLine();
+  }
+  ```
+- `finally` 없이 리소스 정리 가능 (파일, 소켓 등 자주 사용)
+
+---
+
+## 33. GC와 메모리 누수
+
+- 자바는 GC가 있지만 **명시적 해제 필요 없는 것 ≠ 메모리 누수가 없다**
+- 대표적 누수 사례:
+  - static 컬렉션에 객체 계속 추가
+  - Listener 등록 후 제거 안 함
+  - WeakReference, SoftReference 활용 고려
+
+---
+
+## 34. finalize()는 Deprecated
+
+- Java 9부터 `finalize()`는 **비권장**
+- 이유:
+  - GC 타이밍 불확실
+  - 리소스 반환 보장 어려움
+- 대안:
+  - `try-with-resources`
+  - `Cleaner`, `PhantomReference`
+
+---
+
+## 35. String Pool과 불변성
+
+- `String s1 = "hi";`, `s2 = "hi";` → 같은 리터럴이면 참조 공유
+- `new String("hi")`는 heap에 별도 생성
+- String은 immutable. 문자열 변경은 새로운 객체 생성
+
+```java
+String a = "hi";
+a += " there";  // 새로운 String 생성됨
+```
+
+---
+
+## 36. 리플렉션(Reflection)의 위험
+
+- 사전 타입 검증 없이 클래스 내부 접근 가능
+  ```java
+  Class<?> clazz = Class.forName("com.example.MyClass");
+  Object obj = clazz.getDeclaredConstructor().newInstance();
+  ```
+- 장점: 유연성, 단점: 느림 + 보안 문제
+
+---
+
+## 37. 람다에서의 this
+
+- 람다식 내부에서의 `this`는 **외부 클래스**를 가리킴
+  ```java
+  Runnable r = () -> System.out.println(this.toString());
+  ```
+
+- 익명 클래스는 내부 객체 자신 (`new Runnable() { ... }`)
+
+---
+
+## 38. Stream 재사용 불가
+
+- Java Stream은 1회용
+  ```java
+  Stream<String> stream = list.stream();
+  stream.forEach(...);
+  stream.forEach(...);  // ❌ IllegalStateException
+  ```
+
+- 여러 번 사용하려면 `.collect(Collectors.toList())` 등으로 저장
+
+---
+
+## 39. 직렬화(Serialization)과 UID
+
+- Serializable 객체는 클래스 변경 시 UID 변경 주의
+  ```java
+  private static final long serialVersionUID = 1L;
+  ```
+
+- UID 없으면 자동 생성되며, 버전 달라지면 `InvalidClassException` 발생 가능
+
+---
+
+## 40. 멀티스레드 환경에서의 공유 변수
+
+- `volatile`은 캐시 일관성 보장
+- `synchronized`는 **atomic + visibility + ordering** 보장
+- 동시성 이슈는 Atomic 클래스 또는 `Lock`, `ExecutorService` 활용
+
+---
+
+## 41. Enum을 switch에서 사용할 때
+
+- 컴파일 최적화로 switch문에서 enum ordinal 사용
+- enum 상수 변경 시 switch 로직 깨질 수 있음
+- enum에 직접 메서드 구현하거나 map 기반 디스패치 고려
+
+---
+
+## 42. instanceof vs getClass()
+
+- `instanceof`는 상속 관계 모두 포함
+- `getClass()`는 정확히 같은 타입만 비교
+  ```java
+  obj.getClass() == MyClass.class  // 서브클래스는 false
+  ```
+
+---
+
+## 43. 타입 소거(Type Erasure)로 인한 제네릭 제한
+
+- Java 제네릭은 런타임에 사라짐 → `List<String>`과 `List<Integer>`는 동일
+- 제네릭 배열 선언 불가:
+  ```java
+  List<String>[] list = new List<String>[10]; // ❌
+  ```
+
+- instanceof에서 제네릭 사용 불가
+  ```java
+  if (obj instanceof List<String>) // ❌
+  ```
+
+---

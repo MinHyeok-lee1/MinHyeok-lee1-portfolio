@@ -1,0 +1,480 @@
+# ☕ Java 주요 문법 정리
+
+## 1. 📦 기본 구조
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+```
+
+---
+
+## 2. 🔤 변수 & 데이터 타입
+
+```java
+int age = 25;
+double pi = 3.14;
+boolean isOn = true;
+char initial = 'A';
+String name = "Java";
+```
+
+---
+
+## 3. 🎯 제어문
+
+### ▸ 조건문
+```java
+if (x > 0) {
+    System.out.println("Positive");
+} else if (x < 0) {
+    System.out.println("Negative");
+} else {
+    System.out.println("Zero");
+}
+```
+
+### ▸ switch문
+```java
+switch (day) {
+    case "Mon":
+        break;
+    default:
+        break;
+}
+```
+
+### ▸ 반복문
+```java
+for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}
+
+while (x < 10) {
+    x++;
+}
+
+do {
+    x--;
+} while (x > 0);
+```
+
+---
+
+## 4. 🧱 배열
+
+```java
+int[] arr = {1, 2, 3};
+String[] names = new String[3];
+names[0] = "Alice";
+```
+
+---
+
+## 5. 🧰 함수 (메서드)
+
+```java
+public static int add(int a, int b) {
+    return a + b;
+}
+```
+
+---
+
+## 6. 🧬 클래스 & 객체
+
+```java
+public class Car {
+    String model;
+    int year;
+
+    public void drive() {
+        System.out.println("Driving...");
+    }
+}
+
+// 객체 생성
+Car myCar = new Car();
+myCar.model = "Tesla";
+myCar.drive();
+```
+
+---
+
+## 7. 🧱 상속
+
+```java
+public class Animal {
+    public void makeSound() {
+        System.out.println("Some sound");
+    }
+}
+
+public class Dog extends Animal {
+    public void makeSound() {
+        System.out.println("Bark");
+    }
+}
+```
+
+---
+
+## 8. 🧩 인터페이스 & 추상 클래스
+
+```java
+interface Drivable {
+    void drive();
+}
+
+abstract class Animal {
+    abstract void sound();
+}
+```
+
+---
+
+## 9. 🌪 예외 처리
+
+```java
+try {
+    int x = 5 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Cannot divide by zero!");
+} finally {
+    System.out.println("Done");
+}
+```
+
+---
+
+## 10. 📦 패키지 & import
+
+```java
+package com.example;
+
+import java.util.Scanner;
+```
+
+---
+
+## 11. `this` – 현재 인스턴스를 참조
+
+```java
+public class Car {
+    String model;
+
+    public Car(String model) {
+        this.model = model; // 인스턴스 변수와 매개변수 구분
+    }
+}
+```
+
+- 생성자, 메서드 내에서 인스턴스 자신을 가리킴
+- 지역 변수와 멤버 변수가 겹칠 때 주로 사용
+
+---
+
+## 12. `static` – 클래스 단위 공유
+
+```java
+public class Counter {
+    static int count = 0;
+
+    public Counter() {
+        count++;
+    }
+}
+```
+
+- 인스턴스와 무관하게 클래스가 공유하는 변수/메서드
+- 메모리 절약과 상태 공유 용도로 사용됨
+
+---
+
+## 13. `final` – 상수 또는 오버라이딩 금지
+
+```java
+final int MAX_SPEED = 120;
+
+final class Vehicle {}      // 상속 불가
+final void stop() {}        // 오버라이딩 불가
+```
+
+- 변수: 재할당 불가 (상수)
+- 메서드: 하위 클래스에서 오버라이드 불가
+- 클래스: 상속 불가
+
+---
+
+## 14. `new` – 객체 생성
+
+```java
+Car myCar = new Car("BMW");
+```
+
+- `new` 키워드를 통해 메모리에 객체를 동적으로 생성
+- 생성자 호출과 동시에 객체 초기화
+
+---
+
+## 15. `super` – 부모 클래스 참조
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+class Dog extends Animal {
+    void sound() {
+        super.sound(); // 부모 클래스의 sound 호출
+        System.out.println("Dog bark");
+    }
+}
+```
+
+- 부모 클래스의 필드, 메서드, 생성자에 접근할 때 사용
+
+---
+
+## 16. `return` – 값을 반환하거나 메서드 종료
+
+```java
+public int add(int a, int b) {
+    return a + b;
+}
+```
+
+- 값을 반환하거나, `void` 메서드에서도 실행 중단 용도로 사용 가능
+
+---
+
+## 17. `break`, `continue`
+
+```java
+for (int i = 0; i < 10; i++) {
+    if (i == 5) break;       // 반복문 종료
+    if (i % 2 == 0) continue; // 짝수 건너뜀
+    System.out.println(i);
+}
+```
+
+- `break`: 반복문 종료
+- `continue`: 해당 루프 건너뛰고 다음 반복
+
+---
+
+## 18. `==` vs `.equals()`
+
+```java
+String a = "hello";
+String b = new String("hello");
+
+System.out.println(a == b);         // false (주소 비교)
+System.out.println(a.equals(b));    // true (값 비교)
+```
+
+- `==`: 참조 비교 (주소)
+- `.equals()`: 내용 비교
+
+---
+
+## 19. `instanceof` – 타입 확인
+
+```java
+if (obj instanceof Car) {
+    System.out.println("Car 타입입니다.");
+}
+```
+
+- 객체가 특정 클래스의 인스턴스인지 확인
+- 다형성 활용 시 유용
+
+---
+
+## 20. `var` (Java 10+)
+
+```java
+var name = "John";    // 자동으로 String으로 추론
+var age = 30;         // int
+```
+
+- 타입 추론 (단, 명확히 추론 가능한 경우만)
+- 실무에서는 간결하지만 남용 시 가독성 저하 주의
+
+---
+
+## 21. 람다 표현식 (Lambda Expression)
+
+```java
+// 일반 함수형 인터페이스 사용
+interface Printer {
+    void print(String msg);
+}
+
+// 람다식 구현
+Printer printer = msg -> System.out.println("Message: " + msg);
+printer.print("Hello!");
+```
+
+- 익명 클래스의 축약형
+- 함수형 인터페이스 (메서드 1개만 정의된 인터페이스)와 함께 사용
+- 자주 쓰는 함수형 인터페이스: `Runnable`, `Consumer<T>`, `Function<T,R>`, `Predicate<T>`
+
+---
+
+## 22. 제네릭 (Generic)
+
+```java
+class Box<T> {
+    private T value;
+    public void set(T value) { this.value = value; }
+    public T get() { return value; }
+}
+
+Box<String> stringBox = new Box<>();
+stringBox.set("Hello");
+System.out.println(stringBox.get());  // Hello
+```
+
+- 클래스나 메서드에서 사용할 **데이터 타입을 파라미터화**
+- 타입 안정성 + 코드 재사용성 향상
+
+---
+
+## 23. 인터페이스 (Interface)
+
+```java
+interface Animal {
+    void sound();  // public abstract 생략 가능
+}
+
+class Dog implements Animal {
+    public void sound() {
+        System.out.println("멍멍");
+    }
+}
+```
+
+- 다형성 구현 핵심
+- 다중 구현 가능 (`implements`는 여러 개 가능)
+- Java 8 이상부터 `default`, `static` 메서드 허용
+
+---
+
+## 24. 추상 클래스 (Abstract Class)
+
+```java
+abstract class Vehicle {
+    abstract void move();  // 추상 메서드
+    void fuel() { System.out.println("Fueling..."); }
+}
+
+class Car extends Vehicle {
+    void move() { System.out.println("Driving"); }
+}
+```
+
+- 공통 기능은 구현하고, 일부는 자식이 반드시 구현하도록 강제
+- 단일 상속만 가능
+
+---
+
+## 25. 열거형 (Enum)
+
+```java
+enum Direction {
+    NORTH, SOUTH, EAST, WEST
+}
+
+Direction d = Direction.NORTH;
+System.out.println(d.name());  // "NORTH"
+```
+
+- 상수 집합을 표현하는 클래스
+- 내부에 메서드 정의도 가능
+
+---
+
+## 26. 예외 처리 (`try-catch-finally`, `throw`, `throws`)
+
+```java
+try {
+    int x = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("0으로 나눌 수 없습니다.");
+} finally {
+    System.out.println("항상 실행됨");
+}
+```
+
+- `try-catch`: 예외 처리
+- `finally`: 무조건 실행
+- `throw`: 예외 발생
+- `throws`: 예외 전가
+
+---
+
+## 27. 내부 클래스 (Inner Class)
+
+```java
+class Outer {
+    class Inner {
+        void show() {
+            System.out.println("Inner class");
+        }
+    }
+}
+```
+
+- 클래스 내부에 선언된 클래스
+- **정적(static)** / **비정적(inner)** / **익명 내부 클래스** 등 다양
+
+---
+
+## 28. 레코드 (Record, Java 16+)
+
+```java
+public record Person(String name, int age) {}
+
+Person p = new Person("John", 30);
+System.out.println(p.name());  // John
+```
+
+- 자동으로 `getter`, `toString`, `equals`, `hashCode`, `생성자` 생성
+- **불변 객체(Immutable Data Carrier)** 표현에 적합
+
+---
+
+## 29. switch 개선 (Java 14+)
+
+```java
+int day = 2;
+String result = switch (day) {
+    case 1 -> "Mon";
+    case 2 -> "Tue";
+    default -> "Other";
+};
+```
+
+- `->` 구문을 지원하여 더 간결하고 에러 방지 가능
+- `yield` 키워드로 반환도 가능
+
+---
+
+## 30. try-with-resources (자동 자원 반납)
+
+```java
+try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+    System.out.println(br.readLine());
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+- `AutoCloseable`을 구현한 객체는 `try()` 블록 종료 시 자동 `close()`
+
+---
