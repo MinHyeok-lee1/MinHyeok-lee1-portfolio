@@ -1,0 +1,193 @@
+# 🔰 기본 지식
+
+STM32 개발을 위한 **필수 이론 TOP 5**를 **이해 중심으로 자세하고 쉽게** 설명  
+실습하면서 적용할 수 있도록 예시와 함께 설명
+
+---
+
+## ✅ 1. 시계 구조 (Clock Tree)
+
+### 📌 왜 중요한가?
+
+STM32의 **모든 동작 속도**는 클럭에 의해 결정
+
+- MCU 코어 속도 (SYSCLK)
+- 타이머 속도 (TIMxCLK)
+- UART, SPI, I2C 등 주변장치 속도
+- `HAL_Delay()`의 정확성도 클럭 설정에 따라 다름
+
+---
+
+### 🧠 기본 용어
+
+| 용어       | 설명                                             |
+| ---------- | ------------------------------------------------ |
+| HSI        | 내부 고속 클럭 (16MHz 기본 제공)                 |
+| HSE        | 외부 고속 클럭 (크리스탈 연결, 8MHz 등)          |
+| PLL        | 클럭을 배로 증폭해서 원하는 속도 만들어주는 회로 |
+| SYSCLK     | 시스템 전체의 기준 클럭                          |
+| AHB        | 고속 버스, 대부분의 장치가 연결됨                |
+| APB1, APB2 | 저속 및 고속 주변 버스 (UART, TIM 등)            |
+
+---
+
+### 🔧 설정 예시
+
+STM32F746ZG의 기본 설정 목표는 다음과 같음
+
+| 클럭 항목 | 설정값             |
+| --------- | ------------------ |
+| SYSCLK    | 216 MHz (최고속도) |
+| AHB       | 216 MHz            |
+| APB1      | 54 MHz             |
+| APB2      | 108 MHz            |
+
+이 설정은 `.ioc` 파일의 **Clock Configuration 탭**에서 자동 계산되어 설정됨
+
+---
+
+## ✅ 2. GPIO 설정 방식
+
+### 📌 왜 중요한가?
+
+모든 센서, LED, 버튼, 모터 등은 GPIO를 통해 MCU와 연결됨
+
+---
+
+### 🧠 주요 레지스터
+
+| 레지스터 | 설명                                            |
+| -------- | ----------------------------------------------- |
+| MODER    | 핀의 모드 설정 (입력/출력/AF/아날로그)          |
+| ODR      | 출력 데이터 (1이면 HIGH, 0이면 LOW)             |
+| IDR      | 입력된 데이터 확인 (입력 시 읽음)               |
+| PUPDR    | 풀업/풀다운 설정 (버튼처럼 안정된 상태 필요 시) |
+
+---
+
+### 🛠 CubeMX 설정법
+
+- GPIOx를 클릭 → `GPIO_Output` / `GPIO_Input` 선택
+- `.ioc`에서 설정하면 `MX_GPIO_Init()` 함수가 자동 생성
+
+예시:
+
+```cpp
+HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);  // PA5 HIGH
+HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);                // 버튼 입력 확인
+```
+
+---
+
+## ✅ 3. HAL의 기본 구조
+
+### 📌 HAL은 STM32가 제공하는 **고수준 함수 모음집**
+
+→ 레지스터 직접 건드리지 않고도 GPIO, UART, PWM 등을 쉽게 다룰 수 있게 해줌
+
+---
+
+### 🧠 기본 흐름
+
+1. **HAL_Init();**  
+   → 내부적으로 SysTick, NVIC 등 초기화
+2. **SystemClock_Config();**  
+   → Clock 설정 함수 (CubeMX가 생성)
+3. **MX_GPIO_Init();, MX_USARTx_UART_Init(); 등**  
+   → CubeMX에서 설정한 주변장치 초기화 함수
+4. 이후 `while(1)` 루프에서 동작
+
+---
+
+### 🛠 예시 코드 흐름
+
+```cpp
+int main(void)
+{
+  HAL_Init();                 // HAL 전역 초기화
+  SystemClock_Config();       // 시스템 클럭 설정
+  MX_GPIO_Init();             // GPIO 설정
+  MX_USART3_UART_Init();      // UART 설정 (예시)
+
+  while (1) {
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    HAL_Delay(500);
+  }
+}
+```
+
+---
+
+## ✅ 4. Interrupt / Timer / PWM
+
+### 📌 MCU의 **실시간성, 반응성**을 가능하게 하는 핵심 개념
+
+---
+
+### 🧠 인터럽트(IRQ)
+
+- **버튼 누름**, **센서 감지**, **UART 수신**, **타이머 도달** 시 자동으로 발생
+- ISR (Interrupt Service Routine) 함수로 처리
+
+```cpp
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+  if (GPIO_Pin == GPIO_PIN_13) {
+    // 버튼 누름 감지
+  }
+}
+```
+
+---
+
+### 🧠 타이머 (Timer)
+
+- 주기적인 인터럽트를 발생시킬 수 있음
+- PWM도 타이머를 기반으로 동작
+
+```cpp
+HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);  // PWM 시작
+__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 1000); // 듀티비 설정
+```
+
+---
+
+## ✅ 5. 메모리 구조 (Flash, RAM, Stack, Heap)
+
+### 📌 임베디드에서 메모리 구조를 모르고 객체를 마구 생성하면 쉽게 죽습니다 😅
+
+---
+
+### 🧠 메모리 영역
+
+| 영역  | 설명                     | 예시               |
+| ----- | ------------------------ | ------------------ |
+| Flash | 프로그램 코드 저장 (ROM) | `.text` 영역       |
+| RAM   | 전역변수, 스택, 힙       | `.data`, `.bss` 등 |
+| Stack | 함수 호출 시 지역 변수   | `int a;`           |
+| Heap  | malloc/new 시 동적 할당  | `new Led()`        |
+
+---
+
+### 📌 중요한 팁
+
+- **new 사용 시** Heap 사용 → Heap이 작으면 금방 죽음
+- ISR 안에서는 Stack 오버플로우 위험 있음
+- 전역 객체로 선언하는 것이 일반적으로 안전
+
+```cpp
+Led led(GPIOA, GPIO_PIN_5);  // 안전한 전역 객체
+```
+
+---
+
+## ✅ 요약: STM32 기본지식 TOP5
+
+| 주제               | 요약 키워드                               |
+| ------------------ | ----------------------------------------- |
+| 1. Clock           | SYSCLK, HSE, PLL, APB                     |
+| 2. GPIO            | MODER, ODR, IDR                           |
+| 3. HAL             | HAL_Init, MX_GPIO_Init, HAL_GPIO_WritePin |
+| 4. Interrupt/Timer | EXTI, PWM, HAL_TIM_xxx                    |
+| 5. Memory          | Flash, Stack, Heap, 전역 vs 지역 객체     |
+
+---
