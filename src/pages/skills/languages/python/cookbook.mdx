@@ -1,0 +1,364 @@
+# 🐍 Python 주요 문법 정리
+
+## 📌 1. 변수 선언과 자료형
+
+```python
+x = 10            # 정수형
+pi = 3.14         # 실수형
+name = "Alice"    # 문자열
+is_ok = True      # 불리언
+```
+
+---
+
+## 📌 2. 자료형 변환
+
+```python
+int("10")         # 문자열 → 정수
+float("3.14")     # 문자열 → 실수
+str(100)          # 숫자 → 문자열
+bool(1)           # True
+```
+
+---
+
+## 📌 3. 조건문
+
+```python
+if x > 0:
+    print("양수")
+elif x == 0:
+    print("0")
+else:
+    print("음수")
+```
+
+---
+
+## 📌 4. 반복문
+
+### 🔁 for문
+
+```python
+for i in range(5):
+    print(i)
+```
+
+### 🔁 while문
+
+```python
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+```
+
+---
+
+## 📌 5. 함수 정의
+
+```python
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("Bob"))
+```
+
+---
+
+## 📌 6. 리스트(List)
+
+```python
+fruits = ["apple", "banana", "cherry"]
+fruits.append("orange")
+fruits[1] = "mango"
+del fruits[2]
+```
+
+---
+
+## 📌 7. 딕셔너리(Dictionary)
+
+```python
+person = {"name": "Alice", "age": 25}
+person["job"] = "engineer"
+print(person["name"])
+```
+
+---
+
+## 📌 8. 클래스와 객체
+
+```python
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print("Woof!")
+
+my_dog = Dog("Buddy")
+my_dog.bark()
+```
+
+---
+
+## 📌 9. 예외 처리
+
+```python
+try:
+    num = int(input("숫자 입력: "))
+except ValueError:
+    print("숫자가 아닙니다!")
+finally:
+    print("종료")
+```
+
+---
+
+## 📌 10. 파일 입출력
+
+```python
+# 쓰기
+with open("test.txt", "w") as f:
+    f.write("Hello, file!")
+
+# 읽기
+with open("test.txt", "r") as f:
+    content = f.read()
+```
+
+---
+
+## 📌 11. 리스트 컴프리헨션
+
+```python
+squares = [x**2 for x in range(5)]  # [0, 1, 4, 9, 16]
+```
+
+---
+
+## 📌 12. 모듈 import
+
+```python
+import math
+from datetime import datetime
+```
+
+---
+
+## 📌 13. lambda 함수
+
+```python
+square = lambda x: x**2
+print(square(4))  # 16
+```
+
+---
+
+## 📌 14. 조건부 표현식 (삼항 연산자)
+
+```python
+result = "Even" if x % 2 == 0 else "Odd"
+```
+
+---
+
+## 📌 15. 패킹 / 언패킹
+
+```python
+a, b = (1, 2)           # 언패킹
+def func(*args):        # 가변 인자
+    for arg in args:
+        print(arg)
+```
+
+---
+
+## 📌 16. 데코레이터 (Decorator)
+
+```python
+def decorator(func):
+    def wrapper():
+        print("전처리")
+        func()
+        print("후처리")
+    return wrapper
+
+@decorator
+def say_hello():
+    print("Hello!")
+
+say_hello()
+```
+
+---
+
+## 📌 17. 제너레이터 (Generator)
+
+```python
+def my_generator():
+    yield 1
+    yield 2
+    yield 3
+
+for val in my_generator():
+    print(val)
+```
+
+- `yield`를 사용하면 값을 하나씩 반환하며 상태를 유지
+- 메모리 효율적
+
+---
+
+## 📌 18. 이터레이터 (Iterator)
+
+```python
+nums = [1, 2, 3]
+it = iter(nums)
+print(next(it))  # 1
+print(next(it))  # 2
+```
+
+- `__iter__()`와 `__next__()`를 가진 객체가 이터레이터
+
+---
+
+## 📌 19. 컨텍스트 매니저 (`with` 문)
+
+```python
+with open("file.txt", "r") as f:
+    content = f.read()
+```
+
+사용자 정의 컨텍스트 매니저:
+
+```python
+class MyContext:
+    def __enter__(self):
+        print("시작")
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("종료")
+
+with MyContext():
+    print("작업 중")
+```
+
+---
+
+## 📌 20. 리스트, 딕셔너리, 집합 컴프리헨션
+
+```python
+# 리스트
+squares = [x*x for x in range(5)]
+
+# 딕셔너리
+squared_dict = {x: x*x for x in range(5)}
+
+# 집합
+unique_squares = {x*x for x in [1, 2, 2, 3]}
+```
+
+---
+
+## 📌 21. 타입 힌트 (Type Hint)
+
+```python
+def add(a: int, b: int) -> int:
+    return a + b
+```
+
+- 실행에는 영향 없음 (정적 분석 용도)
+- IDE와 협업 시 유용
+
+---
+
+## 📌 22. 언패킹 연산자 `*`, `**`
+
+```python
+def func(a, b, c):
+    print(a, b, c)
+
+args = [1, 2, 3]
+func(*args)
+
+kwargs = {"a": 1, "b": 2, "c": 3}
+func(**kwargs)
+```
+
+---
+
+## 📌 23. 조건 매칭 (match-case, Python 3.10+)
+
+```python
+def http_error(status):
+    match status:
+        case 400:
+            return "Bad Request"
+        case 404:
+            return "Not Found"
+        case 500:
+            return "Server Error"
+```
+
+---
+
+## 📌 24. walrus 연산자 (`:=`, Python 3.8+)
+
+```python
+# 변수 할당과 조건을 동시에
+if (n := len("hello")) > 3:
+    print(n)  # 5
+```
+
+---
+
+## 📌 25. `dataclass` (Python 3.7+)
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+p = Point(1, 2)
+print(p.x, p.y)
+```
+
+---
+
+## 📌 26. 슬라이싱 응용
+
+```python
+lst = [0, 1, 2, 3, 4, 5]
+print(lst[1:4])      # [1, 2, 3]
+print(lst[::-1])     # 역순 출력
+```
+
+---
+
+## 📌 27. 모듈 실행 시점 제어 (`__name__ == "__main__"`)
+
+```python
+def main():
+    print("메인 실행")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 📌 28. 예외 직접 정의
+
+```python
+class MyError(Exception):
+    pass
+
+raise MyError("사용자 정의 예외 발생")
+```
+
+---
