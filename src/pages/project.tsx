@@ -15,7 +15,7 @@ export default function Projects({ projects }) {
               name="viewport"
               content="width=device-width, initial-scale=1"
             />
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/developer.ico" />
           </Head>
 
           <h1 className="text-2xl font-bold sm:text-4xl mt-12 md:mt-8">

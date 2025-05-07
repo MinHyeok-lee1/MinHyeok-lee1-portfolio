@@ -19,7 +19,7 @@ export default function AboutMe() {
               name="viewport"
               content="width=device-width, initial-scale=1"
             />
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/developer.ico" />
           </Head>
           <div className="min-h-screen">
             <div className="flex flex-col mx-16 pt-12 justify-between">
@@ -227,8 +227,7 @@ export default function AboutMe() {
                           <br />
                           <br />
                           <b>◦ JavaScript</b>: ES6, Next, React와 jQuery를
-                          활용해 DOM을 제어하고 AJAX로 데이터 송수신이
-                          가능하다.
+                          활용해 DOM을 제어하고 AJAX로 데이터 송수신이 가능하다.
                           <br />
                           <br />
                           <b>◦ HTML</b>: HTML 구조와 DOM을 이해하고 HTML5 시멘틱
