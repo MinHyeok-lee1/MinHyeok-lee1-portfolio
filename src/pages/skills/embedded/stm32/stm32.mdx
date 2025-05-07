@@ -4,16 +4,17 @@ import { FileTree } from "nextra-theme-docs";
 
 ## 🔷 STM32란?
 
-**STM32**는 STMicroelectronics에서 제작한 **32비트 ARM Cortex 기반 마이크로컨트롤러** 제품군이다.  
+**STM32**는 STMicroelectronics에서 제작한 **32비트 ARM Cortex 기반 마이크로컨트롤러** 제품군이다.
 
-| 항목 | 설명 |
-|------|------|
-| 🔧 제조사 | STMicroelectronics |
-| 🧠 아키텍처 | ARM Cortex-M0, M3, M4, M7, M33 등 |
-| 🎯 용도 | 임베디드 시스템, IoT, 로봇, 센서 제어, 모터 제어, 디스플레이 등 |
-| 💡 특징 | 저전력, 다양한 주변장치 내장, 폭넓은 성능 스펙, STM32CubeMX 및 HAL 지원 |
+| 항목        | 설명                                                                    |
+| ----------- | ----------------------------------------------------------------------- |
+| 🔧 제조사   | STMicroelectronics                                                      |
+| 🧠 아키텍처 | ARM Cortex-M0, M3, M4, M7, M33 등                                       |
+| 🎯 용도     | 임베디드 시스템, IoT, 로봇, 센서 제어, 모터 제어, 디스플레이 등         |
+| 💡 특징     | 저전력, 다양한 주변장치 내장, 폭넓은 성능 스펙, STM32CubeMX 및 HAL 지원 |
 
 ### 📌 대표 시리즈 | 설명 |
+
 |--------|------|
 | **STM32F1** | 가장 보편적인 입문용 시리즈 |
 | **STM32F4** | 고성능, DSP 기능 |
@@ -27,56 +28,59 @@ import { FileTree } from "nextra-theme-docs";
 ## 📚 STM32 개발에 필요한 지식 요구사항
 
 ### 🟢 **기초 레벨** (입문자용)
-| 주제 | 설명 |
-|------|------|
-| ✅ C 언어 | 포인터, 배열, 구조체, 전처리기 |
-| ✅ MCU 개념 | 마이크로컨트롤러란 무엇인지, 내부 구성요소 |
-| ✅ 핀맵 이해 | GPIO란 무엇이며, 핀 설정 개념 |
-| ✅ 개발 환경 | STM32CubeIDE 또는 VSCode + GCC + Make |
-| ✅ 디버깅 | 시리얼 통신(UART), 로그 출력 이해 |
+
+| 주제         | 설명                                       |
+| ------------ | ------------------------------------------ |
+| ✅ C 언어    | 포인터, 배열, 구조체, 전처리기             |
+| ✅ MCU 개념  | 마이크로컨트롤러란 무엇인지, 내부 구성요소 |
+| ✅ 핀맵 이해 | GPIO란 무엇이며, 핀 설정 개념              |
+| ✅ 개발 환경 | STM32CubeIDE 또는 VSCode + GCC + Make      |
+| ✅ 디버깅    | 시리얼 통신(UART), 로그 출력 이해          |
 
 ---
 
 ### 🟡 **중급 레벨** (실전 개발자)
-| 주제 | 설명 |
-|------|------|
+
+| 주제              | 설명                              |
+| ----------------- | --------------------------------- |
 | ✅ HAL 라이브러리 | STM32Cube HAL 함수 구조 및 사용법 |
-| ✅ 인터럽트 | EXTI, 타이머 인터럽트 처리 |
-| ✅ 타이머/PWM | 모터, LED, 주기적 이벤트 구현 |
-| ✅ UART/I2C/SPI | 주변장치 통신 프로토콜 |
-| ✅ ADC/DAC | 아날로그 신호 측정 및 출력 |
-| ✅ DMA | CPU 개입 없이 데이터 전송 최적화 |
+| ✅ 인터럽트       | EXTI, 타이머 인터럽트 처리        |
+| ✅ 타이머/PWM     | 모터, LED, 주기적 이벤트 구현     |
+| ✅ UART/I2C/SPI   | 주변장치 통신 프로토콜            |
+| ✅ ADC/DAC        | 아날로그 신호 측정 및 출력        |
+| ✅ DMA            | CPU 개입 없이 데이터 전송 최적화  |
 
 ---
 
 ### 🔴 **고급 레벨** (성능 최적화/제품화 단계)
-| 주제 | 설명 |
-|------|------|
-| ✅ LL 드라이버 | HAL보다 가볍고 빠른 Low-Layer API |
-| ✅ RTOS | FreeRTOS 기반 멀티태스킹 및 동기화 |
-| ✅ Bootloader | 펌웨어 업데이트 시스템 |
-| ✅ 전력 관리 | Sleep/Stop 모드, 클럭 게이팅, PWR 제어 |
-| ✅ 메모리 매핑 | Flash/RAM/SRAM 구조 이해 |
-| ✅ 보안 기능 | TrustZone, CRC, AES 등
+
+| 주제           | 설명                                   |
+| -------------- | -------------------------------------- |
+| ✅ LL 드라이버 | HAL보다 가볍고 빠른 Low-Layer API      |
+| ✅ RTOS        | FreeRTOS 기반 멀티태스킹 및 동기화     |
+| ✅ Bootloader  | 펌웨어 업데이트 시스템                 |
+| ✅ 전력 관리   | Sleep/Stop 모드, 클럭 게이팅, PWR 제어 |
+| ✅ 메모리 매핑 | Flash/RAM/SRAM 구조 이해               |
+| ✅ 보안 기능   | TrustZone, CRC, AES 등                 |
 
 ---
 
 ## 💻 개발툴 및 리소스
 
-| 항목 | 설명 |
-|------|------|
-| **IDE** | STM32CubeIDE, Keil MDK, VSCode + PlatformIO |
-| **코드 생성기** | STM32CubeMX |
-| **디버깅툴** | ST-Link, J-Link |
-| **도큐먼트** | Reference Manual, Datasheet, UM 문서 |
-| **실습보드** | Nucleo 보드, Discovery 보드, 커스텀 보드
+| 항목            | 설명                                        |
+| --------------- | ------------------------------------------- |
+| **IDE**         | STM32CubeIDE, Keil MDK, VSCode + PlatformIO |
+| **코드 생성기** | STM32CubeMX                                 |
+| **디버깅툴**    | ST-Link, J-Link                             |
+| **도큐먼트**    | Reference Manual, Datasheet, UM 문서        |
+| **실습보드**    | Nucleo 보드, Discovery 보드, 커스텀 보드    |
 
 ---
 
-## 📂  폴더 및 파일 구조
+## 📂 폴더 및 파일 구조
 
 <FileTree.Folder name="STM32" defaultOpen>
-  <FileTree.File name="문서 시작" />
+  <FileTree.File name="문서개요" />
   <FileTree.File name="개발환경 설정" />
   <FileTree.Folder name="기술문서 정리" defaultOpen>
     <FileTree.File name="기본지식" />
