@@ -8,7 +8,7 @@
 $ sudo npm install --global expo-cli sharp-cli
 ```
 
-<br />
+---
 
 ### 2. Expo 로그인
 
@@ -18,13 +18,13 @@ Expo 원격 개발 기능 등을 이용하기 위해 로그인이 필요한데 [
 $ expo login
 ```
 
-<br />
+---
 
 ### 3. Expo Go App 설치
 
 - Android 단말기를 통해 개발중인 프로젝트를 실시간으로 테스트 할 수 있으며 이를 위해 Expo(Expo Go) 앱을 구글 플레이를 통해 설치한다.
 
-<br />
+---
 
 ## 프로젝트 생성
 
@@ -50,7 +50,7 @@ To run your project, navigate to the directory and run one of the following yarn
 ubuntu@ip-172-26-13-163:~$
 ```
 
-<br />
+---
 
 ### 원격 개발 환경 설정
 
@@ -85,7 +85,7 @@ Expo 프로젝트를 생성하면 기본적으로 로컬 환경 개발용으로 
 - start: tunnel 옵션으로 실행하면 Public IP나 자동생성된 도메인 주소로 원격 Expo 프로젝트에 접속 가능해짐
 - start:web: port 옵션으로 실행되는 웹 서버에 특정 포트를 부여가능
 
-<br />
+---
 
 ## 프로젝트 실행
 
@@ -109,7 +109,7 @@ expo start로 실행된 Metro는 ctrl+c 를 눌러 종료할 수 있으며, 이 
 
 원격 개발을 하는 경우 앱 서비스와 Metro의 연결이 종종 끊기곤 하는데 이 때 Metro 콘솔에서 r 을 입력해 앱을 리로드하면 다시 연결된다.
 
-<br />
+---
 
 ## 파일명 부여
 
@@ -118,7 +118,170 @@ expo start로 실행된 Metro는 ctrl+c 를 눌러 종료할 수 있으며, 이 
 - ts: 기본적인 TypeScript 기반의 소스 파일
 - tsx: 컴포넌트를 가지는 TypeScript 기반의 소스 파일
 
-<br />
+---
+
+## 접속정보 확인
+
+### expo login
+
+expo에 로그인하면 개발중인 프로젝트를 실제 스마트폰에서 확인이 가능하다.
+
+```sh
+expo login
+```
+
+### expo whoami
+
+로그인된 정보를 확인
+
+```sh
+expo whoami
+```
+
+## 절대경로 설정
+
+assets 디렉토리의 파일을 참조할 때 다음과 같이 절대경로로 사용하는 방법
+
+```js
+const PlaceholderImage = require("@assets/background-image.png");
+```
+
+관련 패키지 설치
+
+```sh
+yarn add -D babel-plugin-module-resolver,
+```
+
+babel.config.js 파일 수정
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [
+      "nativewind/babel",
+      [
+        "module-resolver",
+        {
+          root: ["."],
+          alias: {
+            "@": "./",
+            "@screens": "./screens",
+            "@components": "./components",
+            "@constants": "./constants",
+            "@types": "./types",
+            "@assets": "./assets",
+          },
+        },
+      ],
+    ],
+  };
+};
+```
+
+tsconfig.json 파일 수정
+
+```json
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "typeRoots": ["./node_modules/@types", "@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@screens/*": ["./screens/*"],
+      "@components/*": ["./components/*"],
+      "@constants": ["./constants"],
+      "@types": ["./types"],
+      "@assets/*": ["./assets/*"]
+    }
+  }
+}
+```
+
+## 설정 및 파일 수정
+
+```sh
+expo init
+```
+
+- 프로젝트명 입력
+- typescript 템플릿 설정
+
+### nativewind 설정
+
+nativewind는 expo용 tailwind 컴포넌트다.
+
+```sh
+yarn add nativewind && yarn add --dev tailwindcss && npx tailwindcss init
+```
+
+### tailwind.config.js 수정
+
+nativewind를 적용할 디렉토리를 설정한다.
+
+- screens은 화면구성용 소스코드 디렉토리
+
+```js
+module.exports = {
+  content: ["./App.{js,jsx,ts,tsx}", "./screens/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+### 바벨 플러그인 수정
+
+babel.config.js 파일을 수정한다.
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["nativewind/babel"],
+  };
+};
+```
+
+### typescript 설정
+
+react-native의 컴포넌트에서 NativeWind의 className 속성을 사용하기 위해서 app.d.ts 파일을 생성하고 다음의 내용을 추가한다.
+
+```js
+<reference types="nativewind/types" />
+```
+
+### 적용 여부 확인
+
+App.tsx 파일을 다음과 같이 수정한다.
+
+```js
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { Text, View } from "react-native";
+
+export default function App() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+```
+
+적용여부를 확인하기 위해 expo를 실행한다.
+
+```sh
+export start
+```
+
+안드로이드폰에서 expo go 앱을 실행하면 앞서 실행한 expo 프로젝트가 표시되고 이를 선택하면 프로젝트 동작화면을 확인할 수 있다.
+
 
 ## 기타 설정
 
@@ -130,7 +293,7 @@ yarn은 facebook에서 npm의 단점을 보완하여 만든 npm 패키지 관리
 sudo npm i -g yarn
 ```
 
-<br />
+---
 
 ### 로거 설정
 
@@ -164,7 +327,7 @@ lg.d("테스트용 디버그 로그");
 Index | [D] 테스트용 디버그 로그
 ```
 
-<br />
+---
 
 ### 환경 변수 설정
 
@@ -190,7 +353,7 @@ expo install dotenv expo-constants
 **환경변수를 상수로 설정**
 향후 추가
 
-<br />
+---
 
 ### 절대경로 사용 설정
 
@@ -208,7 +371,7 @@ import { ScreenNameList } from "src/screens/screen.settings";
 
 이를 위해서는 babel-plugin-module-resolver 패키지 설치 및 tsconfig.json과 babel.config.js 파일의 설정이 필요하다.
 
-<br />
+---
 
 **패키지설치**
 
@@ -267,7 +430,7 @@ npm run start:clearcache
 expo start -c --tunnel
 ```
 
-<br />
+---
 
 ### 화면 라우팅 & 네비게이션
 
@@ -298,7 +461,7 @@ npx pod-install ios
 npm install --save @react-navigation/native
 ```
 
-<br />
+---
 
 ### 에러 경계(ErrorBoundary) 설정
 
@@ -308,7 +471,7 @@ npm install --save @react-navigation/native
 yarn add react-native-error-boundary
 ```
 
-<br />
+---
 
 ### 다국어 설정
 
@@ -318,7 +481,7 @@ yarn add react-native-error-boundary
 expo install expo-localization i18n-js @types/i18n-js
 ```
 
-<br />
+---
 
 ### 전역 상태 관리용 Recoil 설정
 

@@ -1,161 +1,119 @@
-# Expo 이슈 정리
+# ❗ Expo 이슈 정리
 
-### expo login
+## 1. `expo install`로 설치했는데도 모듈을 찾을 수 없다고 나올 때
 
-expo에 로그인하면 개발중인 프로젝트를 실제 스마트폰에서 확인이 가능하다.
+* 이유: 버전 호환성 문제 또는 캐시 충돌
+* 해결:
 
-```sh
-expo login
-```
+  ```bash
+  rm -rf node_modules
+  expo r -c
+  yarn install or npm install
+  ```
 
-### expo whoami
+---
 
-로그인된 정보를 확인
+## 2. `expo start` 후 QR코드 스캔했지만 앱이 안 켜질 때
 
-```sh
-expo whoami
-```
+* 이유: 휴대폰과 PC가 같은 네트워크에 연결되어 있지 않거나, 방화벽 문제
+* 해결:
 
-## 프로젝트 생성
+  * PC와 폰이 동일한 Wi-Fi 사용 확인
+  * `--tunnel` 옵션 사용
 
-```sh
-expo init
-```
+    ```bash
+    expo start --tunnel
+    ```
 
-- 프로젝트명 입력
-- typescript 템플릿 설정
+---
 
-### nativewind 설정
+## 3. Expo Go에서 특정 네이티브 모듈 사용 불가
 
-nativewind는 expo용 tailwind 컴포넌트다.
+* 예: `react-native-firebase`, `react-native-vision-camera`
+* 이유: Expo Go는 네이티브 코드 추가 불가
+* 해결:
 
-```sh
-yarn add nativewind && yarn add --dev tailwindcss && npx tailwindcss init
-```
+  * `expo eject`로 bare workflow 전환
+  * 또는 Expo에서 지원되는 대체 모듈 사용
 
-### tailwind.config.js 수정
+---
 
-nativewind를 적용할 디렉토리를 설정한다.
+## 4. 앱 업데이트가 Expo Go에서 즉시 반영되지 않음
 
-- screens은 화면구성용 소스코드 디렉토리
+* 이유: 캐시된 JS 번들 사용
+* 해결:
 
-```js
-module.exports = {
-  content: ["./App.{js,jsx,ts,tsx}", "./screens/**/*.{js,jsx,ts,tsx}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-```
+  ```bash
+  expo start -c
+  ```
 
-### 바벨 플러그인 수정
+---
 
-babel.config.js 파일을 수정한다.
+## 5. `Error: Cannot find module 'metro-config'`
 
-```js
-module.exports = function (api) {
-  api.cache(true);
-  return {
-    presets: ["babel-preset-expo"],
-    plugins: ["nativewind/babel"],
-  };
-};
-```
+* 이유: 의존성 설치 불완전
+* 해결:
 
-### typescript 설정
+  ```bash
+  yarn add metro-config
+  ```
 
-react-native의 컴포넌트에서 NativeWind의 className 속성을 사용하기 위해서 app.d.ts 파일을 생성하고 다음의 내용을 추가한다.
+---
 
-```js
-<reference types="nativewind/types" />
-```
+## 6. `sdkVersion` 호환 문제
 
-### 적용 여부 확인
+* 이유: 사용 중인 패키지가 Expo SDK 버전과 호환되지 않음
+* 해결:
 
-App.tsx 파일을 다음과 같이 수정한다.
+  * Expo SDK 버전에 맞는 패키지 사용
+  * `https://docs.expo.dev/versions/latest/` 확인
 
-```js
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Text, View } from "react-native";
+---
 
-export default function App() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-```
+## 7. 위치, 카메라 등 권한 이슈
 
-적용여부를 확인하기 위해 expo를 실행한다.
+* 이유: `app.json`에 권한 설정 누락
+* 해결:
 
-```sh
-export start
-```
-
-안드로이드폰에서 expo go 앱을 실행하면 앞서 실행한 expo 프로젝트가 표시되고 이를 선택하면 프로젝트 동작화면을 확인할 수 있다.
-
-## 절대경로 설정
-
-assets 디렉토리의 파일을 참조할 때 다음과 같이 절대경로로 사용하는 방법
-
-```js
-const PlaceholderImage = require("@assets/background-image.png");
-```
-
-관련 패키지 설치
-
-```sh
-yarn add -D babel-plugin-module-resolver,
-```
-
-babel.config.js 파일 수정
-
-```js
-module.exports = function (api) {
-  api.cache(true);
-  return {
-    presets: ["babel-preset-expo"],
-    plugins: [
-      "nativewind/babel",
-      [
-        "module-resolver",
-        {
-          root: ["."],
-          alias: {
-            "@": "./",
-            "@screens": "./screens",
-            "@components": "./components",
-            "@constants": "./constants",
-            "@types": "./types",
-            "@assets": "./assets",
-          },
-        },
-      ],
-    ],
-  };
-};
-```
-
-tsconfig.json 파일 수정
-
-```json
-{
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "typeRoots": ["./node_modules/@types", "@types"],
-    "baseUrl": ".",
-    "paths": {
-      "@screens/*": ["./screens/*"],
-      "@components/*": ["./components/*"],
-      "@constants": ["./constants"],
-      "@types": ["./types"],
-      "@assets/*": ["./assets/*"]
+  ```json
+  "expo": {
+    "android": {
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION"]
     }
   }
-}
-```
+  ```
+
+---
+
+## 8. `expo build` 종료 후 앱이 설치는 되는데 실행되지 않음
+
+* 이유: 네이티브 라이브러리와 설정 충돌
+* 해결:
+
+  * `expo diagnostics`로 환경 점검
+  * 앱 초기화 후 다시 설정
+
+---
+
+## 9. `AppRegistry.registerComponent` not called 에러
+
+* 이유: 진입점에서 `App`을 등록하지 않았거나 구조 문제
+* 해결:
+
+  ```js
+  import { registerRootComponent } from 'expo';
+  import App from './App';
+  registerRootComponent(App);
+  ```
+
+---
+
+## 10. OTA (Over-the-Air) 업데이트가 반영되지 않음
+
+* 이유: 앱 재시작 필요 또는 업데이트 설정 문제
+* 해결:
+
+  * `expo-updates` 모듈 확인
+  * 설정에서 `fallbackToCacheTimeout` 등 구성
+
+---
