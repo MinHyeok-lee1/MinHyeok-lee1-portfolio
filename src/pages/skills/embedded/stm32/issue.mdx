@@ -1,0 +1,152 @@
+# 💥 STM32 이슈 정리
+
+## ❌ Please login to download a software package
+
+이 창은 STM32CubeIDE 또는 STM32CubeMX에서 **필요한 소프트웨어 패키지 (예: STM32F7 시리즈의 HAL 드라이버)**를 다운로드하려 할 때, **로그인이 되어 있지 않아 거부된 상황**임
+
+### ✅ 해결 방법
+
+#### 🔹 1. **ST 계정 로그인 필요**
+
+STMicroelectronics의 공식 계정(myST)이 있어야 다운로드가 가능함
+
+##### 👉 로그인 절차
+
+1. 상단 메뉴
+
+   ```text
+   Help > STM32Cube Updates > Connection to myST
+   ```
+
+2. ST 계정으로 로그인하거나, 계정이 없다면 가입
+
+📌 ST 계정 만들기
+
+- [https://my.st.com](https://my.st.com) 에서 회원가입 (무료)
+
+#### 🔹 2. **로그인 후 다시 시도**
+
+로그인한 상태에서 STM32CubeIDE가 자동으로 필요한 HAL 드라이버/패키지를 다운로드할 수 있음
+
+- `Help > Manage Embedded Software Packages`로 들어가서 수동 설치도 가능
+
+#### ✅ 참고: 오프라인 수동 설치도 가능
+
+필요한 경우 [ST 사이트](https://www.st.com/en/development-tools/stm32cubef7.html)에서 `.zip` 형태의 **STM32CubeF7 Firmware Package**를 수동 다운로드하여 설치할 수도 있음
+
+---
+
+## ❌ ../Core/Startup/startup_stm32f746zgtx.s:61: Error: junk at end of line, first unrecognized character is `\`
+
+### 🔍 원인
+
+- 해당 `.s` 파일이 **CRLF 줄바꿈 형식**으로 저장됨
+- 또는 비정상적인 특수문자(`\` 등)가 포함되어 있음
+
+### ✅ 해결 방법
+
+- `LF`로 줄바꿈 변경 (VSCode 우측 하단 → `CRLF` → `LF`로 변경)
+- 또는 `dos2unix startup_stm32f746zgtx.s` 명령 사용
+
+---
+
+## ❌ fatal error: stdint.h: No such file or directory
+
+### 🔍 원인
+
+- macOS에 설치된 `arm-none-eabi-gcc`가 **newlib 라이브러리를 제대로 참조하지 못함**
+- 특히 `/opt/homebrew/bin`에 있는 버전이 macOS 시스템 경로와 충돌 가능
+
+### ✅ 해결 방법
+
+- `brew` 버전 대신 **ST 공식 toolchain 사용**
+
+```bash
+# CubeIDE toolchain 사용 예시
+/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc
+```
+
+- Makefile 또는 `build.sh`에서 `GCC_PATH=/opt/gcc-arm-none-eabi/bin`으로 지정 필요
+
+---
+
+## ❌ Upload failed - Timeout / Wrong USB port / Serial error
+
+### 🔍 원인
+
+- 보드가 DFU 모드나 시리얼 부트로 잘못 부팅됨
+- 또는 SWD 대신 UART로 업로드 시도 중
+
+### ✅ 해결 방법
+
+- `upload.sh`에서 ST-LINK를 명확하게 지정
+
+```bash
+"$CUBEPROG_CLI" -c port=SWD -d build/led_test.bin 0x08000000 -rst
+```
+
+- 부트 핀(BOOT0, BOOT1) 설정 확인 → BOOT0을 GND에 연결
+- 보드 **USB 케이블 재연결** 또는 **RESET 버튼 수동 누름**도 유효
+
+---
+
+## ❌ F5로 빌드 안 되고 입력 키 오류 발생
+
+### 🔍 원인
+
+- `F5`는 **디버깅용** 실행이므로 `launch.json` 설정이 필요
+- 그러나 STM32는 일반적인 `gdb`만으로 실행되지 않음 (펌웨어 직접 업로드 필요)
+
+### ✅ 해결 방법
+
+- **F5 대신 `Cmd + Shift + B`** (VSCode Build Task 실행)
+- `tasks.json`에 `build.sh` → `upload.sh` 자동 실행 설정 가능
+- `F5`는 Cortex-Debug를 통한 GDB 디버깅 용도로만 유지
+
+---
+
+## ⚠️ Eclipse 경고: Project has no explicit encoding set
+
+### 🔍 원인
+
+- Eclipse 프로젝트가 문자 인코딩을 명시하지 않아 경고 발생
+
+### ✅ 해결 방법
+
+- CubeIDE → 프로젝트 우클릭 → `Properties` → `Resource` → `Text file encoding`
+- `UTF-8`로 명시적으로 설정하면 경고 사라짐
+
+---
+
+## ❌ CHxN 채널 사용 시 PWM 출력이 되지 않음
+
+### 🔍 원인
+
+- `TIM1_CH2N`, `TIM8_CH2N` 등 **CHxN 채널**은 고속/고전류 드라이버용이며, 일반 GPIO 핀으로는 PWM이 출력되지 않음
+
+### ✅ 해결 방법
+
+- 일반 CHx 채널로 교체:
+  - `TIM1_CH2N → TIM12_CH1 (PB14)`
+  - `TIM8_CH2N → TIM3_CH3 (PB0)`
+  - `TIM4_CH3 → TIM4_CH2 (PC8)` 등
+
+---
+
+## ❌ UART 입력이 되지 않음
+
+### 🔍 원인
+
+- `USART3`는 CubeMX에서 초기화만 되고 **수신 인터럽트**가 활성화되지 않음
+
+### ✅ 해결 방법
+
+- `main()` 또는 `MX_USART3_UART_Init()` 이후 수동으로 다음 코드 추가
+
+```c
+HAL_UART_Receive_IT(&huart3, (uint8_t*)&uart_rx_buf[uart_rx_index], 1);
+```
+
+- 입력이 들어오지 않는다면 이 코드 누락이 의심됨
+
+---
