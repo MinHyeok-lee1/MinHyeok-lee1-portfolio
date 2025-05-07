@@ -1,0 +1,275 @@
+# ☸️ Kubernetes 기술 모음 (배포 자동화, Github Actions)
+
+## 🚀 Next.js + Docker + Kubernetes 배포 자동화 (on AWS)
+
+### ✅ 1. 개요 및 흐름 요약
+
+```
+Next.js → Docker Image → Kubernetes Deployment → AWS EKS(Elastic Kubernetes Service)
+```
+
+* **Next.js 프로젝트**는 Dockerfile을 통해 이미지를 생성
+* 해당 이미지를 ECR (AWS Elastic Container Registry)에 Push
+* **Kubernetes**를 통해 AWS EKS 클러스터에 배포
+* 필요 시 Ingress Controller + LoadBalancer + Auto Scaling 구성
+
+---
+
+### 🧱 2. 전제 조건
+
+* AWS CLI 및 EKS CLI (`eksctl`) 설치
+* AWS ECR 사용을 위한 IAM 권한
+* Docker, kubectl, Helm 설치
+* EKS 클러스터 생성 완료 상태
+* `next.config.js`에서 `output: "standalone"` 적용
+
+---
+
+### 🐳 3. Docker 이미지 빌드 및 ECR Push
+
+```sh
+# ECR 리포지토리 생성
+aws ecr create-repository --repository-name nextjs-app
+
+# 로그인 (리눅스/Mac)
+aws ecr get-login-password | docker login --username AWS --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com
+
+# 이미지 빌드 및 태깅
+docker build -t nextjs-app .
+docker tag nextjs-app:latest <account-id>.dkr.ecr.<region>.amazonaws.com/nextjs-app:latest
+
+# ECR에 Push
+docker push <account-id>.dkr.ecr.<region>.amazonaws.com/nextjs-app:latest
+```
+
+---
+
+### ☸️ 4. Kubernetes 배포 설정
+
+#### 🔧 `nextjs-deployment.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nextjs-app
+  template:
+    metadata:
+      labels:
+        app: nextjs-app
+    spec:
+      containers:
+        - name: nextjs
+          image: <ECR 이미지 경로>
+          ports:
+            - containerPort: 3000
+```
+
+#### 🌐 `nextjs-service.yaml`
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-service
+spec:
+  type: LoadBalancer  # 또는 NodePort
+  selector:
+    app: nextjs-app
+  ports:
+    - port: 80
+      targetPort: 3000
+```
+
+---
+
+### 📡 5. 배포 명령어
+
+```sh
+kubectl apply -f nextjs-deployment.yaml
+kubectl apply -f nextjs-service.yaml
+```
+
+* 외부 IP 확인:
+
+```sh
+kubectl get svc nextjs-service
+```
+
+---
+
+### 🧩 6. Ingress 연동 (선택)
+
+Ingress Controller 설치 (예: NGINX)
+
+```sh
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx
+```
+
+Ingress 설정 파일 추가:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextjs-ingress
+spec:
+  rules:
+    - host: nextjs.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nextjs-service
+                port:
+                  number: 80
+```
+
+도메인과 SSL 적용은 `cert-manager` + `Let's Encrypt` 연동 가능.
+
+---
+
+### 📈 7. 확장 및 운영 자동화 (옵션)
+
+* **HPA** (Horizontal Pod Autoscaler):
+
+  ```sh
+  kubectl autoscale deployment nextjs-app --cpu-percent=50 --min=2 --max=10
+  ```
+
+* **CI/CD 연동**: GitHub Actions로 ECR push + kubectl 배포 자동화
+
+* **모니터링**: Prometheus + Grafana / AWS CloudWatch 연동
+
+---
+
+### ✅ 결론
+
+| 구성 요소      | 역할                           |
+| ---------- | ---------------------------- |
+| Docker     | Next.js 앱을 경량화된 이미지로 포장      |
+| ECR        | AWS에서 컨테이너 이미지 저장소 역할        |
+| Kubernetes | 배포, 스케일링, 네트워킹 오케스트레이션       |
+| EKS        | AWS에서 Kubernetes 관리형 클러스터 제공 |
+| Ingress    | 도메인 기반 라우팅 및 SSL 연동          |
+
+---
+
+## 🚀 GitHub Actions를 활용한 Next.js → Docker → AWS ECR → EKS 자동 배포
+
+### 📁 디렉토리 구조 예시
+
+```
+.
+├── .github
+│   └── workflows
+│       └── deploy.yml
+├── Dockerfile
+├── docker-compose.yml
+├── next.config.js
+├── ...
+```
+
+---
+
+### ⚙️ 1. GitHub Secrets 등록
+
+| 이름                      | 설명                              |
+| ----------------------- | ------------------------------- |
+| `AWS_ACCESS_KEY_ID`     | IAM 유저의 Access Key              |
+| `AWS_SECRET_ACCESS_KEY` | IAM 유저의 Secret Key              |
+| `AWS_REGION`            | 예: `ap-northeast-2`             |
+| `ECR_REPOSITORY`        | 예: `nextjs-app`                 |
+| `EKS_CLUSTER_NAME`      | 예: `my-eks-cluster`             |
+| `KUBE_CONFIG_DATA`      | base64 인코딩된 `~/.kube/config` 내용 |
+
+※ `KUBE_CONFIG_DATA` 생성:
+
+```bash
+cat ~/.kube/config | base64
+```
+
+---
+
+### 📝 2. `.github/workflows/deploy.yml`
+
+```yaml
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker tag ${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Decode kubeconfig
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+
+      - name: Update K8s deployment image
+        run: |
+          kubectl config use-context arn:aws:eks:${{ secrets.AWS_REGION }}:<ACCOUNT_ID>:cluster/${{ secrets.EKS_CLUSTER_NAME }}
+          kubectl set image deployment/nextjs-app nextjs=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+```
+
+---
+
+### 📌 3. Deployment.yaml 변경 예시
+
+`image:` 값을 GitHub Actions에서 사용하는 형식에 맞게:
+
+```yaml
+containers:
+  - name: nextjs
+    image: <AWS_ACCOUNT_ID>.dkr.ecr.ap-northeast-2.amazonaws.com/nextjs-app:<IMAGE_TAG>
+```
+
+※ `IMAGE_TAG`는 Git SHA로 자동 처리되므로 항상 최신 커밋 기준으로 배포됩니다.
+
+---
+
+### ✅ 결과
+
+* `main` 브랜치에 푸시하면:
+
+  1. Docker 이미지가 빌드되고 ECR에 푸시됨
+  2. EKS 클러스터에서 실행 중인 Deployment의 이미지가 새 태그로 업데이트됨
+  3. 롤링 업데이트로 무중단 배포
+
+---

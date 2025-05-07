@@ -1,1 +1,223 @@
-#
+# ☸️ Kubernetes(K8s) 개발 환경 설정 가이드
+
+## ✅ 1. Kubernetes란?
+
+Kubernetes는 **컨테이너 오케스트레이션 시스템**입니다.  
+수많은 Docker 컨테이너를 **자동 배포, 확장, 로드밸런싱, 복구**까지 관리해줍니다.
+
+> 예: "서비스가 많아져서 docker-compose로 감당이 안 된다면 → Kubernetes 사용"
+
+---
+
+## ✅ 2. 설치 방법
+
+### 📍 로컬 설치 (개발용)
+
+* **Minikube**: 가장 많이 쓰이는 로컬용 K8s 환경
+
+  ```bash
+  # 설치
+  brew install minikube     # (macOS)
+  sudo apt install minikube # (Ubuntu)
+
+  # 실행
+  minikube start
+  ```
+
+* **Docker Desktop (Windows/macOS)**
+  Kubernetes 탭에서 “Enable Kubernetes” 옵션 체크 후 시작
+
+---
+
+## ✅ 3. CLI 도구: kubectl
+
+```bash
+# 설치
+brew install kubectl          # macOS
+sudo apt install kubectl -y   # Ubuntu
+
+# 클러스터 확인
+kubectl cluster-info
+
+# 노드 확인
+kubectl get nodes
+```
+
+---
+
+## ✅ 4. 기본 개념 구조
+
+```
+Cluster
+ └── Node (실제 머신)
+      └── Pod (컨테이너 집합)
+           └── Container (Docker 등)
+```
+
+---
+
+## ✅ 5. 프로젝트 구성 예시
+
+```
+my-k8s-app/
+├── deployment.yaml
+├── service.yaml
+├── configmap.yaml
+└── ingress.yaml
+```
+
+---
+
+## ✅ 6. 배포 예시 (Python Flask)
+
+### 📍 deployment.yaml
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+        - name: flask
+          image: yourname/flask-app:latest
+          ports:
+            - containerPort: 5000
+```
+
+### 📍 service.yaml
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  type: NodePort
+  selector:
+    app: flask
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      nodePort: 30001
+```
+
+---
+
+## ✅ 7. 배포 실행
+
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+kubectl get pods
+kubectl get services
+```
+
+---
+
+## ✅ 8. 자주 쓰는 명령어
+
+```bash
+# 모든 리소스 확인
+kubectl get all
+
+# Pod 상태 확인
+kubectl describe pod <POD_NAME>
+
+# Pod 로그 확인
+kubectl logs <POD_NAME>
+
+# Pod 접속
+kubectl exec -it <POD_NAME> -- /bin/bash
+
+# 리소스 삭제
+kubectl delete -f deployment.yaml
+```
+
+---
+
+## ✅ 9. ConfigMap & Secret
+
+환경 변수, 설정값 등을 관리할 때 사용
+
+```yaml
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  ENV: production
+```
+
+Pod에서 참조하려면 `envFrom`, `env` 키로 불러올 수 있음
+
+---
+
+## ✅ 10. Ingress (도메인 라우팅 설정)
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+    - host: myapp.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-service
+                port:
+                  number: 80
+```
+
+> 로컬에서는 `ingress-nginx` 설치 후 `/etc/hosts`에 도메인 등록 필요
+
+---
+
+## ✅ 11. Helm (패키지 매니저)
+
+```bash
+# 설치
+brew install helm
+
+# 예시: Nginx 설치
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-nginx bitnami/nginx
+```
+
+---
+
+## ✅ 12. 개발 환경에서 주의할 점
+
+* 로컬 Kubernetes는 실제 운영 환경과 일부 차이 있음
+* 리소스 누수 방지를 위해 `kubectl delete` 자주 사용
+* Docker Hub pull 제한 주의 (Private Registry 권장)
+
+---
+
+## ✅ 13. 추천 로컬 도구
+
+| 도구       | 설명                   |
+| -------- | -------------------- |
+| Lens     | K8s GUI 대시보드 (강력 추천) |
+| K9s      | CLI 기반 리소스 모니터링 도구   |
+| Skaffold | 개발-배포 자동화 도구         |
+| Tilt     | 실시간 코드 변경 반영 도구      |
+
+---

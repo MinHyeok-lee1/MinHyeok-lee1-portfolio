@@ -1,0 +1,206 @@
+# ❗ Kubernetes 이슈 정리
+
+## 1. `CrashLoopBackOff`
+
+* 컨테이너가 반복해서 죽고 재시작되는 상태
+* 원인:
+
+  * 애플리케이션 런타임 오류
+  * 환경 변수 누락
+  * `readinessProbe`/`livenessProbe` 설정 문제
+* 해결:
+
+  ```bash
+  kubectl logs <pod-name>               # 로그 확인
+  kubectl describe pod <pod-name>       # 이벤트 확인
+  ```
+
+---
+
+## 2. `ImagePullBackOff` 또는 `ErrImagePull`
+
+* 이미지를 가져올 수 없는 상태
+* 원인:
+
+  * 이미지 이름 오타
+  * private registry 접근 실패 (인증 누락)
+* 해결:
+
+  * 이미지 경로 확인 (`image:`)
+  * 필요한 경우 `imagePullSecret` 설정
+
+---
+
+## 3. `Pending` 상태에서 Pod가 실행되지 않음
+
+* 원인:
+
+  * 스케줄 가능한 노드가 없음
+  * 자원 부족 (CPU/RAM)
+  * `nodeSelector`, `taints`, `tolerations` 충돌
+* 확인:
+
+  ```bash
+  kubectl describe pod <pod-name>
+  ```
+
+---
+
+## 4. 서비스 접근 불가 (`kubectl port-forward`는 되는데 외부접근 불가)
+
+* 원인:
+
+  * `Service` 타입이 `ClusterIP`로 설정됨
+  * `Ingress` 미설정
+* 해결:
+
+  * 외부 노출 시 `NodePort` 또는 `LoadBalancer` 설정
+  * 또는 `Ingress` Controller와 함께 `Ingress` 리소스 사용
+
+---
+
+## 5. `ConfigMap` 또는 `Secret`이 적용되지 않음
+
+* 원인:
+
+  * 업데이트 후에도 Pod가 재시작되지 않아 반영 안됨
+* 해결:
+
+  * 수동으로 롤링 재시작 필요
+
+    ```bash
+    kubectl rollout restart deployment <name>
+    ```
+
+---
+
+## 6. `Readiness` 또는 `Liveness` probe 실패
+
+* Pod는 실행되지만 서비스에 연결되지 않음
+* 원인:
+
+  * Probe 경로/포트/타임아웃 설정 오류
+* 해결:
+
+  * 실제 앱 상태와 맞는 probe 설정으로 조정
+
+---
+
+## 7. 볼륨 마운트 실패 (`MountVolume.SetUp failed`)
+
+* 원인:
+
+  * PVC 바인딩 실패
+  * 스토리지 클래스 없음
+* 해결:
+
+  ```bash
+  kubectl describe pvc <name>
+  ```
+
+---
+
+## 8. DNS 관련 문제 (`curl nginx.default.svc.cluster.local` 안됨)
+
+* 원인:
+
+  * CoreDNS 파드 비정상
+* 확인:
+
+  ```bash
+  kubectl get pods -n kube-system
+  kubectl logs -n kube-system <coredns-pod>
+  ```
+
+---
+
+## 9. `Node` NotReady
+
+* 원인:
+
+  * kubelet 장애
+  * 노드 리소스 고갈
+* 해결:
+
+  * 노드 재부팅 또는 `kubelet` 서비스 재시작
+
+---
+
+## 10. `Helm` 설치 시 충돌 또는 Hook 실패
+
+* 원인:
+
+  * 이전 릴리스 충돌
+  * Hook 리소스 삭제되지 않음
+* 해결:
+
+  ```bash
+  helm uninstall <release>
+  helm install ... --force
+  ```
+
+---
+
+## 11. `kubectl exec` 또는 `logs` 안 됨
+
+* 원인:
+
+  * `containerd` 또는 `kubelet` 로그 접근 실패
+* 확인:
+
+  * 노드의 시스템 로그 확인 (`journalctl`, `dmesg`)
+
+---
+
+## 12. StatefulSet 재시작 시 PVC 충돌
+
+* 원인:
+
+  * 동일 이름의 PVC가 삭제되지 않음
+* 해결:
+
+  * 필요 시 `volumeClaimTemplates`와 PVC 전략 재설계
+
+---
+
+## 13. 자주 발생하는 YAML 오류
+
+* 들여쓰기 문제
+* 배열 내 `-` 위치 오류
+* Boolean 값 true/false 대신 문자열 `"true"` 입력
+
+---
+
+## 14. 포트 충돌 또는 호스트 포트 바인딩 실패
+
+* 원인:
+
+  * 동일 포트 사용하는 다른 서비스 존재
+* 해결:
+
+  * `hostPort` 사용 주의 (가능하면 `ClusterIP` 기반)
+
+---
+
+## 15. Ingress 동작 안 함
+
+* 원인:
+
+  * Ingress Controller 미설치 (예: nginx)
+  * DNS 설정 누락
+* 확인:
+
+  ```bash
+  kubectl get ingress
+  kubectl get pods -n ingress-nginx
+  ```
+
+---
+
+## 16. RBAC 권한 오류 (`Forbidden`, `User "system:serviceaccount..." cannot`)
+
+* 해결:
+
+  * 적절한 `Role`/`ClusterRole`과 `RoleBinding` 설정 필요
+
+---

@@ -2,14 +2,83 @@ import { FileTree } from "nextra-theme-docs";
 
 # Kubernetes(k8s) 문서 시작
 
-## Kubernetes(k8s)
+## ☸️ Kubernetes(K8s)란?
 
-쿠버네티스는 도커와 같은 컨테이너화된 애플리케이션의 자동 디플로이, 스케일링 등을 제공하는 관리시스템이다.  
-오픈 소스 기반이며 원래 구글에 의해 설계되었고 현재 리눅스 재단에 의해 관리되고 있다.
+**Kubernetes**는 Google에서 시작되어 CNCF(Cloud Native Computing Foundation)에서 관리하는 **오픈소스 컨테이너 오케스트레이션 플랫폼**입니다.  
+컨테이너화된 애플리케이션의 **자동 배포, 확장, 스케줄링, 복구** 등을 클러스터 환경에서 관리하다.  
 
-## 요구사항
+> 예: 수십\~수천 개의 Docker 컨테이너를 "자동으로" 관리하는 시스템
 
-- Docker
+---
+
+## ✅ Kubernetes의 주요 기능
+
+* **자동화된 배포 및 롤백**
+* **서비스 디스커버리 및 로드밸런싱**
+* **자체 복구(Self-healing)**
+* **컨테이너 오토스케일링**
+* **스토리지 자동 마운트**
+* **구성(ConfigMap, Secret) 및 권한 관리(RBAC)**
+
+---
+
+## ✅ Kubernetes가 필요한 이유
+
+| 전통 방식           | Kubernetes 도입 시        |
+| --------------- | ---------------------- |
+| 수동 컨테이너 관리      | 자동화된 오케스트레이션           |
+| 단일 서버에서의 서비스 운영 | 클러스터 기반 분산 처리          |
+| 직접 배포 및 스케일 관리  | 선언적 배포 + 오토스케일링        |
+| 설정값 직접 삽입 및 관리  | ConfigMap/Secret 분리 관리 |
+
+---
+
+## ✅ K8s를 위한 기술 요구사항
+
+### 📌 1. 기본 기술 스택
+
+| 범주         | 요구사항                                             |
+| ---------- | ------------------------------------------------ |
+| 운영 체제      | Linux (Ubuntu, CentOS 등), Windows (제한적)          |
+| 컨테이너 엔진    | Docker, containerd, CRI-O 등                      |
+| CLI 도구     | `kubectl`, `kubeadm`, `helm`, `minikube` 등       |
+| 클러스터 환경    | VM 또는 물리서버 다수 구성                                 |
+| 네트워크 이해    | CNI(Container Network Interface), LoadBalancer 등 |
+| YAML 구성 능력 | K8s 리소스 정의 시 필수                                  |
+
+---
+
+### 📌 2. 설치 요건 (On-Premise 기준)
+
+| 항목      | 최소 사양 (마스터 노드 기준)          |
+| ------- | -------------------------- |
+| CPU     | 2 core 이상                  |
+| RAM     | 2GB 이상                     |
+| OS      | Linux 기반 (Ubuntu 20.04 추천) |
+| 네트워크 포트 | 6443, 10250, 10255 등 오픈 필요 |
+| 기타      | 스왑 메모리 비활성화 필수 (`swapoff`) |
+
+---
+
+### 📌 3. 권장 지식 배경
+
+* 리눅스 명령어 및 서버 운용 지식
+* Docker 사용 경험
+* YAML 문법 이해
+* 기본적인 네트워크/포트/서비스 개념
+* CI/CD 및 GitOps 이해 (심화)
+
+---
+
+## ✅ Kubernetes를 배우기 위한 추천 진입 순서
+
+1. Docker 기본기 익히기
+2. Minikube 또는 Docker Desktop으로 로컬 K8s 실습
+3. `kubectl`, `helm`, `kustomize` 명령어 학습
+4. 실전 앱 배포 및 서비스 노출 연습 (예: Flask, Node.js 등)
+5. 고급 주제: 볼륨, Ingress, RBAC, HPA, StatefulSet 등
+
+---
 
 ## 폴더 및 파일 구조
 
@@ -18,5 +87,4 @@ import { FileTree } from "nextra-theme-docs";
   <FileTree.File name="개발환경 설정" />
   <FileTree.File name="기술문서 정리" />
   <FileTree.File name="발생이슈 정리" />
-  <FileTree.File name="배포" />
 </FileTree.Folder>
