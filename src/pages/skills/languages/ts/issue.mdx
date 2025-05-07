@@ -1,6 +1,290 @@
-# TypeScript 이슈 정리
+# ❗ TypeScript에서 자주 발생하는 이슈 및 오류 정리 (JS 제외)
 
-## 다형성 관점에서의 TypeScript
+## 1. 타입 선언 누락으로 인한 추론 오류
+
+```ts
+let user;  // 타입 추론: any
+user = "Alice";
+user = 123;  // 문제 없음 (any로 추론됨)
+```
+
+➡ 명시적 타입 선언 권장:
+
+```ts
+let user: string = "Alice";
+```
+
+---
+
+## 2. 타입 불일치 오류 (Type 'X' is not assignable to type 'Y')
+
+```ts
+let age: number = "20";  // ❌ 문자열을 number에 할당
+```
+
+➡ 타입 일치 여부 확인 필요.
+
+---
+
+## 3. Optional과 Required 혼동
+
+```ts
+function greet(name?: string) {
+  console.log("Hi " + name.toUpperCase());  // ❌ name이 undefined일 수 있음
+}
+```
+
+➡ `undefined` 체크 필요:
+
+```ts
+if (name) {
+  console.log(name.toUpperCase());
+}
+```
+
+---
+
+## 4. Null / Undefined 타입 오류 (`strictNullChecks` 옵션 켜짐 시)
+
+```ts
+let title: string = null;  // ❌ string에 null 할당 불가
+```
+
+➡ `string | null` 또는 `string | undefined` 사용
+
+---
+
+## 5. keyof, typeof 사용 실수
+
+```ts
+const obj = { name: "TS" };
+let key: keyof obj = "wrong";  // ❌ obj 타입을 정확히 지정하지 않음
+```
+
+➡ `keyof typeof obj`로 사용
+
+```ts
+let key: keyof typeof obj = "name";  // ✅
+```
+
+---
+
+## 6. 인터페이스 vs 타입 중복 정의
+
+```ts
+interface User {
+  name: string;
+}
+type User = {  // ❌ 동일 이름
+  age: number;
+};
+```
+
+➡ 중복 정의 금지 또는 네이밍 구분 필요
+
+---
+
+## 7. Enum 값 혼동
+
+```ts
+enum Direction {
+  Up,
+  Down
+}
+let dir: Direction = "Up";  // ❌ 문자열 "Up"은 Direction에 없음
+```
+
+➡ 숫자 기반 또는 `Direction["Up"]`으로 접근
+
+---
+
+## 8. 잘못된 타입 단언 (Type Assertion)
+
+```ts
+const input = document.querySelector("input") as HTMLInputElement;
+console.log(input.value);  // ✅ DOM에서 null일 수도 있음 → 런타임 오류
+```
+
+➡ null 체크 필수:
+
+```ts
+if (input) {
+  console.log(input.value);
+}
+```
+
+---
+
+## 9. 함수 반환 타입 누락
+
+```ts
+function getName() {
+  return "Alice";  // 암묵적으로 string 추론
+}
+```
+
+➡ 반환 타입 명시 권장:
+
+```ts
+function getName(): string {
+  return "Alice";
+}
+```
+
+---
+
+## 10. Union 타입 처리 미흡
+
+```ts
+function printId(id: number | string) {
+  console.log(id.toUpperCase());  // ❌ string 메서드 사용 불가
+}
+```
+
+➡ 타입 내로우잉 필요:
+
+```ts
+if (typeof id === "string") {
+  console.log(id.toUpperCase());
+}
+```
+
+---
+
+## 11. never 타입 무시
+
+```ts
+function error(message: string): never {
+  throw new Error(message);
+}
+```
+
+➡ `never`는 **절대 반환되지 않음을 명시**하는 타입. 무한 루프나 에러 전용 함수에서만 사용해야 함.
+
+---
+
+## 12. 제네릭 타입 사용 오류
+
+```ts
+function wrap<T>(value: T): T[] {
+  return [value];
+}
+
+wrap("a");        // OK
+wrap();           // ❌ 제네릭 타입 유추 불가
+```
+
+➡ 인자를 제대로 넘기지 않으면 추론 실패
+
+---
+
+## 13. `any` 사용 남발
+
+```ts
+let data: any;
+data = 123;
+data = "text";
+data.callThis();  // 런타임 오류 발생 가능
+```
+
+➡ 가능하면 `unknown`, `never`, `Record<string, unknown>` 등으로 대체
+
+---
+
+## 14. 타입 선언과 실제 구현 불일치
+
+```ts
+function add(a: number, b: number): number {
+  return a + b + "";  // ❌ string 반환
+}
+```
+
+➡ 함수 시그니처와 실제 구현 일치 확인
+
+---
+
+## 15. 모듈 import 시 타입 정의 누락
+
+```ts
+import express from 'express';  // @types/express가 없으면 타입 오류
+```
+
+➡ DefinitelyTyped의 `@types/*` 설치 필요:
+
+```bash
+npm install --save-dev @types/express
+```
+
+---
+
+## 16. 인터페이스 확장 시 누락
+
+```ts
+interface A { id: number }
+interface B extends A {
+  name: string;
+}
+
+const obj: B = { name: "TS" };  // ❌ id 누락
+```
+
+➡ 상속 구조일 경우 필수 속성 체크
+
+---
+
+## 17. Readonly, Partial 등의 유틸리티 타입 오용
+
+```ts
+interface Todo {
+  title: string;
+  done: boolean;
+}
+
+const todo: Readonly<Todo> = {
+  title: "TS",
+  done: false
+};
+
+todo.done = true;  // ❌ 수정 불가
+```
+
+➡ 유틸리티 타입이 의도에 맞는지 확인 필요
+
+---
+
+## 18. 타입 가드 함수 미사용
+
+```ts
+function isString(x: unknown): x is string {
+  return typeof x === "string";
+}
+```
+
+➡ 사용자 정의 타입 가드 사용으로 타입 좁히기 가능
+
+---
+
+## 19. JSX 타입 오류 (React 사용 시)
+
+```tsx
+const element: JSX.Element = <div>Hello</div>;
+```
+
+- JSX 사용 시 `tsconfig.json`에 `"jsx": "react-jsx"` 필요
+- @types/react, @types/react-dom 설치 필수
+
+---
+
+## 20. tsconfig 설정 누락
+
+- `"strict": true`를 설정하지 않으면 타입 검사가 느슨해짐
+- `include`, `exclude`, `lib`, `target`, `moduleResolution` 등도 설정 중요
+
+➡ 명확한 **tsconfig.json 구성**이 중요함
+
+---
+
+## 21. 다형성 관점에서의 TypeScript
 
 JavaScript는 동적타입의 언어이다.  
 유연한 언어라는 점이 장점이라고 언급되지만, 예측할 수 없는 에러를 발생시킨다는 단점이 항상 수반된다.  
@@ -28,9 +312,9 @@ OOP에서의 다형성 정의
 2. 타입스크립트의 동적타이핑인 Duck Typing은 다형성의 측면에서 해석한 결과이다.
 3. 타입스크립트를 정적, 동적 이라는 상반된 개념 모두 연관지을 수 있었던 것이다.
 
-<br />
+---
 
-## TypeScript enum을 사용하지 않는게 좋은 이유
+## 22. TypeScript enum을 사용하지 않는게 좋은 이유
 
 [TypeScript enum을 사용하지 않는 게 좋은 이유를 Tree-shaking 관점에서 소개](https://engineering.linecorp.com/ko/blog/typescript-enum-tree-shaking)한다.
 
@@ -187,9 +471,9 @@ const isJugem =
 
 - Union Types > const enum > enum 순으로 사용하는 것이 좋다.
 
-<br />
+---
 
-## tsconfig로 인해 컴파일한 파일을 출력하지 않는 문제
+## 23. tsconfig로 인해 컴파일한 파일을 출력하지 않는 문제
 
 - tsconfig 설정은 React & TypeScript 개발환경 설정 글에서 복사해서 생긴 문제
 
@@ -203,3 +487,5 @@ tsc --init
 이 설정이 true라면 컴파일한 파일을 출력하지 않는다.  
 이 설정은 실질적인 컴파일은 babel같은 컴파일러가 담당하고 있고, TypeScript로는 타입 검사만 행하거나 할 때에 사용하는 옵션이다.
 따라서 복사한 tsconfig 옵션 중에 "noEmit"옵션을 false로 바꾸거나 위와 같이 새로 생성한다.
+
+---
