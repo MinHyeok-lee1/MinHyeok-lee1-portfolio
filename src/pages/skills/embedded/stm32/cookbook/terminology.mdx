@@ -1,0 +1,205 @@
+# 📘 필수 STM32 용어/약어 정리
+
+STM32를 다룰 때 접하게 되는 주요 **용어/약어**들을 **카테고리별로 총정리**  
+CubeMX, HAL 드라이버, 레지스터 설정 등을 포함한 **STM32 개발에 꼭 필요한 용어 중심**
+
+---
+
+## 🧠 **코어/시스템 관련 (확장판)**
+
+**코어/시스템 관련** 항목에 실제 임베디드 실무나 STM32 HAL에서 자주 쓰이는 중요한 구성요소
+
+|         **용어**          |                      **의미**                      |                **설명**                 |
+| :-----------------------: | :------------------------------------------------: | :-------------------------------------: |
+|         **NVIC**          |         Nested Vector Interrupt Controller         |    인터럽트 우선순위 및 활성화 제어     |
+|        **SysTick**        |                 System Tick Timer                  | 1ms 단위 시스템 타이머 (HAL_Delay 기반) |
+|            SCB            |                System Control Block                |      예외 처리 설정, SysTick 포함       |
+|           CMSIS           | Cortex Microcontroller Software Interface Standard |    ARM Cortex용 HAL 인터페이스 표준     |
+|           VTOR            |            Vector Table Offset Register            |   인터럽트 벡터 테이블 시작 주소 지정   |
+|            MPU            |               Memory Protection Unit               |   메모리 접근 권한 제어 (보안성 향상)   |
+|            FPU            |                Floating Point Unit                 |     부동소수점 연산 하드웨어 가속기     |
+|           DFSR            |            Debug Fault Status Register             |     디버그용 오류 상태 플래그 저장      |
+|           AIRCR           |  Application Interrupt and Reset Control Register  |     소프트웨어 리셋 등 시스템 제어      |
+| PRIMASK/BASEPRI/FAULTMASK |          인터럽트 마스킹 제어 레지스터들           |    전역/우선순위 기반 인터럽트 차단     |
+
+- `MPU`는 RTOS나 보안 펌웨어에서 **메모리 보호**에 중요
+- `FPU`는 `float` 연산 시 속도 향상에 핵심적 (STM32F4 이상에서는 기본 탑재됨)
+- `VTOR`은 **부트로더 ↔ 앱 분리 구조**에서 아주 자주 등장
+
+---
+
+## ⏱️ **타이머 / PWM 관련**
+
+|   **용어**   |         **의미**         |              **설명**               |
+| :----------: | :----------------------: | :---------------------------------: |
+|   **TIMx**   | Timer x (예: TIM1, TIM3) |      하드웨어 타이머 인스턴스       |
+|   **PSC**    |        Prescaler         |       타이머 입력 클럭 분주기       |
+|   **ARR**    |   Auto Reload Register   |      타이머 주기 (최대 카운트)      |
+|   **CCRx**   | Capture/Compare Register |     PWM 듀티 및 캡처 비교 설정      |
+|   **CNT**    |         Counter          |           현재 카운터 값            |
+|   **PWM**    |  Pulse Width Modulation  |  펄스 폭 조절 방식 (모터 제어 등)   |
+|      OC      |      Output Compare      |   출력 신호 비교 (PWM 생성 가능)    |
+|      IC      |      Input Capture       |  외부 입력 신호 캡처(펄스 측정 등)  |
+|     ETR      |     External Trigger     |         외부 트리거 입력 핀         |
+|     BDTR     |    Break & Dead-Time     | 고급 타이머 전용, 보호 및 데드타임  |
+|     MOE      |    Main Output Enable    | PWM 출력 활성화 플래그 (BDTR 포함)  |
+|      UG      |    Update Generation     | 수동으로 이벤트(업데이트) 발생 시킴 |
+|     UIF      |  Update Interrupt Flag   |    타이머 오버플로우 발생 플래그    |
+| TIMx_UP_IRQn |   타이머 인터럽트 번호   |  NVIC 설정 시 사용되는 인터럽트 ID  |
+
+- **BDTR 레지스터**는 **PWM 브레이크 보호 회로**, **전력 드라이브**, **H-Bridge** 회로와 함께 자주 사용
+- **UG(업데이트 발생)**은 수동으로 타이머 이벤트를 강제로 유도하고 싶을 때 유용
+- **UIF**는 오버플로우 발생 감지로 **타이머 인터럽트** 처리 시 체크
+
+---
+
+## 📊 **ADC / DAC 관련**
+
+|   **용어**    |           **의미**            |               **설명**                |
+| :-----------: | :---------------------------: | :-----------------------------------: |
+|    **ADC**    |  Analog to Digital Converter  |     아날로그 신호를 디지털로 변환     |
+|    **DAC**    |  Digital to Analog Converter  |     디지털 신호를 아날로그로 출력     |
+|  Resolution   |      해상도 (12/10/8bit)      |     변환 시 표현 가능한 값의 범위     |
+|     VREF+     |       Reference Voltage       |      변환 기준 전압 (보통 3.3V)       |
+| Sampling Time |          샘플링 시간          | ADC 입력이 안정될 때까지의 대기 시간  |
+|    TS_CALx    | Temp Sensor Calibration Value |  온도 센서의 보정 상수 (공장 교정값)  |
+|   Injected    |     외부 트리거 ADC 채널      | 정규 변환과는 별도로 실행 가능한 채널 |
+|    Regular    |      정규 변환 ADC 채널       | 일반적인 순차 변환 채널 (polling 등)  |
+|   Scan Mode   |      채널 자동 순회 모드      |   다채널 변환 시 순서대로 자동 수행   |
+|      EOC      |    End Of Conversion Flag     |  변환 완료 플래그 (인터럽트 등 사용)  |
+|      DMA      |  Direct Memory Access (연계)  |  ADC 결과를 CPU 개입 없이 자동 저장   |
+| Oversampling  |           과샘플링            | 노이즈 줄이기 위해 여러 번 측정 평균  |
+
+- STM32G4나 H7 계열은 **ADC 공진 모드**, **오버샘플링**, **심층 FIFO** 등을 지원
+- `HAL_ADC_Start_DMA()` 같은 함수는 DMA 기반 자동 변환에 필수
+
+---
+
+## 📡 **통신 관련**
+
+|    **용어**    |               **의미**               |                        **설명**                         |
+| :------------: | :----------------------------------: | :-----------------------------------------------------: |
+| **UART/USART** | Universal Async Receiver/Transmitter |               비동기 직렬 통신 인터페이스               |
+|    **SPI**     |     Serial Peripheral Interface      |            동기식 직렬 통신, 빠른 속도 지원             |
+|    **I2C**     |       Inter-Integrated Circuit       |         2선식(클럭+데이터) 마스터/슬레이브 구조         |
+| **CAN/FDCAN**  |       Controller Area Network        | 차량/산업용 네트워크 프로토콜 (STM32G4/H7 등에서 FDCAN) |
+|    **LIN**     |      Local Interconnect Network      |                  단순 저속 단방향 통신                  |
+|   **RS-485**   |       Recommended Standard 485       |                다중 노드 차동 통신 표준                 |
+|    RX / TX     |          Receive / Transmit          |                    수신 핀 / 송신 핀                    |
+|    Baudrate    |           전송 속도 (bps)            |           초당 비트 전송 속도, UART 필수 설정           |
+|     NSS/CS     |      Slave Select / Chip Select      |               SPI에서 슬레이브 선택 신호                |
+|      MISO      |      Master In Slave Out (SPI)       |                SPI 수신 선 (Master 입장)                |
+|      MOSI      |      Master Out Slave In (SPI)       |                SPI 송신 선 (Master 입장)                |
+|      SCL       |          Serial Clock (I2C)          |                      I2C 클럭 라인                      |
+|      SDA       |          Serial Data (I2C)           |                     I2C 데이터 라인                     |
+|   ACK / NACK   |    Acknowledge / Not Acknowledge     |                   I2C 통신 응답 신호                    |
+
+- UART와 USART는 거의 동일하지만 **USART**는 **동기식(Synchronous) 통신도 지원**한다는 점에서 차이 존재
+- STM32에서 `HAL_UART_Transmit()`, `HAL_SPI_TransmitReceive()`, `HAL_I2C_Master_Transmit()` 등의 HAL 함수와 연결해 사용
+
+---
+
+## 💾 **메모리 / 플래시 / 부트 관련**
+
+|   **용어**   |             **의미**             |               **설명**                |
+| :----------: | :------------------------------: | :-----------------------------------: |
+|  **FLASH**   |  비휘발성 프로그램 저장 메모리   |       코드/펌웨어 저장에 사용됨       |
+|   **SRAM**   |            Static RAM            |   휘발성 메모리, 전원 차단 시 소멸    |
+|  **EEPROM**  | 전자식 영구 메모리 (내장형 가능) |  설정값/로그 등 비휘발성 데이터 저장  |
+|   LD/MD/HD   |     Low/Medium/High Density      |     플래시 용량별 STM32 제품 구분     |
+|     VTOR     |   Vector Table Offset Register   |  인터럽트 벡터 테이블 시작 주소 설정  |
+|  Bootloader  |       부트 모드 (Boot ROM)       |   펌웨어 업데이트 및 통신 부팅 모드   |
+| Option Bytes |      플래시 옵션 설정 영역       | 부트 모드, 리드아웃 보호, RDP 등 설정 |
+|     RDP      |     Readout Protection Level     |   플래시 메모리 외부 읽기 보호 기능   |
+
+- STM32는 플래시 영역에 직접 코드를 실행하는 **XIP(eXecute In Place)** 방식 사용
+- 일부 STM32는 **내장 EEPROM이 없고**, 에뮬레이션 방식으로 플래시에 저장
+- `VTOR`은 부트로더 → 사용자 코드 전환 시 필수 설정
+
+---
+
+## 🧰 **툴 / 디버깅 관련**
+
+|     **용어**     |           **의미**            |              **설명**               |
+| :--------------: | :---------------------------: | :---------------------------------: |
+|    **CubeMX**    |  초기 설정 및 코드 생성 도구  |   RCC, GPIO, Peripheral 설정 GUI    |
+|   **CubeIDE**    |   STM32 전용 통합 개발환경    |  Eclipse 기반의 코드 편집기/디버거  |
+| STM32 Programmer |    ST의 통합 프로그래밍 툴    |    ST-Link / UART / USB DFU 지원    |
+|     ST-Link      |      STMicro 전용 디버거      |    펌웨어 업로드 및 디버깅 지원     |
+|       GDB        |         GNU Debugger          | CLI 기반 디버깅 도구 (CubeIDE 내장) |
+|     OpenOCD      |     Open On-Chip Debugger     |  JTAG/SWD 디버깅용 오픈소스 백엔드  |
+|    JTAG / SWD    | 디버그 인터페이스 (표준/단선) |   ST-Link 등으로 디버깅 연결 수행   |
+|       STVP       |     ST Visual Programmer      |   Flash 메모리 수동 프로그래밍 툴   |
+
+- `SWD`(Serial Wire Debug)는 STM32에서 가장 널리 쓰이는 2핀 디버그 방식
+- `CubeIDE` 내에서 Breakpoint, Memory View, Register 확인 등 다양한 디버깅 기능을 제공
+
+---
+
+## 🧲 **클럭 / 전원 / Reset 관련**
+
+| **용어** |           **의미**            |              **설명**               |
+| :------: | :---------------------------: | :---------------------------------: |
+| **RCC**  |    Reset and Clock Control    |    시스템 클럭 및 리셋 제어 모듈    |
+|   HSE    |      High Speed External      | 외부 고속 클럭 (예: 8MHz 크리스탈)  |
+|   HSI    |      High Speed Internal      |     내부 고속 클럭 (보통 16MHz)     |
+|   LSE    |      Low Speed External       |    외부 저속 클럭 (32.768kHz 등)    |
+|   LSI    |      Low Speed Internal       | 내부 저속 클럭 (Watchdog 등에 사용) |
+|   PLL    |       Phase Locked Loop       | 클럭 배율기, 고속 시스템 클럭 생성  |
+|  SYSCLK  |         System Clock          |       MCU의 메인 시스템 클럭        |
+|   AHB    | Advanced High-performance Bus |   고속 버스 (메모리, DMA 등 연결)   |
+|  APB1/2  |    Advanced Peripheral Bus    |   주변장치 연결 버스 (저속/고속)    |
+|   VDD    |        Supply Voltage         |      MCU 동작 전압 (예: 3.3V)       |
+|   VDDA   |     Analog Supply Voltage     |        아날로그 회로용 전원         |
+|   NRST   |           Reset Pin           |          외부 리셋 입력 핀          |
+|   BOR    |        Brown-Out Reset        |     전압 강하 감지 후 리셋 기능     |
+
+- `RCC`는 모든 클럭 소스를 제어하며, CubeMX에서 주요 설정을 GUI로 조정할 수 있음
+- `PLL`은 HSE/HSI 등을 입력으로 받아 다양한 배수 설정이 가능해, CPU 클럭 및 주변기기 주파수를 설정
+
+---
+
+## 🛡️ **보안 / 부트 / 시스템 보호 관련**
+
+|   **용어**   |             **의미**              |               **설명**               |
+| :----------: | :-------------------------------: | :----------------------------------: |
+|     WDT      |          Watchdog Timer           |     MCU 오작동 감지 시 자동 리셋     |
+|     IWDG     |       Independent Watchdog        |  독립형 감시 타이머 (시스템 안정용)  |
+|     WWDG     |          Window Watchdog          |       윈도우 기반 감시 타이머        |
+|     BOR      |          Brown-Out Reset          |     전압 강하 시 리셋 방지 기능      |
+|     RDP      |        Readout Protection         |     플래시 메모리 읽기 보호 레벨     |
+|    TAMPER    |         Tamper Detection          |  외부 침입 감지 기능 (RTC 등 연동)   |
+| OPTION BYTES |        설정 비트 저장 영역        |    보안 / 부트 모드 등 설정 저장     |
+|    BOOTx     |      부트 모드 핀 (BOOT0/1)       | 부트 소스 선택 (Flash, SRAM, 시스템) |
+|   STANDBY    |        초저전력 대기 모드         |  전원 소비 최소화, RTC 등 유지 가능  |
+|     VBAT     |     RTC 및 백업 레지스터 전원     |  전원 OFF 상태에서도 RTC 유지 가능   |
+|  TrustZone   | Armv8-M 보안 영역 기능 (일부 MCU) |    Secure / Non-secure 영역 분리     |
+
+- `WDT`, `IWDG`, `WWDG`는 **펌웨어 무한 루프 등 오류**를 방지하기 위해 주기적으로 초기화(`kick`)해야 하며, 그렇지 않으면 자동으로 시스템 리셋이 발생
+- `RDP Level`을 활성화하면 디버깅 / 메모리 읽기가 차단되어 **코드 보안성**을 높일 수 있음
+- **BOOT0 핀 설정**은 MCU가 부팅 시 어떤 메모리 주소에서 실행할지를 결정
+
+---
+
+## ⚡ **기타 자주 등장하는 약어**
+
+|  **약어**   |           **풀네임**           |         **의미**          |                    **설명**                     |
+| :---------: | :----------------------------: | :-----------------------: | :---------------------------------------------: |
+| **SysTick** |       System Tick Timer        |    시스템 주기 타이머     |       ms 단위 시간 생성 (HAL_Delay 기반)        |
+|  **GPIO**   |      General Purpose I/O       |     범용 입출력 포트      |      핀을 입력/출력 등 다양한 용도로 사용       |
+|   **RNG**   |    Random Number Generator     |        난수 생성기        | 무작위 값을 생성. 보안, 센서 노이즈 등에서 활용 |
+|   **CRC**   |    Cyclic Redundancy Check     |      순환 중복 검사       |    데이터 오류 검출용. 송수신 시 무결성 확인    |
+|   **DMA**   |      Direct Memory Access      |     직접 메모리 접근      |       CPU 개입 없이 메모리 간 데이터 전송       |
+|   **RTC**   |        Real Time Clock         |        실시간 시계        |    날짜/시간 유지용. 백업 배터리로 유지 가능    |
+|    EXTI     |       External Interrupt       |       외부 인터럽트       |        버튼 등 외부 신호로 인터럽트 발생        |
+|    AFIO     |     Alternate Function I/O     |     대체 기능 입출력      |      핀을 UART, SPI 등 다른 기능으로 설정       |
+|    NVIC     | Nested Vectored Interrupt Ctrl | 중첩 벡터 인터럽트 제어기 |         인터럽트 우선순위 관리 및 제어          |
+|     SCB     |      System Control Block      |     시스템 제어 블록      |           예외 처리, 시스템 초기화용            |
+|    VTOR     |  Vector Table Offset Register  |   벡터 테이블 위치 설정   |         인터럽트 시작 주소 변경에 사용          |
+|     UID     |           Unique ID            |      고유 식별 번호       |         MCU마다 고유한 시리얼 넘버 제공         |
+|     BKP     |        Backup Register         |       백업 레지스터       |      RTC 데이터, 재부팅 후 유지용 값 저장       |
+|     WDG     |         Watchdog Timer         |       워치독 타이머       |       시스템 멈춤 방지용 자동 리셋 타이머       |
+|     PVD     | Programmable Voltage Detector  |        전압 감지기        |       전원 이상 감지 및 알림/리셋 트리거        |
+
+- `DMA`, `EXTI`, `CRC` 등은 **CubeMX에서도 가장 자주 등장**하는 기능 중 하나
+- 각 약어는 **HAL 라이브러리 함수 이름**, **레지스터 이름**, **CubeIDE 설정 항목** 등에 그대로 쓰임
