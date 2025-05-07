@@ -1,0 +1,193 @@
+# 🛠️ 문제 상황과 연결된 해결 방안
+
+**"실제 문제에 맞닥뜨렸을 때 왜 이 문제가 생기고 → 어떤 이론/구조로 해결하는지"** 를 **현장 경험에 가까운 시나리오**로 설명
+
+---
+
+## ✅ 1. `HAL_Delay()`가 느리거나 빠름→ **Clock 문제**
+
+### 🧪 증상
+
+```cpp
+HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+HAL_Delay(1000); // 1초 동안 LED 꺼져야 하는데 0.3초만에 켜짐
+```
+
+### 🔍 원인
+
+- `SystemClock_Config()`에서 SYSCLK을 제대로 설정하지 않음
+- 기본 클럭(HSI, 16MHz)으로 작동 → `HAL_Delay()` 계산이 깨짐
+
+### ✅ 해결
+
+- `.ioc`에서 HSE 사용 + PLL로 216MHz 설정
+- `HAL_Init()` → `SystemClock_Config()` 호출 순서 확인
+- Debug에서 `SystemCoreClock` 변수 확인해보면 실제 클럭 확인 가능
+
+### 💥 반대로
+
+> **UART 전송속도 깨짐**, **PWM이 너무 느리게 작동함** → 이것도 **클럭 문제**임  
+> UART 115200 설정했는데 글자가 깨진다면 99% 클럭 미설정
+
+---
+
+## ✅ 2. 버튼 누름이 안 먹힘 → **GPIO 모드 or 풀업 미설정**
+
+### 🧪 증상
+
+- `HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)` 항상 `1`
+- 버튼 눌러도 if문 진입 안 함
+
+### 🔍 원인
+
+- `.ioc`에서 `PC13` 핀을 GPIO_Input으로 설정했지만 `Pull-up` 안 함
+- 버튼 회로는 **풀다운이 없으면 default 상태가 떠 있음 (부동상태)**
+- 눌렀을 때 0, 안 눌렀을 때도 부정확한 값 나옴
+
+### ✅ 해결
+
+- `.ioc` → PC13 → Mode: Input, Pull: Pull-Up 설정
+- 버튼 눌렀을 때만 0, 안 누르면 안정적으로 1 읽힘
+
+### 💥 반대로
+
+> GPIO를 Output으로 잘못 설정하면 `ReadPin()`해도 항상 0 또는 쓰레기 값
+
+---
+
+## ✅ 3. UART 한 글자 받고 죽음 → **Interrupt + 버퍼 문제**
+
+### 🧪 증상
+
+- `HAL_UART_Receive_IT(&huart3, &ch, 1);` 사용
+- 한 글자 받고 `HAL_UART_RxCpltCallback()`은 호출되지만 두 번째부터는 아무 반응 없음
+
+### 🔍 원인
+
+- 콜백 함수 안에서 `HAL_UART_Receive_IT()`를 **다시 호출하지 않음**
+- IT 모드는 1회성 → 계속 수신하고 싶으면 매번 재시작해야 함
+
+### ✅ 해결
+
+```cpp
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART3) {
+        processChar(ch);
+        HAL_UART_Receive_IT(&huart3, &ch, 1); // 재등록!
+    }
+}
+```
+
+### 💥 반대로
+
+> `DMA 모드`는 자동 반복 가능 → `HAL_UART_Receive_DMA()` 한 번만 써도 됨  
+> → 하지만 콜백이 늦게 불리면 **오버런** 생김
+
+---
+
+## ✅ 4. HAL 코드 다 짰는데 LED가 안 켜짐 → **MX_GPIO_Init() 안 불림**
+
+### 🧪 증상
+
+- 코드에 `HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);` 있음
+- 아무리 해도 LED가 안 켜짐
+
+### 🔍 원인
+
+- `MX_GPIO_Init()` 호출 누락
+- `main()`에서 `HAL_Init()`은 했지만, 핀 설정 함수는 호출 안 함
+
+### ✅ 해결
+
+```cpp
+int main(void) {
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init(); // 이게 꼭 있어야 실제 GPIO 설정됨
+}
+```
+
+---
+
+## ✅ 5. `HAL_Delay()`도 못 쓰고, UART도 안 됨 → **SysTick 죽음**
+
+### 🧪 증상
+
+- 딜레이 안 됨
+- UART도 반응 없음
+- 타이머도 안 먹힘
+
+### 🔍 원인
+
+- `HAL_Init()` 안 부름 → `SysTick`, `HAL tick` 기능이 안 살아남
+
+### ✅ 해결
+
+- `HAL_Init()`은 **무조건 main() 제일 먼저 호출**
+
+---
+
+## ✅ 6. PWM은 나오는데 속도가 이상하거나 깜빡임이 보임 → **TIM 주기 or 주파수 설정 문제**
+
+### 🧪 증상
+
+- 듀티비 50%인데 LED 깜빡이는 게 보임
+- 또는 모터가 끊기는 느낌
+
+### 🔍 원인
+
+- PWM 주파수가 너무 낮음 (예: 1Hz~50Hz 수준)
+- 타이머의 Prescaler / Period 계산이 잘못됨
+
+### ✅ 해결
+
+→ 예: 10kHz PWM 생성하려면
+
+```c
+Prescaler = 108-1;      // 108MHz / 108 = 1MHz
+Period    = 100 - 1;     // 1MHz / 100 = 10kHz
+```
+
+> 이건 CubeMX에서 타이머 설정으로 자동 계산됨
+
+---
+
+## ✅ 7. DMA 안 불림 → **버퍼 위치 or 크기 문제**
+
+### 🧪 증상
+
+- `HAL_UART_Receive_DMA()` 썼는데 콜백 안 불림
+- 수신도 안 되고 시스템이 가끔 죽음
+
+### 🔍 원인
+
+- DMA는 **Heap, Stack 위치가 중요한데**, 로컬 변수(스택)에 버퍼 선언
+
+```cpp
+void startReceive() {
+  uint8_t buf[100]; // ❌ 위험
+  HAL_UART_Receive_DMA(&huart3, buf, 100);
+}
+```
+
+- 함수 끝나면 buf는 소멸됨 → DMA는 사라진 주소에 쓰게 됨 → 시스템 크래시
+
+### ✅ 해결
+
+- DMA용 버퍼는 **전역(global)** 또는 `static`으로 선언해야 함
+
+```cpp
+uint8_t dma_buf[100]; // ✅ 안전
+```
+
+---
+
+## 🔁 기타 예시 정리
+
+- FreeRTOS task 실행 안 될 때 → Stack size 문제
+- SPI 수신이 끊길 때 → NSS 관리와 DMA 연동
+- I2C ACK 문제 → 주소가 틀리거나 pull-up 누락
+- 외부 인터럽트가 중복될 때 → 우선순위 설정 및 NVIC 구성 문제
+- EEPROM 쓰기 동작 안 될 때 → Write Protection, busy flag 문제
+
+---
