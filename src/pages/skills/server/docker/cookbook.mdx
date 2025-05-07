@@ -1,8 +1,10 @@
 import { Callout } from "nextra-theme-docs";
 
-# Next.js 프로젝트 Docker를 이용하여 배포 자동화
+# Docker 기술 모음 (배포 자동화, vs Docker + k8s)
 
-## 1. Next.js Dcoker 이미지 만들기
+## 🚀 Next.js 프로젝트 Docker를 이용하여 배포 자동화
+
+### 1. Next.js Dcoker 이미지 만들기
 
 참고: [Next.js Dockerfile 예제](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile)  
 참고: [https://bum-developer.tistory.com/entry/Docker-Node-환경-만들기](https://bum-developer.tistory.com/entry/Docker-Node-환경-만들기) (Dockerfile 설정하기)
@@ -18,7 +20,7 @@ FROM node:18-alpine AS base
 - alpine은 최소단위의 linux 버전을 의미한다.
 - 뒤에 `AS base`는 별칭을 지정하는 것이다.
 
-## 2. NPM 패키지 설치
+### 2. NPM 패키지 설치
 
 1. npm 의존성 설치
 
@@ -72,7 +74,7 @@ package.json, pnpm-lock.yaml은 그리 빈번하게 변경되지 않으니 처�
 RUN npm i
 ```
 
-## 3. Build 하기
+### 3. Build 하기
 
 위처럼 라이브러리를 설치하고 그 다음으로는 build를 한다.
 
@@ -92,7 +94,7 @@ RUN yarn build
 - COPY .env.development .env.production: yarn build는 기본적으로 .env.productuib을 바라보기때문에 현재 .env.development를 .env.production으로 만든다음에 yarn build를 통해 해당 설정된 환경변수를 사용하게 만드는 것이다.
 - RUN yarn build : 최종 빌드
 
-## 4. production mode 이미지, 모든 파일 복사 및 다음 실행
+### 4. production mode 이미지, 모든 파일 복사 및 다음 실행
 
 최종 실행하기 위한 이미지를 만드는 단계이다.  
 결국 우리가 진짜로 필요한 것이 해당 이미지이다.
@@ -171,7 +173,7 @@ ENV PORT 3000
 CMD ["node", "server.js"]
 ```
 
-## 5. 도커 이미지 생성하기
+### 5. 도커 이미지 생성하기
 
 Dockerfile을 작성했다면 이를 기반으로 도커 빌드를 통해 이미지를 만들어볼 수 있다.  
 여기서 -t는 —tag 옵션을 의미한다.  
@@ -236,7 +238,7 @@ Listening on port 3000 url: http://e94bfe211f46:3000
 
 VSCode에서 docker extension을 설치하면 docker container 바로 확인할 수 있다.
 
-## 6. 도커 컴포즈 연동하기
+### 6. 도커 컴포즈 연동하기
 
 도커 컴포즈는 여러개의 도커 컨테이너를 띄우기 위해 사용되는 간단한 오케스트레이션 도구이다.
 
@@ -316,3 +318,106 @@ network next-app-network declared as external, but could not be found
 참고: [https://github.com/vercel/next.js/tree/canary/examples/with-docker-multi-env](https://github.com/vercel/next.js/tree/canary/examples/with-docker-multi-env)
 
 배포환경에 따라 development, staging, production을 구분해서 만드는 방법이다.
+
+---
+
+
+## 🚀 GitHub Actions와 연동한 Next.js Docker 배포 자동화
+
+### ✅ 전체 흐름 요약
+
+1. **Next.js 프로젝트를 Docker 이미지로 빌드**
+2. **GitHub Actions로 CI/CD 파이프라인 구성**
+3. **Docker Hub 또는 AWS ECR로 이미지 Push**
+4. **EC2 또는 EKS에서 Pull 후 배포 자동화**
+
+---
+
+### 🔧 1. GitHub Actions Workflow 파일 구성 (`.github/workflows/deploy.yml`)
+
+```yaml
+name: Deploy Next.js Docker App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/nextjs-docker:latest
+
+      - name: SSH Remote Deploy (EC2 or VPS)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/nextjs-docker:latest
+            docker stop nextjs || true && docker rm nextjs || true
+            docker run -d --name nextjs -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/nextjs-docker:latest
+```
+
+---
+
+### 🔐 2. GitHub Secrets 등록 항목
+
+| 키 이름              | 설명                            |
+| ----------------- | ----------------------------- |
+| `DOCKER_USERNAME` | Docker Hub ID                 |
+| `DOCKER_PASSWORD` | Docker Hub 비밀번호 또는 토큰         |
+| `SSH_HOST`        | EC2 또는 VPS IP 주소              |
+| `SSH_USER`        | 리눅스 사용자 (예: `ubuntu`)         |
+| `SSH_KEY`         | EC2 개인 키 (`.pem` 파일 내용을 붙여넣음) |
+
+---
+
+### 💡 참고 사항
+
+* 위 방식은 GitHub Actions를 이용해 자동으로 **Docker 이미지 빌드 → Docker Hub에 Push → 서버에 배포**까지 진행된다.
+* EC2가 아닌 **Kubernetes (EKS)** 를 사용하는 경우, `kubectl apply -f deployment.yaml` 또는 Helm 배포 단계로 대체할 수 있다.
+* 다중 환경 (dev/stage/prod) 구분을 위해 `deploy-dev.yml`, `deploy-prod.yml` 등으로 워크플로를 나눌 수 있다.
+
+---
+
+## 🔍 Docker만 사용하는 CI/CD vs Docker + Kubernetes(EKS) 기반 CI/CD
+
+| 항목            | Docker만 사용하는 CI/CD                                                  | Docker + Kubernetes(EKS) 기반 CI/CD                                                                           |
+| ------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ✅ **장점**      | - 단순한 서버에 컨테이너 실행만으로 배포 가능<br />- 설정과 운영이 간단함<br />- EC2 등 단일 서버 환경에 적합 | - **확장성**: 오토스케일링, 롤링 업데이트 등 가능<br />- **복구성**: 장애 발생 시 자동 재시작<br />- **운영 자동화**: Helm, Ingress, HPA 등으로 유연한 운영 |
+| ❌ **단점**      | - 장애 복구 수동 처리<br />- 무중단 배포 어려움<br />- 컨테이너끼리의 통신 및 구성 복잡함              | - 초기 셋업 복잡 (IAM, EKS 클러스터, yaml 배포 설정)<br />- 러닝커브 존재 (kubectl, manifests, Helm 등 필요)                         |
+| 🚀 **적합한 상황** | - 단일 서버나 간단한 프로젝트<br />- 소규모 트래픽 서비스                                  | - **프로덕션 수준**, **다수 서비스 운영**, **트래픽 확장성 요구**되는 상황                                                           |
+| 🛠️ **배포 방식** | GitHub Actions → Docker 이미지 빌드 & EC2/VM 실행                          | GitHub Actions → Docker 이미지 빌드 & ECR 푸시 → EKS에 자동 배포                                                        |
+
+---
+
+### 📌 결론
+
+* **Docker만 사용하는 방식**은 **빠르게 MVP를 배포**하거나 소규모 프로젝트에 적합하다.
+* **Docker + EKS(Kubernetes)** 기반은 **대규모 트래픽 대응**, **무중단 배포**, **복수 컨테이너 조합 (DB, Redis 등)** 에 유리한 구조이다.
+
+👉 따라서 **규모가 커질수록 Kubernetes 기반 자동화가 유리**하다.
+
+---

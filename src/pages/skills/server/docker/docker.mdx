@@ -2,14 +2,127 @@ import { FileTree } from "nextra-theme-docs";
 
 # Docker 문서 시작
 
-## Docker
+## ✅ Docker란?
 
-도커는 리눅스의 응용 프로그램들을 프로세스 격리 기술들을 사용해 컨테이너로 실행하고 관리하는 오픈 소스 프로젝트이다.
+Docker는 **애플리케이션을 컨테이너(container)** 라는 가볍고 이식 가능한 실행 환경에 패키징하여 실행할 수 있게 해주는 **가상화 플랫폼**  
+전통적인 가상 머신과 달리 **OS 전체를 가상화하지 않고**, 애플리케이션과 필요한 의존성만을 분리해 **호스트 OS 커널을 공유**하여 실행한다.  
 
-## 요구사항
+```markdown
+- 📦 컨테이너 기반 가상화 기술
+- ⚙️ 앱과 그 의존성(라이브러리, 설정 등)을 하나의 이미지로 패키징
+- 🚀 어디서나 동일하게 실행 가능 (로컬/서버/클라우드 등)
+- 🛠️ 이미지 → 컨테이너로 실행
+- 💡 빠른 배포, 테스트, 확장에 유리함
+```
 
-- JavaScript
-- React.js
+---
+
+## 🧠 Docker를 사용하기 위한 기술 요구사항
+
+### 1. 기본 개념 이해
+
+#### ✅ 1. **OS: Linux vs Windows에서의 컨테이너 작동 차이**
+
+```markdown
+- Docker는 기본적으로 **Linux 커널 기반** 컨테이너 기술.
+- Windows에서도 Docker 사용 가능하나, 내부적으로 Hyper-V 또는 WSL2를 사용해 **리눅스 커널 환경을 에뮬레이션**함.
+- 리눅스에서는 Native하게 실행되므로 성능과 호환성이 더 뛰어남.
+- Windows에서 Linux 컨테이너를 사용하려면 "WSL2 백엔드" 또는 "Hyper-V 백엔드" 중 하나를 사용해야 함.
+```
+
+---
+
+#### ✅ 2. **가상화(VM) vs 컨테이너(Container)**
+
+```markdown
+- 가상화(VM): 전체 OS를 가상머신 위에 실행 → **무겁고 느림**
+- 컨테이너: **호스트 OS의 커널을 공유**, 필요한 라이브러리만 포함 → **가볍고 빠름**
+- VM은 각각의 커널을 가짐, 컨테이너는 하나의 커널 위에 여러 컨테이너가 올려짐
+```
+
+| 항목       | VM (가상머신) | Docker (컨테이너) |
+| -------- | --------- | ------------- |
+| 속도       | 느림        | 빠름            |
+| 리소스 사용량  | 많음        | 적음            |
+| 커널 공유 여부 | X (별도 커널) | O (공유)        |
+| 이식성      | 낮음        | 매우 높음         |
+
+---
+
+#### ✅ 3. **이미지(Image) vs 컨테이너(Container)**
+
+```markdown
+- 이미지(Image): 실행 가능한 앱과 모든 의존성을 포함한 **정적인 스냅샷**
+- 컨테이너(Container): 이미지로부터 만들어져 실행 중인 **실제 인스턴스 (동적)**
+- 하나의 이미지로부터 여러 컨테이너를 만들 수 있음
+```
+
+---
+
+### 2. 핵심 명령어 숙지
+
+```bash
+docker build . -t my-app     # 이미지 생성
+docker run -p 3000:3000 my-app  # 컨테이너 실행
+docker ps                     # 실행 중인 컨테이너 확인
+docker exec -it <id> bash     # 실행 중인 컨테이너에 접속
+docker stop <id>              # 컨테이너 중지
+docker rm <id>                # 컨테이너 삭제
+docker rmi <image>            # 이미지 삭제
+```
+
+---
+
+### 3. Dockerfile 작성법
+
+* 애플리케이션을 이미지로 만드는 **설정 파일**
+
+```dockerfile
+FROM node:18
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["node", "index.js"]
+```
+
+---
+
+### 4. 이미지와 컨테이너 구조
+
+* 이미지: 읽기 전용 계층으로 구성
+* 컨테이너: 이미지 + 읽기/쓰기 계층
+
+---
+
+### 5. 네트워크 및 볼륨
+
+* 브리지 네트워크, 포트 포워딩
+* `docker volume`으로 데이터 유지
+
+---
+
+### 6. docker-compose (멀티 컨테이너 관리)
+
+```yaml
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+  db:
+    image: postgres
+```
+
+---
+
+### 7. 실전에서 필요한 이해
+
+* CI/CD에 Docker 통합
+* Private registry / Docker Hub 사용
+* 보안 (이미지 최소화, 네트워크 제한)
+
+---
 
 ## 폴더 및 파일 구조
 
@@ -18,5 +131,4 @@ import { FileTree } from "nextra-theme-docs";
   <FileTree.File name="개발환경 설정" />
   <FileTree.File name="기술문서 정리" />
   <FileTree.File name="발생이슈 정리" />
-  <FileTree.File name="배포" />
 </FileTree.Folder>

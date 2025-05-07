@@ -1,0 +1,104 @@
+# ❗ Docker 이슈 정리
+
+## 🛠️ 실행 관련
+
+1. **port already in use**
+
+   * 이미 해당 포트를 사용하는 서비스가 있어서 충돌
+   * 해결: 포트 변경 or 기존 프로세스 종료
+
+2. **permission denied (volume mount 시)**
+
+   * 호스트 디렉터리의 권한 문제
+   * 해결: `chmod`, `chown`, `sudo` 사용
+
+3. **OCI runtime error**
+
+   * 보통 Docker 내부에서 컨테이너 실행에 실패
+   * 해결: 이미지 재빌드 또는 docker 업데이트
+
+---
+
+## 🧱 이미지 관련
+
+4. **no space left on device**
+
+   * Docker 이미지, 컨테이너, 볼륨이 디스크를 가득 채움
+   * 해결:
+
+     ```bash
+     docker system prune -a
+     ```
+
+5. **layer cache 문제**
+
+   * Dockerfile의 캐시가 잘못 작동해 오래된 파일 사용
+   * 해결: `--no-cache` 옵션으로 이미지 재빌드
+
+6. **RUN, COPY, CMD 등 Dockerfile 오류**
+
+   * 경로 잘못 지정, 명령어 누락 등
+   * 해결: 단계별로 Dockerfile 검토하고 `docker build` 로그 확인
+
+---
+
+## 🔄 컨테이너/네트워크 관련
+
+7. **Cannot connect to the Docker daemon**
+
+   * Docker 서비스가 동작 중이지 않음
+   * 해결:
+
+     ```bash
+     sudo systemctl start docker
+     ```
+
+8. **network not found / conflict**
+
+   * 사용자 정의 네트워크 충돌 또는 삭제됨
+   * 해결: `docker network ls`, `docker network prune`
+
+9. **컨테이너 간 통신 안됨**
+
+   * `--network bridge`에서는 컨테이너 이름으로 DNS 안됨
+   * 해결: `docker-compose`로 bridge 대신 custom network 사용
+
+---
+
+## 📦 Docker Compose 관련
+
+10. **build context가 잘못됨**
+
+    * `context: .` 경로에 Dockerfile이 없음
+    * 해결: `context`, `dockerfile` 경로 지정 확인
+
+11. **환경 변수 설정 문제**
+
+    * `.env` 파일 누락 또는 포맷 오류
+    * 해결: `.env` 문법 확인, `docker-compose config`로 확인
+
+12. **volume mount 후 파일 내용 변경되지 않음**
+
+    * bind mount가 제대로 작동하지 않음
+    * 해결: 볼륨이 먼저 생성되면 override 안 됨 → `docker-compose down -v`
+
+---
+
+## 🌐 외부 접속/보안 관련
+
+13. **Docker Hub pull limit exceeded**
+
+    * 비로그인 사용자는 하루 100회 pull 제한
+    * 해결: `docker login`
+
+14. **이미지 취약점 / 보안 경고**
+
+    * 오래된 베이스 이미지, 패키지 업데이트 안함
+    * 해결: `FROM` 최신화, `RUN apt update && apt upgrade`
+
+15. **localhost에 접근 불가 (외부 브라우저 등에서)**
+
+    * 컨테이너 내부의 localhost는 호스트와 다름
+    * 해결: `0.0.0.0`으로 바인딩 필요, 포트 포워딩 확인
+
+---

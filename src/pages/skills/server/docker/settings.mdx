@@ -1,10 +1,154 @@
-import { Callout } from "nextra-theme-docs";
+# 🚀 Docker 개발 환경 설정 가이드
 
-# Docker 개발환경 설정
+## ✅ 1. Docker 설치
 
-## 1. Docker 설치
+### 📍 Windows / macOS
 
-Dokcer를 설치하려면 운영체제 별로 아래 링크에서 설치하면 된다.
-[Docker 설치하기](https://www.docker.com/products/docker-desktop/)
+* 공식 홈페이지에서 Docker Desktop 설치
+  👉 [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+* 설치 후 Docker가 실행되는지 확인:
 
-<br />
+  ```bash
+  docker --version
+  docker info
+  ```
+
+### 📍 Linux (Ubuntu 예시)
+
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+---
+
+## ✅ 2. Docker 권한 설정 (Linux만 해당)
+
+```bash
+# 현재 유저를 docker 그룹에 추가
+sudo usermod -aG docker $USER
+# 적용을 위해 재로그인 또는 reboot
+```
+
+---
+
+## ✅ 3. 프로젝트 구조 예시
+
+```
+my-app/
+├── Dockerfile
+├── docker-compose.yml
+├── .env
+├── src/
+│   └── main.py
+├── requirements.txt
+```
+
+---
+
+## ✅ 4. Dockerfile 작성 (Python 예시)
+
+```Dockerfile
+FROM python:3.10-slim
+
+# 작업 디렉터리 설정
+WORKDIR /app
+
+# 필요한 파일 복사
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "src/main.py"]
+```
+
+---
+
+## ✅ 5. docker-compose 설정 (개발 서버용)
+
+```yaml
+version: "3.8"
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=dev
+    command: python src/main.py
+```
+
+---
+
+## ✅ 6. 환경 변수 파일 (.env)
+
+```dotenv
+ENV=dev
+PORT=8000
+```
+
+---
+
+## ✅ 7. 컨테이너 실행 명령어
+
+```bash
+# 이미지 빌드 + 컨테이너 실행
+docker-compose up --build
+
+# 백그라운드 실행
+docker-compose up -d
+
+# 컨테이너 정지 및 정리
+docker-compose down
+```
+
+---
+
+## ✅ 8. 자주 사용하는 명령어
+
+```bash
+# 컨테이너 상태 보기
+docker ps
+
+# 특정 컨테이너에 접속
+docker exec -it <container_name> /bin/bash
+
+# 로그 확인
+docker logs -f <container_name>
+
+# 컨테이너 삭제 (중지 후)
+docker rm <container_id>
+
+# 이미지 삭제
+docker rmi <image_id>
+```
+
+---
+
+## ✅ 9. 유의사항
+
+* `volumes`를 사용하면 실시간 코드 수정이 반영되어 **개발 시 매우 유용**함
+* `.env` 파일은 `docker-compose`에서 자동 로드됨
+* **OS에 따라 line ending, 경로 표기 차이**로 `COPY` 등이 실패할 수 있으므로 주의
+
+---
+
+## ✅ 10. 개발에 활용 가능한 이미지들
+
+| 언어/프레임워크   | Base Image 예시       |
+| ---------- | ------------------- |
+| Node.js    | `node:18`           |
+| Python     | `python:3.11-slim`  |
+| Java       | `openjdk:17-alpine` |
+| Golang     | `golang:1.20`       |
+| PHP        | `php:8.2-apache`    |
+| Nginx      | `nginx:latest`      |
+| MySQL      | `mysql:8`           |
+| PostgreSQL | `postgres:15`       |
+| Redis      | `redis:7`           |
