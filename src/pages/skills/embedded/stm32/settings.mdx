@@ -1,0 +1,383 @@
+# STM32 개발환경 설정
+
+## 💻 VSCode + CubeMX STM32 개발환경 구축
+
+### 🧰 [1단계] 개발환경 준비
+
+Mac 환경에서 **VSCode(Visual Studio Code)**를 사용해 **STM32 NUCLEO-F746ZG 보드에 코드 업로드 및 테스트**하는 전 과정  
+**개발 환경 설정 → 코드 작성 → 컴파일 → 업로드 → LED 깜빡임 확인**까지 **순차적으로 아주 자세히** 안내
+
+#### 📦 설치 목록
+
+| 도구              | 설치 명령                                                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Homebrew          | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`                                                                          |
+| ARM GCC Toolchain | **(직접 설치 권장)** [gcc-arm-none-eabi-10.3-2021.10-aarch64-linux.tar.bz2](https://developer.arm.com/downloads/-/gnu-rm) 다운로드 후 `/opt/gcc-arm-none-eabi/`에 압축해제 |
+| ST-Link 도구      | `brew install stlink`                                                                                                                                                      |
+| VSCode            | `brew install --cask visual-studio-code`                                                                                                                                   |
+
+---
+
+#### 🧩 VSCode 확장팩 설치 (VSCode 안에서 Ctrl+Shift+X)
+
+- ✅ C/C++ (`ms-vscode.cpptools`)
+- ✅ Cortex-Debug (`marus25.cortex-debug`)
+- ✅ Makefile Tools (`ms-vscode.makefile-tools`)
+
+---
+
+### 🧱 [2단계] STM32CubeMX로 프로젝트 생성
+
+1. STM32CubeMX 실행
+2. `Board Selector`에서 `NUCLEO-F746ZG` 선택
+3. 핀맵 설정:
+   - **PB0, PB7, PB14 → GPIO_Output**
+4. Project 설정
+   - Toolchain: **Makefile**
+   - Language: **C**
+   - 프로젝트 폴더: 예: `~/stm32/led_test`
+5. [GENERATE CODE] 클릭
+
+---
+
+### 🗃️ [3단계] VSCode에서 프로젝트 열기
+
+1. VSCode 실행 → `led_test` 폴더 열기
+2. `.vscode` 폴더 생성 후 `launch.json`, `c_cpp_properties.json`, `tasks.json` 설정
+
+> 필요한 경우 템플릿 제공 가능
+
+---
+
+### ✍️ [4단계] 코드 작성
+
+`Core/Src/main.c` 파일의 `while (1)` 안을 다음으로 수정
+
+```c
+while (1)
+{
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+  HAL_Delay(500);
+
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+  HAL_Delay(500);
+
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+  HAL_Delay(500);
+}
+```
+
+📀 이 코드는 0.5초 간격으로 PB0 → PB7 → PB14를 순차 토글하며 LED 깜빡임
+
+---
+
+### ⚙️ [5단계] 컴파일
+
+```bash
+./build.sh
+```
+
+```sh
+#!/bin/bash
+GCC_PATH=/opt/gcc-arm-none-eabi/bin
+make clean
+make GCC_PATH=$GCC_PATH
+```
+
+---
+
+### 📤 [6단계] 업로드
+
+```bash
+./upload.sh
+```
+
+```sh
+#!/bin/bash
+CUBEPROG_CLI="/Applications/STM32CubeIDE.app/Contents/Eclipse/plugins/com.st.stm32cube.ide.mcu.externaltools.cubeprogrammer.macos64_2.2.100.202412061334/tools/bin/STM32_Programmer_CLI"
+BIN_FILE="build/led_test.bin"
+ADDRESS=0x08000000
+
+if [ ! -f "$BIN_FILE" ]; then
+  echo "❌ $BIN_FILE not found. 먼저 build.sh로 빌드"
+  exit 1
+fi
+
+echo "🚀 Uploading $BIN_FILE to STM32 via ST-LINK (SWD)..."
+"$CUBEPROG_CLI" -c port=SWD -d $BIN_FILE $ADDRESS -rst
+
+if [ $? -eq 0 ]; then
+  echo "✅ Upload successful!"
+else
+  echo "❌ Upload failed!"
+fi
+```
+
+---
+
+### ✅ [7단계] 실행 확인
+
+- 보드의 **PB0, PB7, PB14**에 연결된 LED가 **0.5초 간격으로 순차 깜빡**이면 성공
+- 보드 실크 인쇄로 핀 번호 확인 가능
+- 외부 LED 또는 멀티미터로 신호 확인 가능
+
+---
+
+### 🧪 [보너스] 디버깅 설정 (VSCode + Cortex-Debug)
+
+`.vscode/launch.json` 예시
+
+```json
+{
+  "configurations": [
+    {
+      "name": "Cortex Debug",
+      "cwd": "${workspaceRoot}",
+      "executable": "build/led_test.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "stlink",
+      "device": "STM32F746ZG",
+      "runToMain": true
+    }
+  ]
+}
+```
+
+---
+
+## 🚀 STM32CubeIDE 단독 개발 워크플로우
+
+STM32CubeIDE만으로 STM32 프로젝트를 생성하고 LED 토글 테스트까지 완료하는 전체 흐름을 한눈에 확인할 수 있도록 정리
+
+---
+
+### 🛠️ Step 1: 워크스페이스 설정
+
+![현재 사진](attachment)
+
+- STM32CubeIDE를 처음 실행하면 **작업 공간(Workspace)** 경로를 설정하는 창이 나옴
+- 프로젝트 및 설정이 여기에 저장됨
+- 기본 경로 그대로 두고 진행해도 무방함
+
+👉 **[Launch] 버튼 클릭**
+
+---
+
+### 🧱 Step 2: 새로운 프로젝트 생성
+
+- 메뉴 경로:  
+  `File > New > STM32 Project`
+- 또는 좌측 상단의 **📦 [New STM32 Project] 아이콘** 클릭
+
+---
+
+### 🔍 Step 3: MCU 또는 보드 선택
+
+- 검색창에 `STM32F746ZG` 입력
+- `STM32F746ZGTx` 또는 `NUCLEO-F746ZG` 중 선택
+- ✅ 선택 후 **[Next] 클릭**
+
+💡 _보드 기반 프로젝트를 선택하면 핀맵과 클럭 등이 자동 구성되어 편리함_
+
+---
+
+### 📝 Step 4: 프로젝트 이름 및 설정
+
+- **Project Name**: 예) `F746_Blink`
+- **Toolchain**: 자동으로 STM32CubeIDE 선택
+- **Target Language**: C 또는 C++ 선택 가능
+
+👉 설정 후 **[Finish] 클릭**
+
+---
+
+### 🎛️ Step 5: 핀맵 및 주변장치 설정 (.ioc)
+
+- 핀 설정 화면이 나타납니다
+- 예: `PA5` 클릭 → **GPIO_Output** 선택 (LED 제어용)
+- 상단 탭을 통해 `Clock Configuration`, `Peripherals`, `Project Manager` 메뉴 접근 가능
+
+💡 `.ioc` 파일은 이후 수정이 가능하며, 코드 자동 생성을 다시 할 수 있음
+
+---
+
+### ⚙️ Step 6: 코드 자동 생성
+
+- 상단의 **⚙️ [GENERATE CODE]** 버튼 클릭
+- `Core/`, `Drivers/`, `main.c`, `startup_stm32f7xx.s` 등이 자동 생성됨
+
+---
+
+### ✍️ Step 7: 사용자 코드 작성
+
+- `Core/Src/main.c` → `while (1)` 내부에 아래 코드 작성:
+
+```c
+HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+HAL_Delay(500);
+```
+
+🔁 LED를 0.5초 간격으로 토글
+
+---
+
+### ▶️ Step 8: 빌드 & 업로드 & 실행 (자동)
+
+- 상단의 **▶️ [Run] 버튼**만 클릭
+- CubeIDE가 자동으로
+  1. 🔨 컴파일(Build)
+  2. 📤 보드에 업로드
+  3. ▶️ 실행까지 한 번에 진행함
+
+👉 **LED가 깜빡이면 성공** 🎉
+
+---
+
+### 🧾 전체 순서 요약
+
+| 단계 | 내용                                  |
+| ---- | ------------------------------------- |
+| 1️⃣   | STM32CubeIDE 실행 & 워크스페이스 설정 |
+| 2️⃣   | 새로운 STM32 프로젝트 생성            |
+| 3️⃣   | MCU/보드 선택 (`STM32F746ZG`)         |
+| 4️⃣   | 프로젝트 이름 및 언어 설정            |
+| 5️⃣   | 핀 설정 (.ioc)                        |
+| 6️⃣   | 코드 생성                             |
+| 7️⃣   | `main.c` 코드 작성                    |
+| 8️⃣   | 빌드 & 업로드 & 실행 (자동)           |
+
+---
+
+### 🧠 팁: 디버그 자동 실행 설정
+
+- `Run > Debug Configurations`에서  
+  "Resume" 자동 실행 옵션을 설정하면 Debug 후 자동으로 시작되도록 가능
+
+## ⚖️ VSCode + CubeMX STM32 vs CubeIDE
+
+STM32 개발 환경에서 **VSCode + STM32CubeMX** 조합과 **STM32CubeIDE**의 차이점을 **개발**, **유지보수**, **형상관리(Git 등)** 측면에서 비교
+
+---
+
+### 🧩 공통 개요
+
+| 항목             | 설명                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------- |
+| **STM32CubeMX**  | 핀 설정, 클럭 구성, 미들웨어 선택 등을 GUI로 설정하고, 코드 생성기 역할 수행                            |
+| **STM32CubeIDE** | Eclipse 기반 통합 개발 환경 (CubeMX 포함), 빌드, 디버깅, 플래싱까지 통합                                |
+| **VSCode**       | 가볍고 커스터마이징 자유도가 높은 에디터, 외부 도구(GCC, GDB, make/CMake 등)와 연동하여 STM32 개발 가능 |
+
+---
+
+### 🛠️ 1. 개발 측면 비교
+
+| 항목                         | VSCode + CubeMX                              | STM32CubeIDE                                   |
+| ---------------------------- | -------------------------------------------- | ---------------------------------------------- |
+| **사용자 인터페이스**        | 가볍고 빠르며 깔끔함                         | Eclipse 기반이라 무겁고 복잡함                 |
+| **빌드 시스템**              | `Makefile`, `CMake`, PlatformIO 등 선택 가능 | CubeMX 생성의 `.cproject`/`.project` 구조 고정 |
+| **자동 완성 및 편집기 기능** | IntelliSense, GitLens, clangd 등 활용 가능   | 자동완성, 정의로 이동 기능은 Eclipse CDT 수준  |
+| **디버깅 지원**              | OpenOCD, J-Link, pyOCD 등을 설정 필요        | 기본 디버거 통합 지원, 설정 쉬움               |
+| **RTOS 시각화 등**           | 수동 플러그인 설정 필요                      | FreeRTOS, SystemViewer, 분석 툴 제공           |
+
+🔎 **정리:**
+
+- **VSCode**는 자유롭지만 셋업이 까다로움
+- **CubeIDE**는 바로 쓸 수 있지만 제한적임
+
+---
+
+### 🔧 2. 유지보수 측면 비교
+
+| 항목                        | VSCode + CubeMX                                 | STM32CubeIDE                                  |
+| --------------------------- | ----------------------------------------------- | --------------------------------------------- |
+| **코드 변경 추적**          | CMake/Make 기반이라 외부 툴로 구성 명확         | 자동 생성 파일 많고 구조 복잡                 |
+| **자동 생성 코드 관리**     | CubeMX와 폴더 구조를 나눌 수 있어 분리 쉬움     | 자동 생성 코드와 사용자 코드 혼재됨           |
+| **프로젝트 포팅 및 이식성** | Makefile/CMake 기반이라 타 플랫폼으로 이동 쉬움 | IDE 종속성이 강해 다른 환경에서 재활용 어려움 |
+| **라이브러리 분리 관리**    | HAL/LL, 미들웨어 직접 관리 용이                 | CubeIDE 설정에 얽매임                         |
+
+🔎 **정리:**
+
+- **VSCode**는 구조를 직접 설계할 수 있어 유지보수가 체계적
+- **CubeIDE**는 자동화는 좋지만 유지보수에 제약이 있음
+
+---
+
+### 🗂️ 3. 형상관리(Git 등) 측면 비교
+
+| 항목           | VSCode + CubeMX                                         | STM32CubeIDE                                                    |
+| -------------- | ------------------------------------------------------- | --------------------------------------------------------------- |
+| **Git 통합성** | GitLens, GitHub Copilot 등으로 시각적 관리 탁월         | Eclipse Git 플러그인 사용 (불편함 존재)                         |
+| **변경 추적**  | `Makefile`, `src/inc`, `Drivers`, `.ioc` 명확 분리 가능 | `.cproject`, `.settings`, `.mxproject` 등 많은 숨겨진 설정 파일 |
+| **CI/CD 연동** | Make/CMake 기반이라 자동화에 강함                       | Eclipse 기반 자동화는 난이도 있음                               |
+| **협업**       | 에디터 설정을 `.vscode/`로 통일 가능                    | IDE 간 충돌 많음 (워크스페이스 공유 어려움)                     |
+
+🔎 **정리:**
+
+- **VSCode**는 Git-friendly하며 협업과 자동화에 유리
+- **CubeIDE**는 설정파일이 많아 충돌 위험
+
+---
+
+### 🏁 결론 요약표
+
+| 항목        | VSCode + CubeMX                | STM32CubeIDE                     |
+| ----------- | ------------------------------ | -------------------------------- |
+| 개발 편의성 | 🔄 설정은 복잡하나 가볍고 유연 | ✅ 통합 환경, 즉시 사용 가능     |
+| 유지보수    | ✅ 모듈화, CI/CD에 유리        | 🔄 자동화는 되지만 구조가 제한적 |
+| 형상관리    | ✅ Git, 협업, 자동화에 유리    | 🔄 Git은 가능하나 불편함 존재    |
+| 추천 대상   | 고급 사용자, 팀 개발, CI 도입  | STM32 입문자, 빠른 프로토타입    |
+
+---
+
+### ✍️ 추천
+
+- **🧪 프로토타입/단기 프로젝트**: `STM32CubeIDE`
+- **🔩 장기 유지보수/협업/자동화**: `VSCode + CubeMX + Make/CMake`
+
+---
+
+## 🧾 기타 정리
+
+### ⚖️ Targeted Binary Type, Targeted Project Type
+
+각각의 버튼이 의미하는 바를 아래와 같이 정리
+
+---
+
+#### ✅ **1. Targeted Binary Type**
+
+| 옵션                       | 설명                                                                                                                                                           |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🔘 **Executable** (기본값) | 보드에서 직접 실행 가능한 프로그램을 생성함 (예: `.elf`, `.bin`)                                                                                               |
+| ⚪ **Static Library**      | 실행 파일이 아니라, **다른 프로젝트에서 재사용할 수 있는 정적 라이브러리(.a 파일)**를 생성 <br /> 예: 공통 드라이버, 유틸, HAL 래퍼 등만 따로 모듈화할 때 사용 |
+
+> **💡 대부분의 경우는 Executable을 선택하면 됨**
+
+---
+
+#### ✅ **2. Targeted Project Type**
+
+| 옵션                      | 설명                                                                                                                 |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 🔘 **STM32Cube** (기본값) | **STM32CubeMX 기반의 설정 가능 프로젝트**를 생성함<br /> &nbsp;핀 설정, 클럭 설정 등 `.ioc` 파일이 포함됨              |
+| ⚪ **Empty**              | **CubeMX 없이 완전히 빈 프로젝트를 생성**함<br />자신이 직접 핀 설정, 클럭 설정, 초기화 등 전부 코딩해야 함 (고급자용) |
+
+**💡 STM32Cube 선택 시 `.ioc` 파일이 생기고 GUI로 핀/클럭 설정이 가능함 대부분의 경우 이걸 선택**
+
+---
+
+#### 🔁 예시 추천 조합
+
+| 상황                                           | 추천 설정                                |
+| ---------------------------------------------- | ---------------------------------------- |
+| 보드에서 실행할 프로그램 만들기                | ✅ Executable + ✅ STM32Cube             |
+| 공통 라이브러리를 모듈화해서 재사용하려는 경우 | ✅ Static Library + ✅ Empty (또는 Cube) |
+| CubeMX 없이 직접 초기화부터 하고 싶은 경우     | ✅ Executable + ⚪ Empty                 |
+
+---
+
+#### ✨ 결론
+
+> 대부분의 사용자, 특히 처음 시작하는 경우에는  
+> **"Executable + STM32Cube"** 조합이 정답
