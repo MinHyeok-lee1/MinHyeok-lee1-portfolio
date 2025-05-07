@@ -26,7 +26,7 @@ export default function AboutMe() {
               <section className="flex flex-col items-center justify-center text-gray-600 body-font">
                 <div className="flex w-full justify-start container mx-auto items-start">
                   <h1 className="title-font sm:text-3xl text-2xl font-medium text-gray-900">
-                    기록하려 노력하는 개발자 이민혁입니다.
+                    기록하려 노력하는 개발자 이민혁이다.
                     <br />
                   </h1>
                   <br className="inline-block" />
@@ -52,18 +52,18 @@ export default function AboutMe() {
                       <div className="w-full lg:w-1/2">
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                          ◦ 안녕하세요! 4년 차 백엔드 개발자 이민혁입니다.
+                          ◦ 5년 차 SW Developer 이민혁(lmh).
                           <br />
                           ◦ 기록하지 못하여 잊었던 과거에 실수로 기록의 중요함을
-                          깨달았습니다.
+                          깨달음을 얻다.
                           <br />
-                          ◦ 기록하는 것의 가치를 깨닫게 되어 블로그와 해당
-                          웹사이트에 기록합니다.
+                          ◦ 기록하는 것의 가치를 깨닫게 되어 블로그와 본
+                          웹사이트에 기록한다.
                           <br />
                           ◦ 개발 쪽으로 Clean Code와 Test에 대한 고민을 하고
-                          실제로 적용하고자 합니다.
+                          실제로 적용하고자 한다.
                           <br />◦ 커피와 운동 💪🏻, 그리고 좋은 사람과 함께하는
-                          모든 것에 관심이 많습니다.
+                          모든 것에 관심이 많다.
                         </p>
                       </div>
                     </div>
@@ -198,13 +198,13 @@ export default function AboutMe() {
                           DB 연동이 가능하고 whitelist와 같은 전역적인 수신
                           데이터 설정과 Controller 별 수신 데이터에 대한
                           여러가지에 대한 validation 설정 및 Swagger를 통한
-                          형상관리가 가능합니다.
+                          형상관리가 가능하다.
                           <br />
                           <br />
                           <b>◦ MongoDB</b>: Document 단위로 데이터를 저장하고
                           여러가지 종류의 인덱스를 상황별로 설정 가능 및
                           데이터베이스 설정을 변경하고 dump 및 restore 명령어를
-                          통한 백업 및 복구 가능합니다.
+                          통한 백업 및 복구 가능하다.
                         </p>
                       </div>
                     </div>
@@ -223,21 +223,21 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
                           <b>◦ Next.js</b>: Reactquery를 활용한 상황 별 데이터
                           송수신 가능, Redux, Recoil을 활용한 전역변수 관리 가능
-                          및 CSR, SSR Page를 따로 관리가 가능합니다.
+                          및 CSR, SSR Page를 따로 관리가 가능하다.
                           <br />
                           <br />
                           <b>◦ JavaScript</b>: ES6, Next, React와 jQuery를
                           활용해 DOM을 제어하고 AJAX로 데이터 송수신이
-                          가능합니다.
+                          가능하다.
                           <br />
                           <br />
                           <b>◦ HTML</b>: HTML 구조와 DOM을 이해하고 HTML5 시멘틱
-                          태그에 맞게 작성할 수 있습니다.
+                          태그에 맞게 작성할 수 있다.
                           <br />
                           <br />
                           <b>◦ CSS</b>: CSS3, Bootstrap, Tailwind CSS CSS
                           프레임워크를 활용해 레이아웃과 디자인을 구현할 수
-                          있습니다.
+                          있다.
                         </p>
                       </div>
                     </div>
@@ -255,20 +255,20 @@ export default function AboutMe() {
                         <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
                           <b>◦ Kubernetes, Docker</b>: 개발 및 운영 환경을
-                          정의하고 배포에 활용이 가능합니다.
+                          정의하고 배포에 활용이 가능하다.
                           <br />
                           <br />
                           <b>◦ AWS</b>: EC2, EKS, S3, Lightsail, RDS, SQS EC2
                           인스턴스를 생성하고 요청량에 따라 Auto Scaling 설정을
                           할 수 있고 EKS 클러스터를 구축하고 네트워크 설정이
-                          가능합니다.
+                          가능하다.
                           <br />
                           <br />
                           <b>◦ CloudFlare</b>: A, CNAME 등 전반적인 도메인 관리
                           및 도메인에 대한 네트워크 연결 및 리버스 프록시등의
                           설정이 가능하고 Zero Trust Policies를 사용하여
                           도메인에 접근에 대한 적절한 보안 설정 및 관리등이
-                          가능합니다.
+                          가능하다.
                         </p>
                       </div>
                     </div>
@@ -287,11 +287,11 @@ export default function AboutMe() {
                         <p className="mb-8 leading-relaxedh-auto md:pt-4 break-all">
                           <b>◦ Version Control</b>: Git, GitHub, GitLab, SVN
                           branch, rebase 등 명령어를 활용해 소스코드를 관리가
-                          가능합니다.
+                          가능하다.
                           <br />
                           <br />
                           <b>◦ CI/CD</b>: Jenkins, GitHub Actions Git, SVN과
-                          연동해 개발 및 운영 환경에 배포가 가능합니다.
+                          연동해 개발 및 운영 환경에 배포가 가능하다.
                         </p>
                       </div>
                     </div>
@@ -311,17 +311,17 @@ export default function AboutMe() {
                           <b>◦ FreeRTOS</b>: FreeRTOS에서 관심사를 Task 단위로
                           분리하여 효과적인 작업관리 및
                           uxTaskGetStackHighWaterMark() 함수등을 사용하여 최적의
-                          StackOptimization 등 자원의 관리가 가능합니다.
+                          StackOptimization 등 자원의 관리가 가능하다.
                           <br />
                           <br />
                           <b>◦ Arduino</b>: Interrupt핀을 사용하여 중요한 작업의
                           Interrupt처리를 포함한 전반적인 Arduino 툴 및 함수를
-                          프로젝트에 적용가능합니다.
+                          프로젝트에 적용가능하다.
                           <br />
                           <br />
                           <b>◦ LasberryPi</b>: 프로젝트에 따른 적절한 OS 설치 및
                           c, python 프로그램등을 개발하여 process layer에서의
-                          운용 및 관리가 가능합니다.
+                          운용 및 관리가 가능하다.
                         </p>
                       </div>
                     </div>
