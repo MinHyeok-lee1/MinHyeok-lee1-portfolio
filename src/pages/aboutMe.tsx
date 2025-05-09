@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 
-export default function AboutMe() {
+export default function AboutMe(): JSX.Element {
   const { resolvedTheme } = useTheme();
-  const [isHovered, setIsHovered] = useState(null);
+  const [isHovered, setIsHovered] = useState<string | null>(null);
 
   return (
-    <>
       <Layout>
         <div>
           <Head>
@@ -845,6 +844,5 @@ export default function AboutMe() {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

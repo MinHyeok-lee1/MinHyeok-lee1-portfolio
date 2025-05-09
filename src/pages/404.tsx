@@ -1,6 +1,6 @@
 import { Link } from "nextra-theme-docs";
 
-export default function Custom404() {
+export default function Custom404(): JSX.Element {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-200 text-gray-800">
       <h1 className="text-8xl font-bold mb-4">404</h1>

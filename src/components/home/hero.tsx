@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Animation from "./animation";
 
-export default function Hero() {
+export default function Hero(): JSX.Element {
   return (
     <>
       <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0 lg:ml-20">
@@ -31,7 +31,6 @@ export default function Hero() {
           <strong>중요한 것을 기록해두는 습관</strong>
           <br />
           <strong>그것이 망각을 축복으로 만들 수 있다.</strong>
-          <br />
         </p>
         <div className="flex justify-center">
           <Link href="/project">
@@ -40,9 +39,6 @@ export default function Hero() {
           <Link href="/home">
             <button className="ml-8 btn-project">📚 문서정리 바로가기</button>
           </Link>
-          {/* <button className="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
-                Button
-              </button> */}
         </div>
       </div>
     </>

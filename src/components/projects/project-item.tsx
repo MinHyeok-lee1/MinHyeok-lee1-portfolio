@@ -6,27 +6,29 @@ interface ProjectItemProps {
       file?: { url: string };
       external?: { url: string };
     };
-    properties: {
-      이름: {
-        title: { plain_text: string }[];
-      };
-      개발문서: { url: string };
-      깃허브: { url: string };
-      설명: {
-        rich_text: { plain_text: string }[];
-      };
-      태그: {
-        multi_select: { id: string; name: string }[];
-      };
-      날짜: {
-        date: {
-          start: string;
-          end: string;
-        };
-      };
-    };
+    properties: ProjectItemProperty;
   };
 }
+
+export type ProjectItemProperty = {
+  이름: {
+    title: { plain_text: string }[];
+  };
+  개발문서: { url: string };
+  깃허브: { url: string };
+  설명: {
+    rich_text: { plain_text: string }[];
+  };
+  태그: {
+    multi_select: { id: string; name: string }[];
+  };
+  날짜: {
+    date: {
+      start: string;
+      end: string;
+    };
+  };
+};
 
 export default function ProjectItem({ data }: ProjectItemProps) {
   const {

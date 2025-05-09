@@ -1,14 +1,17 @@
 import Header from "./header";
 import Footer from "./footer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-type ComponentWithChildProps = React.PropsWithChildren<{ example?: string }>;
+type LayoutProps = {
+  children: ReactNode;
+  example?: string;
+};
 
-export default function Layout({ children }: ComponentWithChildProps) {
+export default function Layout({ children }: LayoutProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // 컴포넌트가 마운트되었을 때 설정
+    setMounted(true); // 클라이언트 사이드에서 마운트 확인
   }, []);
 
   if (!mounted) {
@@ -20,12 +23,10 @@ export default function Layout({ children }: ComponentWithChildProps) {
   }
 
   return (
-    <>
-      <div className="bg-priamry">
-        <Header />
-        <div className="pt-16">{children}</div>
-        <Footer />
-      </div>
-    </>
+    <div className="bg-primary"> {/* bg-priamry → bg-primary 오타 수정 */}
+      <Header />
+      <main className="pt-16">{children}</main>
+      <Footer />
+    </div>
   );
 }
