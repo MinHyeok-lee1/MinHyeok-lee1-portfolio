@@ -1,5 +1,139 @@
 # 💥 STM32 이슈 정리
 
+## 💥 macOS + ST-LINK V3 연결 실패기록
+
+### 🧩 배경
+
+MacBook Pro (Apple Silicon, macOS Sonoma)에서 **NUCLEO-G431RB (ST-LINK V3)** 보드를 STM32CubeIDE 및 CubeProgrammer를 통해 연결 시도  
+하지만 **"No ST-LINK detected"** 오류와 함께 연결 실패  
+V2 보드는 문제없이 연결되나, **ST-LINK V3만 인식 불가**
+
+---
+
+### 📍 문제 현상 요약
+
+- `STM32CubeIDE`에서 **No ST-LINK detected** 팝업 반복
+- `STM32_Programmer_CLI` 실행 시
+
+```bash
+ST-LINK error (DEV\_CONNECT\_ERR)
+libusb: warning \[darwin\_transfer\_status] transfer error: device not responding (value = 0xe00002ed)
+```
+
+- 펌웨어 버전은 최신 (`V3J16M8`)
+- `lsusb`로는 `0483:374e` ST 장치 확인 가능
+- Rosetta 설치, SIP 비활성화, 권한 해제 모두 완료
+
+---
+
+### ⚙️ 시도한 해결 방법들
+
+#### ✅ 기본 설정
+
+- `Rosetta 2` 설치: 완료
+- `SIP (System Integrity Protection)` 비활성화: 완료 (`csrutil status`)
+- `xattr`로 격리 해제
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/STM32CubeIDE.app
+sudo xattr -rd com.apple.quarantine /Applications/STMicroelectronics
+```
+
+---
+
+#### 🔌 USB & 시스템 권한
+
+1. USB 포트 변경 (C-A 어댑터, 직접 포트 등): 실패
+2. USB 케이블 교체 (정품 포함): 실패
+3. `lsusb` 명령어로 ST 장치 감지됨 (정상)
+4. `dmesg` 또는 `system.log` 확인: 특이사항 없음
+
+---
+
+#### 🔄 펌웨어 업데이트
+
+1. **STSW-LINK007** 툴 사용하여 펌웨어 업데이트 완료 (Windows 환경에서 V3J16M8 업그레이드 성공)
+2. Mac에 다시 연결 → 동일 오류 (`DEV_USB_COMM_ERR`)
+
+---
+
+#### 🧪 Java 기반 STLinkUpgrade.jar 실행
+
+```bash
+sudo java -jar STLinkUpgrade.jar
+```
+
+1. 라이브러리 로딩 경고 및 `JNI command error 0x1004`
+2. `malloc` 관련 오류까지 출력되며 프로그램 강제 종료
+
+---
+
+#### 📦 CLI 진단 명령 실행
+
+```bash
+arch -x86_64 /.../STM32_Programmer_CLI -c port=SWD
+```
+
+1. ST-LINK V3 인식되나 **Voltage 0.00V**, **pipe is stalled**, **bulk transfer failed**
+2. 결국:
+
+```bash
+ST-LINK error (DEV_USB_COMM_ERR)
+```
+
+---
+
+#### ⚙️ 권한 및 드라이버 상태 점검
+
+* `sudo kextstat | grep ST`: 로딩된 커널 확장 없음
+* `chmod +x` 및 실행권한 재부여: 적용 완료
+* `.app` 권한 해제 및 권한 상승 실행: 적용 완료
+
+---
+
+### 💣 최종 상태
+
+1. **ST-LINK V2** 보드는 정상 연결됨 (CLI 및 IDE)
+2. **ST-LINK V3**는 macOS에서 **전혀 작동 불가**
+3. 최신 펌웨어 적용, 모든 시스템 권한 열람 후에도 동일 증상 반복
+
+---
+
+### 🧾 결론
+
+| 항목                | 결과   |
+| ----------------- | ---- |
+| Rosetta 2 설치      | ✅ 완료 |
+| SIP 해제            | ✅ 완료 |
+| 펌웨어 최신화           | ✅ 완료 |
+| CubeIDE CLI 동작    | ❌ 실패 |
+| Java Upgrade Tool | ❌ 실패 |
+| 다른 포트/케이블 시도      | ❌ 실패 |
+| ST-LINK V2 연결     | ✅ 정상 |
+
+> 🙅‍♂️ **ST-LINK V3는 2025년 기준, macOS에서 완벽하게 호환되지 않음**
+> 특히 복합 디바이스 구조 + libusb 호환성 문제가 커 보임
+
+---
+
+### ✅ 대안 제시
+
+1. **ST-LINK V2 사용 권장** (macOS에서 안정적 작동)
+2. **Windows + STM32CubeIDE 환경에서 개발**
+3. **Docker 기반 Ubuntu 환경에서 CubeProgrammer 사용**
+4. **OpenOCD 연동 시도 (실험적)**
+
+---
+
+### 🔗 참고
+
+1. [ST 공식 FAQ - V3 통신 불가 이슈](https://community.st.com/t5/stm32-mcus/faq-possible-communication-failure-between-stlink-v3-and-some/ta-p/736578)
+2. [libusb Mac M1 이슈 관련 커뮤니티](https://github.com/libusb/libusb/issues)
+
+---
+
+> ❗ 이 포스트는 `M2 Pro / macOS Sonoma / ST-LINK V3 / STM32CubeIDE 1.15.0` 환경에서 실험한 기록입니다.
+
 ## ❌ Please login to download a software package
 
 이 창은 STM32CubeIDE 또는 STM32CubeMX에서 **필요한 소프트웨어 패키지 (예: STM32F7 시리즈의 HAL 드라이버)**를 다운로드하려 할 때, **로그인이 되어 있지 않아 거부된 상황**임
