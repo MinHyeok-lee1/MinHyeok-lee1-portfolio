@@ -1,7 +1,9 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Layout from "../components/layout";
-import ProjectItem, { ProjectItemProperty } from "../components/projects/project-item";
+import ProjectItem, {
+  ProjectItemProperty,
+} from "../components/projects/project-item";
 import { DATABASE_ID, TOKEN } from "../config";
 
 type Project = {
@@ -32,7 +34,9 @@ export default function Projects({
 
         <h1 className="text-2xl font-bold sm:text-4xl mt-12 md:mt-8">
           총 프로젝트:
-          <span className="pl-4 text-orange-500">{projects.results.length}</span>
+          <span className="pl-4 text-orange-500">
+            {projects.results.length}
+          </span>
         </h1>
         <p className="pt-10">
           * 개발문서 바로가기: Github가 Private면 개발문서로 이동
@@ -74,5 +78,6 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { projects },
+    revalidate: 3600,
   };
 };
