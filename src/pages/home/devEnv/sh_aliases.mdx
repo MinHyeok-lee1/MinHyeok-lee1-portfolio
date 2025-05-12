@@ -1,0 +1,249 @@
+# 🌟 Zsh Alias 정리: Git + Shell + ls 등
+
+## 📁 이동 관련
+```bash
+-='cd -'
+...=../..
+....=../../..
+.....=../../../..
+......=../../../../..
+1='cd -1'
+2='cd -2'
+3='cd -3'
+4='cd -4'
+5='cd -5'
+6='cd -6'
+7='cd -7'
+8='cd -8'
+9='cd -9'
+```
+
+## ⚙️ 시스템 관련
+```bash
+_='sudo '
+md='mkdir -p'
+rd='rmdir'
+run-help=man
+which-command=whence
+```
+
+## 📂 ls 관련
+```bash
+l='ls -lah'
+la='ls -lAh'
+ll='ls -lh'
+lsa='ls -lah'
+ls='ls -G'
+```
+
+## 🔍 grep 관련
+```bash
+egrep='grep -E'
+fgrep='grep -F'
+grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox,.venv,venv}'
+```
+
+---
+
+# 🧠 Git alias 정리
+
+## 📌 기본
+```bash
+g=git
+ga='git add'
+gaa='git add --all'
+gau='git add --update'
+gav='git add --verbose'
+gcf='git config --list'
+```
+
+## 🗃️ 커밋
+```bash
+gc='git commit --verbose'
+'gc!'='git commit --verbose --amend'
+gca='git commit --verbose --all'
+'gca!'='git commit --verbose --all --amend'
+gcam='git commit --all --message'
+'gcan!'='git commit --verbose --all --no-edit --amend'
+'gcann!'='git commit --verbose --all --date=now --no-edit --amend'
+'gcans!'='git commit --verbose --all --signoff --no-edit --amend'
+gcas='git commit --all --signoff'
+gcasm='git commit --all --signoff --message'
+```
+
+## 📂 브랜치
+```bash
+gb='git branch'
+gba='git branch --all'
+gbd='git branch --delete'
+gbD='git branch --delete --force'
+gbm='git branch --move'
+gbnm='git branch --no-merged'
+gbr='git branch --remote'
+```
+
+## 🔁 체크아웃
+```bash
+gco='git checkout'
+gcb='git checkout -b'
+gcB='git checkout -B'
+```
+
+## 🔧 머지/리베이스
+```bash
+gm='git merge'
+gma='git merge --abort'
+gmc='git merge --continue'
+gmff='git merge --ff-only'
+gmom='git merge origin/$(git_main_branch)'
+gms='git merge --squash'
+gmtl='git mergetool --no-prompt'
+gmtlvim='git mergetool --no-prompt --tool=vimdiff'
+gmum='git merge upstream/$(git_main_branch)'
+grb='git rebase'
+grba='git rebase --abort'
+grbc='git rebase --continue'
+grbi='git rebase --interactive'
+grbd='git rebase $(git_develop_branch)'
+grbm='git rebase $(git_main_branch)'
+grbo='git rebase --onto'
+grbom='git rebase origin/$(git_main_branch)'
+grbs='git rebase --skip'
+grbum='git rebase upstream/$(git_main_branch)'
+```
+
+## 📜 로그
+```bash
+glg='git log --stat'
+glog='git log --oneline --decorate --graph'
+glol='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
+glola='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset" --all'
+glod='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset"'
+glods='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset" --date=short'
+glgg='git log --graph'
+glgga='git log --graph --decorate --all'
+```
+
+## 🔍 상태 / 차이
+```bash
+gst='git status'
+gss='git status --short'
+gsb='git status --short --branch'
+gd='git diff'
+gds='git diff --staged'
+gdca='git diff --cached'
+gdcw='git diff --cached --word-diff'
+gdup='git diff @{upstream}'
+gdt='git diff-tree --no-commit-id --name-only -r'
+```
+
+## 📦 스태시
+```bash
+gsta='git stash push'
+gstaa='git stash apply'
+gstall='git stash --all'
+gstc='git stash clear'
+gstd='git stash drop'
+gstl='git stash list'
+gstp='git stash pop'
+gsts='git stash show --patch'
+gstu='gsta --include-untracked'
+```
+
+## 📥/📤 Fetch, Pull, Push
+```bash
+gf='git fetch'
+gfa='git fetch --all --tags --prune --jobs=10'
+gfo='git fetch origin'
+gp='git push'
+gpd='git push --dry-run'
+gpv='git push --verbose'
+gpf='git push --force-with-lease --force-if-includes'
+'gpf!'='git push --force'
+gpoat='git push origin --all && git push origin --tags'
+gpod='git push origin --delete'
+gpsup='git push --set-upstream origin $(git_current_branch)'
+gpsupf='git push --set-upstream origin $(git_current_branch) --force-with-lease --force-if-includes'
+ggpu='git push upstream'
+```
+
+## 🔁 Pull + Rebase
+```bash
+gpr='git pull --rebase'
+gpra='git pull --rebase --autostash'
+gprav='git pull --rebase --autostash -v'
+gprom='git pull --rebase origin $(git_main_branch)'
+gpromi='git pull --rebase=interactive origin $(git_main_branch)'
+gprum='git pull --rebase upstream $(git_main_branch)'
+gprumi='git pull --rebase=interactive upstream $(git_main_branch)'
+gprv='git pull --rebase -v'
+```
+
+## 🗃️ 기타
+```bash
+gcl='git clone --recurse-submodules'
+gclean='git clean --interactive -d'
+gclf='git clone --recursive --shallow-submodules --filter=blob:none --also-filter-submodules'
+gk='\gitk --all --branches &!'
+gke='\gitk --all $(git log --walk-reflogs --pretty=%h) &!'
+gsi='git submodule init'
+gsu='git submodule update'
+gignore='git update-index --assume-unchanged'
+gunignore='git update-index --no-assume-unchanged'
+gignored='git ls-files -v | grep "^[[:lower:]]"'
+gunwip='git rev-list --max-count=1 --format="%s" HEAD | grep -q "\--wip--" && git reset HEAD~1'
+gwch='git whatchanged -p --abbrev-commit --pretty=medium'
+gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign --message "--wip-- [skip ci]"'
+gwipe='git reset --hard && git clean --force -df'
+gwt='git worktree'
+gwta='git worktree add'
+gwtls='git worktree list'
+gwtmv='git worktree move'
+gwtrm='git worktree remove'
+grev='git revert'
+greva='git revert --abort'
+grevc='git revert --continue'
+```
+
+## ❌ Deprecated
+
+```bash
+gupv='gprv'
+gup='gpr'
+gupa='gpra'
+gupav='gprav'
+gupom='gprom'
+gupomi='gpromi'
+gupv= 'gprv'
+```
+
+---
+
+## 🧳 새로운 개발환경에서 alias 복사 방법
+
+1. 아래 명령으로 기존 alias 백업:
+
+```bash
+alias > ~/my_aliases.sh
+```
+
+2. 새로운 환경에서 복원:
+
+```bash
+source ~/my_aliases.sh
+```
+
+3. 또는 `~/.zshrc`에 다음처럼 추가:
+
+```bash
+# 내 alias 모음
+source ~/my_aliases.sh
+```
+
+---
+
+## 📘 팁
+
+* `alias | grep g` 로 git 관련 alias만 필터링 가능
+* `which gco` 등으로 실제 명령어 확인 가능
+* 새로운 명령어 추가는 `~/.zshrc` 하단에 `alias abbr='command'` 형식으로 등록
