@@ -72,7 +72,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
             sizes="auto"
             quality={100}
             onError={() => setImageError(true)}
-            priority // 이미지 미리 로드
+            priority
           />
         ) : !imgSrc ? (
           <div className="flex justify-center items-center w-full h-full">
