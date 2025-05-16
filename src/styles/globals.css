@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+select[data-theme-switch] option:checked {
+  background-image: none;
+}
+
 .bg-primary {
   @apply bg-white dark:bg-[#111111];
 }
