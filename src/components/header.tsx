@@ -77,7 +77,16 @@ export default function Header(): JSX.Element {
           <nav className="ml-auto flex items-center text-base">
             <div className="hidden md:flex">
               {navItems.map(({ href, label }) => (
-                <Link key={href} href={href} className={renderLinkClass(href)}>
+                <Link
+                  key={href}
+                  href={href}
+                  className={renderLinkClass(href)}
+                  onClick={(e) => {
+                    if (router.pathname === href) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
                   {label}
                 </Link>
               ))}
