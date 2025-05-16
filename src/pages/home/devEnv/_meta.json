@@ -7,5 +7,5 @@
   "git": "Git 활용",
   "install": "개발환경 설치",
   "markdown": "마크다운 작성",
-  "sh_aliases.mdx": "zsh aliases 정리"
+  "sh_aliases": "Z-sh aliases 정리"
 }

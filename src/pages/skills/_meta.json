@@ -6,5 +6,6 @@
   "jsframeworks": "JS Frameworks",
   "mobileframeworks": "Mobile",
   "server": "Server",
-  "database": "Database"
+  "database": "Database",
+  "embedded": "Embedded"
 }
