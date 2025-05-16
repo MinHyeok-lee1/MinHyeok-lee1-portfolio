@@ -5,5 +5,7 @@
   "peripheral": "주변장치",
   "lowpowermode": "저전력 전략",
   "problem": "문제조치",
-  "interruptdma": "인터럽트 vs DMA"
+  "interrupt": "인터럽트",
+  "dma": "DMA",
+  "interruptdma": "인터럽트, DMA 비교"
 }
