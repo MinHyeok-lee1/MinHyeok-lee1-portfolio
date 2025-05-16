@@ -25,10 +25,10 @@ export default function Hero(): JSX.Element {
           <br />
           <strong>기록되지 않는 건 기억되지 않는다.</strong>
           <br />
-          <strong>매 순간 배우는 것을 소중히 여기며 기록하자.</strong>
+          <strong>매 순간 배우는 것을 소중히 여기며 기록한다.</strong>
           <br />
           <br />
-          <strong>중요한 것을 기록해두는 습관</strong>
+          <strong>중요한 것을 기록해두는 습관, </strong>
           <br />
           <strong>그것이 망각을 축복으로 만들 수 있다.</strong>
         </p>
