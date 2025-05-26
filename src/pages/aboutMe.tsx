@@ -336,6 +336,40 @@ export default function AboutMe(): JSX.Element {
                     <div className="w-full lg:w-1/2">
                       <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
                       <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
+                        <b>botbox+</b>
+                        <br />
+                        <span className="text-xs">2023-12-01 ~ 2024-08-31</span>
+                      </p>
+                    </div>
+                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                    <div className="w-full lg:w-1/2">
+                      <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
+                      <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
+                        <b>◦ 리모컨 사용자를 따라다니는 추종 로봇</b>
+                        <br />
+                        &nbsp; ◦ Embedded | VSC(VisualStudioCode)와 FreeRTOS를
+                        사용하여 개발
+                        <br />
+                        &nbsp; ◦ Embedded | FreeRTOS를 사용하여 Embedded에서
+                        리모컨 신호 수신에 따른 동작 개발
+                        <br />
+                        &nbsp; ◦ Embedded | 초음파 동작에 따른 로봇의 정지 및
+                        회피 개발
+                        <br />
+                        &nbsp; ◦ Embedded | 수신된 UWB 신호를 받아 리모컨을
+                        추종하는 로직 개발
+                        <br />
+                        &nbsp; ◦ Embedded | 각 상황 별 OUTPUT 신호 및 예외처리
+                        관리 및 개발
+                      </p>
+                    </div>
+                  </div>
+
+                  <hr className="h-1 bg-black mb-2 lg:mb-4 lg:hidden" />
+                  <div className="flex flex-col lg:flex-row w-full">
+                    <div className="w-full lg:w-1/2">
+                      <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse mr-[30%]" />
+                      <p className="mb-6 text-lg leading-relaxed lg:h-24 lg:pt-4 break-all">
                         <b>botbox</b>
                         <br />
                         <span className="text-xs">2023-12-01 ~ 2024-08-31</span>
@@ -347,19 +381,19 @@ export default function AboutMe(): JSX.Element {
                       <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                         <b>◦ 리모컨 사용자를 따라다니는 추종 로봇</b>
                         <br />
-                        &nbsp; ◦ MAIN-MCU | VSC(VisualStudioCode)와 FreeRTOS를
+                        &nbsp; ◦ Embedded | VSC(VisualStudioCode)와 FreeRTOS를
                         사용하여 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | FreeRTOS를 사용하여 MAIN-MCU에서
+                        &nbsp; ◦ Embedded | FreeRTOS를 사용하여 Embedded에서
                         리모컨 신호 수신에 따른 동작 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | 초음파 동작에 따른 로봇의 정지 및
+                        &nbsp; ◦ Embedded | 초음파 동작에 따른 로봇의 정지 및
                         회피 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | 수신된 UWB 신호를 받아 리모컨을
+                        &nbsp; ◦ Embedded | 수신된 UWB 신호를 받아 리모컨을
                         추종하는 로직 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | 각 상황 별 OUTPUT 신호 및 예외처리
+                        &nbsp; ◦ Embedded | 각 상황 별 OUTPUT 신호 및 예외처리
                         관리 및 개발
                       </p>
                     </div>
@@ -381,13 +415,13 @@ export default function AboutMe(): JSX.Element {
                       <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                         <b>◦ 무선 배수로 탐사로봇</b>
                         <br />
-                        &nbsp; ◦ MAIN-MCU | OrangePI에서 Python 프로그램으로
+                        &nbsp; ◦ Embedded | OrangePI에서 Python 프로그램으로
                         동작할 수 있게 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | AWS KVS를 사용하여 front-end로
+                        &nbsp; ◦ Embedded | AWS KVS를 사용하여 front-end로
                         영상을 송신
                         <br />
-                        &nbsp; ◦ MAIN-MCU | MQTT를 사용하여 back-end로 로봇의
+                        &nbsp; ◦ Embedded | MQTT를 사용하여 back-end로 로봇의
                         상태 및 제어명령을 송신
                         <br />
                         &nbsp; ◦ VSC(VisualStudioCode)와 NestJS를 사용하여 개발
@@ -624,9 +658,9 @@ export default function AboutMe(): JSX.Element {
                         &nbsp; ◦ app | 해당 이름이 불리게되면 스마트 글래스에서
                         진동으로 알림
                         <br />
-                        &nbsp; ◦ MAIN-MCU | ArduinoIDE를 사용하여 개발
+                        &nbsp; ◦ Embedded | ArduinoIDE를 사용하여 개발
                         <br />
-                        &nbsp; ◦ MAIN-MCU | 앱에서의 신호를 받아 글을 화면에
+                        &nbsp; ◦ Embedded | 앱에서의 신호를 받아 글을 화면에
                         띄우거나 인터랙트 액션으로 진동 동작 수행
                       </p>
                     </div>
@@ -725,18 +759,18 @@ export default function AboutMe(): JSX.Element {
                     <div className="w-full lg:w-1/2">
                       <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                       <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
+                        <strong>◦ 기간: 2023-08-01 ~ 현재</strong>
+                        <br />
+                        <strong>◦ 장소:더로보틱스 주식회사</strong>
+                        <br />
+                        <strong>◦ 직급: 소프트웨어팀 팀장</strong>
+                      </p>
+                      <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
                         <strong>◦ 기간: 2021-07-01 ~ 2023-07-31</strong>
                         <br />
                         <strong>◦ 장소: (주)MK, 주식회사 엠케이</strong>
                         <br />
                         <strong>◦ 직급: 선임 연구원</strong>
-                      </p>
-                      <p className="mb-8 leading-relaxed h-auto pt-4 lg:pt-2 break-all">
-                        <strong>◦ 기간: 2023-08-01 ~ 현재</strong>
-                        <br />
-                        <strong>◦ 장소: 주식회사 아트와</strong>
-                        <br />
-                        <strong>◦ 직급: 소프트웨어팀 팀장</strong>
                       </p>
                     </div>
                   </div>

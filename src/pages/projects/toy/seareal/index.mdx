@@ -9,8 +9,8 @@ import { FileTree } from "nextra-theme-docs";
   - app | Google의 Speech-to-Text API를 사용하여 말을 글로 변환하여 Smart Glasses에 표시
   - app | 사용자의 이름이나 별명등 본인이 물리는 별칭을 저장
   - app | 해당 이름이 불리게되면 스마트 글래스에서 진동으로 알림
-  - MAIN-MCU | ArduinoIDE를 사용하여 개발
-  - MAIN-MCU | 앱에서의 신호를 받아 글을 화면에 띄우거나 인터랙트 액션으로 진동 동작 수행
+  - Embedded | ArduinoIDE를 사용하여 개발
+  - Embedded | 앱에서의 신호를 받아 글을 화면에 띄우거나 인터랙트 액션으로 진동 동작 수행
 
 ## 프로젝트 구성
 
@@ -19,7 +19,7 @@ import { FileTree } from "nextra-theme-docs";
 <FileTree>
   <FileTree.Folder name="SeaReal" defaultOpen>
     <FileTree.File name="SeaReal-App" />
-    <FileTree.File name="MAIN-MCU" />
+    <FileTree.File name="Embedded" />
   </FileTree.Folder>
 </FileTree>
 
@@ -27,6 +27,6 @@ import { FileTree } from "nextra-theme-docs";
 
 Android studio, java로 개발된 UI 제공용 서버
 
-### MAIN-MCU
+### Embedded
 
 SeaReal Smart Glasses의 메인로직을 수행하는 부분

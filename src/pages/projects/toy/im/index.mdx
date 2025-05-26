@@ -10,8 +10,8 @@ import { FileTree } from "nextra-theme-docs";
   - app | AndroidStudio와 Java를 사용하여 인슐린 투여 알림 앱 개발
   - app | 인슐린을 투여해야 하는 시간을 설정하고 알리는 기능
   - app | 인슐린을 투여해야 하는 시간이 되면 인슐린 케이스로 신호를 보냄
-  - MAIN-MCU | ArduinoIDE를 사용하여 개발
-  - MAIN-MCU | 앱에서 신호가 도착하면 부저 및 LED가 동작하며 약통을 열면 해제됌
+  - Embedded | ArduinoIDE를 사용하여 개발
+  - Embedded | 앱에서 신호가 도착하면 부저 및 LED가 동작하며 약통을 열면 해제됌
 
 ## 프로젝트 구성
 
@@ -20,7 +20,7 @@ import { FileTree } from "nextra-theme-docs";
 <FileTree>
   <FileTree.Folder name="IM" defaultOpen>
     <FileTree.File name="IM-App" />
-    <FileTree.File name="MAIN-MCU" />
+    <FileTree.File name="Embedded" />
   </FileTree.Folder>
 </FileTree>
 
@@ -28,6 +28,6 @@ import { FileTree } from "nextra-theme-docs";
 
 Android studio, java로 개발된 UI 제공용 서버
 
-### MAIN-MCU
+### Embedded
 
 IM 케이스의 메인로직을 수행하는 부분
