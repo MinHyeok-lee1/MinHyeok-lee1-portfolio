@@ -18,7 +18,7 @@ export default function AboutMe(): JSX.Element {
           <link rel="icon" href="/developer.ico" />
         </Head>
         <div className="min-h-screen">
-          <div className="flex flex-col mx-16 pt-12 justify-between">
+          <div className="flex flex-col mx-5 md:mx-16 pt-12 justify-between">
             <section className="flex flex-col items-center justify-center text-gray-600 body-font">
               <div className="flex w-full justify-start container mx-auto items-start">
                 <h1 className="title-font sm:text-3xl text-2xl font-medium text-gray-900">
@@ -169,7 +169,7 @@ export default function AboutMe(): JSX.Element {
             </section>
           </div>
 
-          <div className="flex flex-col mx-16 pt-12 justify-between">
+          <div className="flex flex-col mx-5 md:mx-16 pt-12 justify-between">
             <section className="flex flex-col items-center justify-center text-gray-600 body-font">
               <div className="flex w-full justify-start container mx-auto items-start">
                 <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
@@ -322,7 +322,7 @@ export default function AboutMe(): JSX.Element {
             </section>
           </div>
 
-          <div className="flex flex-col mx-16 pt-12 justify-between">
+          <div className="flex flex-col mx-5 md:mx-16 pt-12 justify-between">
             <section className="flex flex-col items-center justify-center text-gray-600 body-font">
               <div className="flex w-full justify-start container mx-auto items-start">
                 <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
@@ -469,7 +469,7 @@ export default function AboutMe(): JSX.Element {
             </section>
           </div>
 
-          <div className="flex flex-col mx-16 pt-12 justify-between">
+          <div className="flex flex-col mx-5 md:mx-16 pt-12 justify-between">
             <section className="flex flex-col items-center justify-center text-gray-600 body-font">
               <div className="flex w-full justify-start container mx-auto items-start">
                 <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
@@ -704,7 +704,7 @@ export default function AboutMe(): JSX.Element {
             </section>
           </div>
 
-          <div className="flex flex-col mx-16 pt-12 justify-between">
+          <div className="flex flex-col mx-5 md:mx-16 pt-12 justify-between">
             <section className="flex flex-col items-center justify-center text-gray-600 body-font">
               <div className="flex w-full justify-start container mx-auto items-start">
                 <h3 className="title-font sm:text-2xl text-xl font-medium text-gray-900">
