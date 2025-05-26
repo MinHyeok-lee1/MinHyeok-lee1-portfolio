@@ -78,6 +78,6 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { projects },
-    revalidate: 3600,
+    revalidate: 1800,
   };
 };
