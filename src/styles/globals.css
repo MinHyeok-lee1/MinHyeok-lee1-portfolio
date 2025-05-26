@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+select[data-theme-switch] option:checked {
+  background-image: none;
+}
+
 .bg-primary {
-  @apply bg-white dark:bg-slate-800;
+  @apply bg-white dark:bg-[#111111];
 }
 
 .btn-project {

@@ -40,7 +40,11 @@ export default function Header(): JSX.Element {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | Event) => {
-      if (menuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        menuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setMenuOpen(false);
       }
     };
@@ -58,8 +62,14 @@ export default function Header(): JSX.Element {
     <div ref={menuRef}>
       <header className="text-gray-600 body-font fixed top-0 left-0 w-full bg-white z-40 dark:bg-[#111111]">
         <div className="md:container pl-2 pr-6 mx-auto flex flex-wrap pt-3 pb-3.5 items-center">
-          <Link href="/" className="flex title-font font-medium items-center text-gray-900">
-            <span onClick={isCurrent("/") ? () => setMenuOpen(false) : undefined} className="ml-4 text-l text-[#667180]">
+          <Link
+            href="/"
+            className="flex title-font font-medium items-center text-gray-900"
+          >
+            <span
+              onClick={isCurrent("/") ? () => setMenuOpen(false) : undefined}
+              className="ml-4 text-l text-[#667180]"
+            >
               <strong>개발새발</strong>
             </span>
           </Link>
@@ -67,7 +77,16 @@ export default function Header(): JSX.Element {
           <nav className="ml-auto flex items-center text-base">
             <div className="hidden md:flex">
               {navItems.map(({ href, label }) => (
-                <Link key={href} href={href} className={renderLinkClass(href)}>
+                <Link
+                  key={href}
+                  href={href}
+                  className={renderLinkClass(href)}
+                  onClick={(e) => {
+                    if (router.pathname === href) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
                   {label}
                 </Link>
               ))}
@@ -76,10 +95,12 @@ export default function Header(): JSX.Element {
             <div className="md:hidden pt-2">
               <button onClick={toggleMenu}>
                 {menuOpen ? (
-                  <CloseIcon onClick={(e) => {
-                    e.stopPropagation();
-                    setMenuOpen(false);
-                  }} />
+                  <CloseIcon
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuOpen(false);
+                    }}
+                  />
                 ) : (
                   <MenuIcon />
                 )}
@@ -111,16 +132,39 @@ export default function Header(): JSX.Element {
 
 function MenuIcon(): JSX.Element {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6h16M4 12h16M4 18h16"
+      />
     </svg>
   );
 }
 
 function CloseIcon({ onClick }: CloseIconProps): JSX.Element {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={onClick}>
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      onClick={onClick}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   );
 }
@@ -139,14 +183,15 @@ function MobileMenu({
       <div className="space-y-1 py-1">
         {navItems.map(({ href, label }) => {
           const isActive = isCurrent(href);
-          const darkStyle = isActive && theme === "dark"
-            ? {
-                backgroundColor: "#1a1d24",
-                color: isHovered === href ? "white" : "#3ea6ff",
-                fontWeight: "bold",
-                borderRadius: "0.375rem",
-              }
-            : {};
+          const darkStyle =
+            isActive && theme === "dark"
+              ? {
+                  backgroundColor: "#1a1d24",
+                  color: isHovered === href ? "white" : "#3ea6ff",
+                  fontWeight: "bold",
+                  borderRadius: "0.375rem",
+                }
+              : {};
           const className = `block py-2 px-4 text-sm rounded ${
             isActive && theme !== "dark"
               ? "bg-blue-100 text-blue-700 font-bold"
@@ -174,7 +219,9 @@ function MobileMenu({
           >
             <LightModeIcon />
             <DarkModeIcon />
-            <span className="pb-0.5">{theme === "dark" ? "Dark" : "Light"}</span>
+            <span className="pb-0.5">
+              {theme === "dark" ? "Dark" : "Light"}
+            </span>
           </button>
         </div>
       </div>
@@ -184,16 +231,38 @@ function MobileMenu({
 
 function LightModeIcon(): JSX.Element {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="visible w-4 h-4 dark:invisible dark:h-0 dark:w-0">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="visible w-4 h-4 dark:invisible dark:h-0 dark:w-0"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+      />
     </svg>
   );
 }
 
 function DarkModeIcon(): JSX.Element {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="invisible w-0 h-0 dark:visible dark:h-4 dark:w-4">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="invisible w-0 h-0 dark:visible dark:h-4 dark:w-4"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+      />
     </svg>
   );
 }

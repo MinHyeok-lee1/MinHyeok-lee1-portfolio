@@ -1,0 +1,127 @@
+# **🚀 STM32에서의 DMA(Direct Memory Access)**
+
+---
+
+## **📚 기본 개념**
+
+- **DMA란?**
+  - CPU를 거치지 않음
+  - **메모리 ↔ 주변장치**, 또는 **메모리 ↔ 메모리** 간에 전송
+  - **직접 데이터 전송**을 수행하는 하드웨어 모듈
+- CPU가 데이터 전송에 관여하지 않기 때문에 아래 가능
+  - CPU는 **다른 작업에 집중** 가능 → **성능 최적화**
+
+---
+
+## **⚙️ STM32 DMA 구조**
+
+STM32 MCU는 **DMA 컨트롤러**를 내장하고 있음
+
+- 보통 여러 개의 **Stream/Channel** 지원
+- 각각 **Source Address → Destination Address** 전송 지원
+- 데이터 전송이 끝나거나, 에러 발생 시 **인터럽트** 발생 가능
+
+**STM32F7 기준**
+
+- **DMA1**, **DMA2** 컨트롤러
+- 각각 다수의 **Stream** 제공 (ex: DMA2_Stream0)
+
+---
+
+## **🛠️ DMA 기본 전송 흐름**
+
+1.  DMA 컨트롤러에 **소스 주소**, **목적지 주소**, **전송 크기** 설정
+2.  DMA 스트림을 **Enable**
+3.  설정된 데이터 자동 전송
+4.  전송 완료 후 **인터럽트 발생** 또는 **플래그 세팅**
+
+---
+
+## **🔧 DMA 주요 설정 항목**
+
+| **항목**           | **설명**                                        |
+| ------------------ | ----------------------------------------------- |
+| 소스 주소          | 데이터가 복사될 **시작 주소**                   |
+| 목적지 주소        | 데이터가 전송될 **목적지 주소**                 |
+| 데이터 사이즈      | 바이트, 하프워드(16비트), 워드(32비트)          |
+| 전송 방향          | 메모리→메모리, 메모리→주변장치, 주변장치→메모리 |
+| 버스트 전송        | 고속 데이터 전송을 위해 여러 데이터 묶음 전송   |
+| FIFO 사용 여부     | 데이터 전송 중 버퍼링 기능                      |
+| 전송 완료 인터럽트 | 데이터 전송이 끝나면 호출                       |
+
+---
+
+## **🖥️ 코드 예제: 메모리 → 메모리 복사 (HAL)**
+
+```
+// 1. DMA 핸들 선언
+DMA_HandleTypeDef hdma_memtomem;
+
+// 2. DMA 초기화 (ex: STM32CubeMX에서 자동 생성 가능)
+void MX_DMA_Init(void)
+{
+    __HAL_RCC_DMA2_CLK_ENABLE();
+
+    hdma_memtomem.Instance = DMA2_Stream0;
+    hdma_memtomem.Init.Channel = DMA_CHANNEL_0;
+    hdma_memtomem.Init.Direction = DMA_MEMORY_TO_MEMORY;
+    hdma_memtomem.Init.PeriphInc = DMA_PINC_ENABLE;
+    hdma_memtomem.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_memtomem.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+    hdma_memtomem.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+    hdma_memtomem.Init.Mode = DMA_NORMAL;
+    hdma_memtomem.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_memtomem.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    HAL_DMA_Init(&hdma_memtomem);
+}
+
+// 3. 전송 실행
+HAL_DMA_Start(&hdma_memtomem, (uint32_t)srcBuffer, (uint32_t)dstBuffer, bufferSize);
+HAL_DMA_PollForTransfer(&hdma_memtomem, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
+```
+
+---
+
+## **🧩 DMA 인터럽트 처리 흐름**
+
+- DMA 전송 완료 시 **콜백 함수** 호출 가능
+
+```
+void HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma)
+{
+    if (__HAL_DMA_GET_FLAG(hdma, DMA_FLAG_TCIF0_4))  // Transfer Complete
+    {
+        __HAL_DMA_CLEAR_FLAG(hdma, DMA_FLAG_TCIF0_4);
+        // 전송 완료 처리
+    }
+}
+```
+
+- HAL에서는 `HAL_DMA_IRQHandler()`와 `HAL_DMA_XferCpltCallback()` 구조를 사용함
+
+---
+
+## **🏎️ DMA 사용의 장점**
+
+- CPU 부하 감소 (특히 대량 데이터 전송 시)
+- 실시간 성능 향상
+- 전송 도중 CPU가 다른 작업 수행 가능 (병렬화)
+- 저전력 모드에서도 데이터 처리 가능
+
+---
+
+## **⚡ 주의사항**
+
+- **DMA 충돌 방지**
+  - 같은 스트림/채널을 동시에 여러 작업에 사용하면 안 됨
+- **메모리 정렬** 주의
+  - 바이트/하프워드/워드 정렬이 맞아야 함
+- **캐시 일관성 문제**
+  - (특히 Cortex-M7 등 캐시가 있는 MCU) 캐시 무효화 필요할 수 있음
+- **인터럽트와 플래그 처리** 명확히 해야 함
+
+---
+
+## **🧠 한 문장 요약**
+
+> **"STM32의 DMA는 CPU 개입 없이 빠르고 효율적으로 데이터를 전송하는 하드웨어 가속 시스템"**
