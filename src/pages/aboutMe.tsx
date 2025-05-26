@@ -345,22 +345,34 @@ export default function AboutMe(): JSX.Element {
                     <div className="w-full lg:w-1/2">
                       <hr className="h-1 bg-black mb-2 lg:mb-4 lg:visible collapse" />
                       <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
-                        <b>◦ 리모컨 사용자를 따라다니는 추종 로봇</b>
+                        <b>◦ 리모컨 사용자를 따라다니는 추종 로봇 ver2</b>
                         <br />
-                        &nbsp; ◦ Embedded | VSC(VisualStudioCode)와 FreeRTOS를
-                        사용하여 개발
+                        &nbsp; ◦ Embedded | STM32CubeMX와 STM32CubeIDE를 통해
+                        구현
                         <br />
-                        &nbsp; ◦ Embedded | FreeRTOS를 사용하여 Embedded에서
-                        리모컨 신호 수신에 따른 동작 개발
+                        &nbsp; ◦ Embedded | STM32 기반 임베디드 제어 보드 펌웨어
+                        설계 및 최적화
                         <br />
-                        &nbsp; ◦ Embedded | 초음파 동작에 따른 로봇의 정지 및
-                        회피 개발
+                        &nbsp; ◦ Embedded | RP2040 라즈베리파이 피코 보드 펌웨어
+                        설계 및 최적화
                         <br />
-                        &nbsp; ◦ Embedded | 수신된 UWB 신호를 받아 리모컨을
-                        추종하는 로직 개발
+                        &nbsp; ◦ Embedded | Mother board와 UWB sensor board 통신
+                        최적화 및 인터페이스 설계
                         <br />
-                        &nbsp; ◦ Embedded | 각 상황 별 OUTPUT 신호 및 예외처리
-                        관리 및 개발
+                        &nbsp; ◦ Embedded | 실시간 계층화 설계 전략을 통한
+                        시간결정성과 비결정성의 분리
+                        <br />
+                        &nbsp; ◦ Embedded | 3-Layer 아키텍처 설계 전략을 통한
+                        유지보수성, 확장성, 테스트 용이성 향상
+                        <br />
+                        &nbsp; ◦ Embedded | FSM 기반 아키텍처와 계층형
+                        아키텍처를 적절하게 혼용하여 실시간 응답 속도 향상
+                        <br />
+                        &nbsp; ◦ Embedded | UWB 센서 이상 시 Mother board에서
+                        이를 인지하여 정지하는 Safety function 구현
+                        <br />
+                        &nbsp; ◦ etc | 구현 내용을 통해 FlowChart 구성 및 특허
+                        등록 (등록번호: 10-27877270000)
                       </p>
                     </div>
                   </div>
@@ -387,14 +399,20 @@ export default function AboutMe(): JSX.Element {
                         &nbsp; ◦ Embedded | FreeRTOS를 사용하여 Embedded에서
                         리모컨 신호 수신에 따른 동작 개발
                         <br />
+                        &nbsp; ◦ Embedded | UWB 기반 추종 알고리즘 및 거리 보정
+                        필터 개발
+                        <br />
                         &nbsp; ◦ Embedded | 초음파 동작에 따른 로봇의 정지 및
                         회피 개발
                         <br />
-                        &nbsp; ◦ Embedded | 수신된 UWB 신호를 받아 리모컨을
-                        추종하는 로직 개발
-                        <br />
                         &nbsp; ◦ Embedded | 각 상황 별 OUTPUT 신호 및 예외처리
                         관리 및 개발
+                        <br />
+                        &nbsp; ◦ Embedded | UWB-MCU와의 통신 최적화 및
+                        인터페이스 설계
+                        <br />
+                        &nbsp; ◦ Embedded | 추종 성능 개선을 위한 알고리즘
+                        고도화 및 안정성 확보
                       </p>
                     </div>
                   </div>
@@ -415,16 +433,13 @@ export default function AboutMe(): JSX.Element {
                       <p className="mb-8 leading-relaxed h-auto md:pt-4 break-all">
                         <b>◦ 무선 배수로 탐사로봇</b>
                         <br />
-                        &nbsp; ◦ Embedded | OrangePI에서 Python 프로그램으로
-                        동작할 수 있게 개발
+                        &nbsp; ◦ VSC(VisualStudioCode)와 NestJS를 사용하여 개발
                         <br />
                         &nbsp; ◦ Embedded | AWS KVS를 사용하여 front-end로
                         영상을 송신
                         <br />
-                        &nbsp; ◦ Embedded | MQTT를 사용하여 back-end로 로봇의
-                        상태 및 제어명령을 송신
-                        <br />
-                        &nbsp; ◦ VSC(VisualStudioCode)와 NestJS를 사용하여 개발
+                        &nbsp; ◦ Embedded | AWS MQTT 포로토콜을 사용하여 서버로
+                        로봇의 상태 및 제어명령을 송신
                         <br />
                         &nbsp; ◦ back-end | 회원가입, 로그인등 Authorization
                         관련 api 개발
