@@ -710,6 +710,9 @@ export default function AboutMe(): JSX.Element {
                         <br />
                         &nbsp; ◦ arduino | 앱, 좌석과 상호작용하는 메인로직 전체
                         개발
+                        <br />
+                        &nbsp; ◦ etc | 구현 내용을 통해 특허 등록 (등록번호:
+                        10-25251210000)
                       </p>
                     </div>
                   </div>
