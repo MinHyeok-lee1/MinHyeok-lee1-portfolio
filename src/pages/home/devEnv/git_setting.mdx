@@ -1,6 +1,8 @@
 # Git Settings
 
-SSH 키를 생성하여 Github의 repository에 접근하는 방법을 기술한 문서이다.
+SSH 키를 생성하여 Github의 repository에 접근하는 방법을 기술한 문서
+
+---
 
 ## SSH 키 생성 및 GitHub에 등록하는 방법
 
@@ -9,14 +11,14 @@ SSH 키를 생성하여 Github의 repository에 접근하는 방법을 기술한
 #### 1.1 Mac에서 SSH 키 생성
 
 - SSH 키 생성 명령어 실행
-  로컬 머신에서 SSH 키를 생성하기 위해 아래 명령어를 터미널에 입력한다.
+  로컬 머신에서 SSH 키를 생성하기 위해 아래 명령어를 터미널에 입력
 
 ```bash
 ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
 
 - `ed25519`는 최신 암호화 방식의 SSH 키 유형이다.
-- `"your_email@example.com"`은 GitHub 계정에 등록된 이메일 주소로 대체해야 한다.
+- `"your_email@example.com"`은 GitHub 계정에 등록된 이메일 주소로 대체
 
 - 생성된 키 파일 확인  
   명령어를 입력한 후 경로를 지정하거나 기본 경로를 사용할 수 있다.  
