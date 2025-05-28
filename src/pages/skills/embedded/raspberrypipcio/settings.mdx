@@ -1,0 +1,326 @@
+# Raspberry Pi Pico 개발환경 설정
+
+라즈베리파이 피코(Raspberry Pi Pico)의 개발 환경 설정은 사용하는 언어나 목적에 따라 다름  
+아래는 가장 널리 사용되는 **2가지 개발 방식: C/C++ SDK** 및 **MicroPython**을 기준으로 개발환경 설정을 정리
+
+---
+
+## 🧰 Raspberry Pi Pico 개발환경 설정 요약
+
+대상 보드: Raspberry Pi Pico / Pico W
+
+---
+
+### 📌 지원 언어:
+
+- 🟢 **MicroPython** – 간단하고 빠르게 시작 가능
+- 🔵 **C/C++ SDK** – 고성능, 시스템 제어 중심
+
+---
+
+## 📘 1. MicroPython 개발 환경 설정
+
+### ✅ 1.1 MicroPython 펌웨어 플래시
+
+1. Pico 보드의 **BOOTSEL 버튼을 누른 상태로 USB 연결**
+2. 드라이브가 마운트됨 (예: `RPI-RP2`)
+3. 공식 MicroPython UF2 파일 다운로드
+   👉 [https://micropython.org/download/rp2-pico/](https://micropython.org/download/rp2-pico/)
+4. 드래그 앤 드롭으로 UF2 파일 복사 → 자동 재부팅
+
+---
+
+### ✅ 1.2 Thonny IDE 설치 및 설정 (권장)
+
+1. [https://thonny.org](https://thonny.org) 에서 설치
+2. 실행 후
+   `도구 > 인터프리터 > MicroPython (Raspberry Pi Pico)` 선택
+3. 포트 자동 인식 → 바로 코드 작성 가능
+
+### ✅ 1.3 예제 코드 (LED 깜빡이기)
+
+```python
+from machine import Pin
+from time import sleep
+
+led = Pin(25, Pin.OUT)  # Pico 내장 LED
+
+while True:
+    led.toggle()
+    sleep(0.5)
+```
+
+---
+
+## 📗 2. C/C++ SDK 개발 환경 설정 (PlatformIO 또는 CLI)
+
+### ✅ 2.1 VS Code + CMake 환경 (macOS/Linux 기준)
+
+#### ① 의존 패키지 설치
+
+```bash
+sudo apt install cmake gcc-arm-none-eabi build-essential libnewlib-arm-none-eabi
+```
+
+#### ② SDK 다운로드
+
+```bash
+git clone -b master https://github.com/raspberrypi/pico-sdk.git
+cd pico-sdk
+git submodule update --init
+```
+
+#### ③ 프로젝트 구조 만들기
+
+```bash
+mkdir my_project && cd my_project
+mkdir build
+```
+
+#### ④ `CMakeLists.txt` 작성 예시
+
+```cmake
+cmake_minimum_required(VERSION 3.13)
+include(pico_sdk_import.cmake)
+
+project(my_project)
+pico_sdk_init()
+
+add_executable(blink blink.c)
+target_link_libraries(blink pico_stdlib)
+pico_add_extra_outputs(blink)
+```
+
+#### ⑤ 코드 예시 (blink.c)
+
+```c
+#include "pico/stdlib.h"
+
+int main() {
+    const uint led = 25;
+    gpio_init(led);
+    gpio_set_dir(led, GPIO_OUT);
+    while (1) {
+        gpio_put(led, 1);
+        sleep_ms(500);
+        gpio_put(led, 0);
+        sleep_ms(500);
+    }
+}
+```
+
+#### ⑥ 빌드 & UF2 생성
+
+```bash
+cd build
+cmake ..
+make
+```
+
+➡ `blink.uf2` 생성됨 → Pico에 드래그 앤 드롭
+
+---
+
+### ✅ 2.2 VS Code + CMake 환경 (Windows 기준)
+
+#### 📦 준비물
+
+- ✅ VS Code
+- ✅ CMake
+- ✅ GNU Arm Toolchain
+- ✅ Git
+- ✅ Python 3 (CMake 설정용)
+- ✅ Windows 환경변수 설정
+
+---
+
+#### 🔽 ① 필수 도구 설치 (Windows)
+
+1. **Git**
+   👉 [https://git-scm.com/download/win](https://git-scm.com/download/win)
+   설치 후 Git Bash 사용 가능
+
+2. **CMake**
+   👉 [https://cmake.org/download/](https://cmake.org/download/)
+   설치 시 `Add CMake to system PATH` 체크
+
+3. **ARM GCC 툴체인**
+   👉 [https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+   예: `arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.exe`
+
+   설치 후 다음 경로 환경변수 추가:
+
+   ```
+   C:\Program Files (x86)\Arm GNU Toolchain\12.2 rel1\bin
+   ```
+
+4. **Python 3 (최신)**
+   👉 [https://www.python.org/downloads/windows/](https://www.python.org/downloads/windows/)
+   설치 시 `Add to PATH` 반드시 체크
+
+5. **VS Code + 확장 설치**
+
+   - CMake Tools
+   - C/C++
+   - Cortex-Debug (선택)
+   - Python (선택)
+
+---
+
+#### 📁 ② Pico SDK 및 프로젝트 설정
+
+1. **SDK 다운로드**
+   Git Bash 또는 PowerShell에서:
+
+   ```bash
+   git clone -b master https://github.com/raspberrypi/pico-sdk.git
+   cd pico-sdk
+   git submodule update --init
+   ```
+
+2. **환경변수 설정**
+   예: 사용자 환경변수에 추가
+
+   ```
+   PICO_SDK_PATH=C:\Users\YourName\pico-sdk
+   ```
+
+3. **프로젝트 생성**
+
+   ```bash
+   mkdir C:\PicoProjects\my_project
+   cd C:\PicoProjects\my_project
+   mkdir build
+   ```
+
+4. **CMakeLists.txt 작성** (`my_project/`에)
+
+   ```cmake
+   cmake_minimum_required(VERSION 3.13)
+   include(pico_sdk_import.cmake)
+
+   project(blink)
+   pico_sdk_init()
+
+   add_executable(blink blink.c)
+   target_link_libraries(blink pico_stdlib)
+   pico_add_extra_outputs(blink)
+   ```
+
+5. **코드 작성** (`blink.c`)
+
+   ```c
+   #include "pico/stdlib.h"
+
+   int main() {
+       const uint led = 25;
+       gpio_init(led);
+       gpio_set_dir(led, GPIO_OUT);
+       while (1) {
+           gpio_put(led, 1);
+           sleep_ms(500);
+           gpio_put(led, 0);
+           sleep_ms(500);
+       }
+   }
+   ```
+
+---
+
+#### 🛠️ ⑥ 빌드 & UF2 생성 (Windows)
+
+PowerShell 또는 Git Bash에서:
+
+```bash
+cd C:\PicoProjects\my_project\build
+cmake ..
+cmake --build . --config Release
+```
+
+> ✅ `blink.uf2` 파일 생성됨 → Pico를 **BOOTSEL 모드**로 연결 후 해당 파일을 드래그 앤 드롭
+
+---
+
+## ⚙️ 3. PlatformIO 개발환경 (C++/Arduino 스타일, Windows 동일)
+
+> VS Code + PlatformIO는 Windows/macOS/Linux 모두 동일하게 사용 가능하며, 설정만 같으면 플랫폼 차이 없음
+
+1. VS Code에서 **PlatformIO IDE** 설치
+2. 새 프로젝트 생성
+
+   - 보드: `Raspberry Pi Pico`
+   - 플랫폼: `rp2040`
+
+3. 자동 생성된 `platformio.ini` 예시:
+
+```ini
+[env:pico]
+platform = raspberrypi
+board = pico
+framework = arduino
+upload_port = /dev/ttyACM0
+monitor_speed = 115200
+```
+
+4. `src/main.cpp` 예시:
+
+```cpp
+void setup() {
+  pinMode(25, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(25, HIGH);
+  delay(500);
+  digitalWrite(25, LOW);
+  delay(500);
+}
+```
+
+---
+
+### 📌 추가 팁
+
+- `upload_port = COMx` 형식으로 Windows 포트 지정 필요 (예: `COM3`)
+- 디바이스 관리자 → "포트 (COM & LPT)" 항목에서 확인 가능
+- `.pio/libdeps` 삭제 후 재빌드로 라이브러리 문제 해결 가능
+
+---
+
+## 📁 예시 디렉토리 구조
+
+```plaintext
+my_project/
+├── CMakeLists.txt
+├── blink.c
+├── pico_sdk_import.cmake
+└── build/
+```
+
+또는 PlatformIO 기준:
+
+```plaintext
+my_project/
+├── platformio.ini
+└── src/
+    └── main.cpp
+```
+
+---
+
+## ✅ 마무리
+
+| 개발 방식       | 장점                         | 추천 대상                     |
+| --------------- | ---------------------------- | ----------------------------- |
+| **MicroPython** | 간편, 빠른 테스트, 학습용    | 입문자, 교육, 간단한 프로젝트 |
+| **C/C++ SDK**   | 빠르고 강력한 제어, PIO 활용 | 고성능, 정밀 제어 필요 시     |
+| **PlatformIO**  | Arduino 스타일 편리함        | 기존 Arduino 사용자           |
+
+---
+
+| 구분      | macOS/Linux           | Windows           |
+| --------- | --------------------- | ----------------- |
+| SDK 설치  | apt + git             | Git + 환경변수    |
+| 빌드 도구 | make                  | `cmake --build .` |
+| 실행      | `.uf2` 직접 복사      | 동일              |
+| IDE 연동  | VS Code (CMake Tools) | 동일              |
