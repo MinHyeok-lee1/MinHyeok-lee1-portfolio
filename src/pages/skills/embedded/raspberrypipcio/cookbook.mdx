@@ -1,0 +1,185 @@
+# Raspberry Pi Pico 기술 정리
+
+**Raspberry Pi Pico (RP2040)** 보드를 위한 **핵심 기술 및 주요 함수 정리**
+
+## 📘 1. Pico 보드 기본 기술 개요
+
+| 항목          | 설명                                      |
+| ------------- | ----------------------------------------- |
+| MCU           | RP2040 (Dual-core ARM Cortex-M0+)         |
+| 클럭          | 최대 133 MHz                              |
+| RAM           | 264 KB                                    |
+| Flash         | 2 MB (QSPI 플래시)                        |
+| GPIO          | 26개 (PWM, ADC, I2C, SPI, UART 등 다기능) |
+| 아날로그 입력 | 3개 (GPIO 26\~28)                         |
+| 내장 LED      | GPIO 25                                   |
+| USB 기능      | USB 디바이스, 일부 보드는 호스트 지원     |
+| 특별 기능     | PIO (Programmable I/O), XIP, DMA 지원     |
+
+---
+
+## 🧠 2. C/C++ SDK – 주요 함수 및 기능
+
+### 📌 2.1 기본 I/O
+
+```c
+gpio_init(pin);                  // GPIO 초기화
+gpio_set_dir(pin, GPIO_OUT);     // 핀 방향 설정
+gpio_put(pin, 1);                // 출력 HIGH
+gpio_get(pin);                   // 입력 상태 읽기
+gpio_toggle(pin);                // 상태 토글
+```
+
+### 📌 2.2 지연 함수 (시간 제어)
+
+```c
+sleep_ms(ms);        // 밀리초 지연
+sleep_us(us);        // 마이크로초 지연
+```
+
+---
+
+### 📡 2.3 UART
+
+```c
+uart_init(uart0, 115200);                     // UART 초기화
+gpio_set_function(0, GPIO_FUNC_UART);         // TX
+gpio_set_function(1, GPIO_FUNC_UART);         // RX
+uart_puts(uart0, "Hello\n");                  // 문자열 전송
+char c = uart_getc(uart0);                    // 수신 문자 읽기
+```
+
+---
+
+### 🔗 2.4 I2C
+
+```c
+i2c_init(i2c0, 100 * 1000);                   // 100kHz
+gpio_set_function(4, GPIO_FUNC_I2C);          // SDA
+gpio_set_function(5, GPIO_FUNC_I2C);          // SCL
+i2c_write_blocking(i2c0, addr, buf, len, false);
+i2c_read_blocking(i2c0, addr, buf, len, false);
+```
+
+---
+
+### 🔁 2.5 SPI
+
+```c
+spi_init(spi0, 500 * 1000);                   // 500kHz
+gpio_set_function(2, GPIO_FUNC_SPI);          // SCK
+gpio_set_function(3, GPIO_FUNC_SPI);          // MOSI
+gpio_set_function(4, GPIO_FUNC_SPI);          // MISO
+spi_write_blocking(spi0, data, len);
+```
+
+---
+
+### 🎛️ 2.6 ADC
+
+```c
+adc_init();                     // ADC 초기화
+adc_select_input(0);           // GPIO 26 = ADC0
+uint16_t val = adc_read();     // 0 ~ 4095
+```
+
+---
+
+### 📐 2.7 PWM
+
+```c
+gpio_set_function(pin, GPIO_FUNC_PWM);
+uint slice = pwm_gpio_to_slice_num(pin);
+pwm_set_wrap(slice, 65535);              // 주기 설정
+pwm_set_chan_level(slice, PWM_CHAN_A, level); // 듀티비
+pwm_set_enabled(slice, true);
+```
+
+---
+
+### 🧩 2.8 PIO (Programmable I/O)
+
+- `pio_add_program()`, `pio_sm_config()`, `pio_sm_init()` 등 사용
+- 고속 SPI, WS2812, 비트 뱅잉 UART 등을 하드웨어처럼 구현 가능
+- PIO 어셈블리 작성 후 `.pio` 파일로 컴파일 (`pioasm` 사용)
+
+---
+
+## 🐍 3. MicroPython – 주요 내장 함수
+
+### 🔧 GPIO
+
+```python
+from machine import Pin
+led = Pin(25, Pin.OUT)
+led.toggle()
+```
+
+### ⏲️ 시간 제어
+
+```python
+from time import sleep, sleep_ms
+sleep(0.5)
+```
+
+### 📡 UART
+
+```python
+from machine import UART
+uart = UART(0, 9600)
+uart.write("Hello")
+data = uart.read()
+```
+
+### 🔗 I2C
+
+```python
+from machine import I2C, Pin
+i2c = I2C(0, scl=Pin(5), sda=Pin(4))
+i2c.scan()
+i2c.writeto(0x3C, b'ABC')
+```
+
+### 🔁 SPI
+
+```python
+from machine import SPI, Pin
+spi = SPI(0, sck=Pin(2), mosi=Pin(3), miso=Pin(4))
+spi.write(b'123')
+```
+
+### 🎛️ ADC
+
+```python
+from machine import ADC
+adc = ADC(26)         # GPIO 26 = ADC0
+value = adc.read_u16()  # 0 ~ 65535
+```
+
+---
+
+## 📎 4. Pico SDK 구조 요약
+
+| 주요 모듈          | 설명             |
+| ------------------ | ---------------- |
+| `pico/stdlib.h`    | 기본 입출력 함수 |
+| `hardware/gpio.h`  | GPIO 제어        |
+| `hardware/uart.h`  | UART             |
+| `hardware/spi.h`   | SPI              |
+| `hardware/i2c.h`   | I2C              |
+| `hardware/adc.h`   | ADC              |
+| `hardware/pwm.h`   | PWM              |
+| `hardware/pio.h`   | PIO              |
+| `pico/multicore.h` | 듀얼코어 처리    |
+| `hardware/irq.h`   | 인터럽트 등록    |
+
+---
+
+## ✅ 마무리 요약
+
+| 항목      | 주요 내용                             |
+| --------- | ------------------------------------- |
+| 제어 방식 | GPIO, PWM, ADC, UART, I2C, SPI, USB   |
+| 사용 언어 | C/C++ (Pico SDK), MicroPython         |
+| 고급 기능 | PIO, DMA, 듀얼코어, 타이머            |
+| 개발환경  | VS Code + CMake / Thonny / PlatformIO |
