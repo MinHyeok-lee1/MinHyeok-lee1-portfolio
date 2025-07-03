@@ -1,8 +1,0 @@
-{
-  "architecture": "아키텍처",
-  "swagger": "형상관리",
-  "validation": "유효성 검증",
-  "security": "보안",
-  "mongodb": "MongoDB 관련",
-  "modeleventserror": "Model.events Error Handling"
-}

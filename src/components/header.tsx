@@ -3,7 +3,6 @@ import DarkModeToggleButton from "./darkToggelButton";
 import { useRouter } from "next/router";
 import { useState, useRef, useEffect, MouseEvent } from "react";
 import { useTheme } from "nextra-theme-docs";
-import type { MutableRefObject } from "react";
 
 interface NavItem {
   href: string;
@@ -27,8 +26,8 @@ interface MobileMenuProps {
 const navItems: NavItem[] = [
   { href: "/", label: "홈" },
   { href: "/project", label: "프로젝트" },
-  { href: "/aboutMe", label: "이력서" },
-  { href: "/home", label: "문서정리" },
+  { href: "/resume", label: "이력서" },
+  { href: "/docs", label: "문서정리" },
 ];
 
 export default function Header(): JSX.Element {

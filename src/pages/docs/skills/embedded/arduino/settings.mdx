@@ -1,0 +1,124 @@
+# Arduino 개발환경 설정
+
+## 🛠️ 1. 아두이노 개발 환경 개요
+
+| 항목      | 설명                                       |
+| --------- | ------------------------------------------ |
+| 개발 언어 | C/C++ 기반의 Arduino Language              |
+| IDE       | Arduino IDE / VS Code + PlatformIO         |
+| 주요 보드 | Arduino UNO, Nano, Mega, ESP32, ESP8266 등 |
+| 기본 통신 | USB 시리얼 (보드 ↔ PC)                     |
+| 추가 통신 | UART, I2C, SPI, CAN 등                     |
+
+---
+
+## 💻 2. 개발 환경 구성 단계
+
+### ✅ 2.1 Arduino IDE 설치
+
+- [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software) 에서 설치
+- Windows, macOS, Linux 지원
+- **드라이버 설치** 포함 (CH340, CP2102 등 보드에 따라 필요)
+
+### ✅ 2.2 보드 매니저 설정
+
+- `툴 > 보드 > 보드 매니저`에서 사용 보드 설치
+
+  - 예: ESP32는 `esp32 by Espressif Systems` 설치
+
+### ✅ 2.3 라이브러리 설치
+
+- `스케치 > 라이브러리 포함하기 > 라이브러리 관리`로 설치
+
+  - 예: `Servo`, `Adafruit Sensor`, `Wire`, `WiFi`, `ArduinoJson` 등
+
+---
+
+## ⚙️ 3. PlatformIO + VS Code (고급 사용자용)
+
+### ✅ 3.1 VS Code 설치
+
+- [VS Code 사용환경 설정](../../../docs/devEnv/vscode) 참고
+
+### ✅ 3.2 PlatformIO 설치
+
+- VS Code 확장 → "PlatformIO IDE" 검색 후 설치
+
+### ✅ 3.3 프로젝트 생성
+
+```bash
+PIO Home > New Project > 보드 선택 (예: Arduino Uno)
+```
+
+### ✅ 3.4 `platformio.ini` 예시
+
+```ini
+[env:uno]
+platform = atmelavr
+board = uno
+framework = arduino
+monitor_speed = 9600
+```
+
+### ✅ 3.5 빌드/업로드/시리얼 모니터
+
+- Ctrl + Alt + B : 빌드
+- Ctrl + Alt + U : 업로드
+- Ctrl + Alt + M : 시리얼 모니터
+
+---
+
+## 🔌 4. 보드 및 포트 설정 (USB 연결 시)
+
+| 항목          | 설명                                                |
+| ------------- | --------------------------------------------------- |
+| 보드 선택     | `툴 > 보드`에서 보드 종류 선택                      |
+| 포트 설정     | `툴 > 포트`에서 USB 시리얼 포트 선택                |
+| 드라이버 설치 | CH340, CP210x 등 설치 필요할 수 있음                |
+| 디바이스 확인 | Windows: 장치 관리자 / macOS: `/dev/cu.usbserial-*` |
+
+---
+
+## 🧰 5. 프로젝트 디렉토리 구조 예시
+
+```plaintext
+MyProject/
+├── MyProject.ino
+├── lib/
+│   └── MyLib/
+│       ├── MyLib.cpp
+│       └── MyLib.h
+├── include/
+│   └── config.h
+├── src/
+│   └── main.cpp (PlatformIO 사용 시)
+├── platformio.ini
+└── README.md
+```
+
+---
+
+## 🔍 6. 디버깅 및 로깅
+
+| 도구                | 기능                                 |
+| ------------------- | ------------------------------------ |
+| `Serial.println()`  | UART 로그 출력                       |
+| Logic Analyzer      | SPI/I2C 디버깅용 (예: Saleae Logic)  |
+| PlatformIO Debugger | 일부 디버깅 보드에서 지원 (예: JTAG) |
+
+---
+
+## 🧪 7. 기타 유용한 설정
+
+| 기능                                  | 설명                                     |
+| ------------------------------------- | ---------------------------------------- |
+| `Preferences > Additional Board URLs` | 서드파티 보드 URL 추가 (ESP32, STM32 등) |
+| OTA 설정                              | ESP 보드는 무선 OTA 업로드 가능          |
+| Makefile 기반 빌드                    | 고급 사용자용 CLI 환경 구성 가능         |
+
+---
+
+## 📎 8. 예제 문서/샘플
+
+- `파일 > 예제`를 통해 기본 예제 확인 가능
+- 라이브러리 설치 시 예제도 함께 설치됨

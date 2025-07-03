@@ -36,7 +36,7 @@ export default function Hero(): JSX.Element {
           <Link href="/project">
             <button className="btn-project">🗂️ 프로젝트 바로가기</button>
           </Link>
-          <Link href="/home">
+          <Link href="/docs">
             <button className="ml-8 btn-project">📚 문서정리 바로가기</button>
           </Link>
         </div>

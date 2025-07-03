@@ -1,3 +1,5 @@
+import Header from "./src/components/header";
+
 /** @type {import('nextra-theme-docs').DocsThemeConfig} */
 export default {
   editLink: { text: "" },
@@ -11,14 +13,17 @@ export default {
   sidebar: {
     toggleButton: true,
   },
+  navbar: {
+    component: <Header />,
+  },
   footer: {
     text: (
       <span>
         © 2023 minhyeok.lee1 —
         <a href="https://instagram.com/minhyeok.lee1" target="_blank">
-           @minhyeok.lee1
+          @minhyeok.lee1
         </a>
       </span>
-    )
-  }
+    ),
+  },
 };
