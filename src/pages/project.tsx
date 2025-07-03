@@ -22,6 +22,8 @@ type ProjectsResponse = {
 export default function Projects({
   projects,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const projectList = projects?.results ?? [];
+
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-screen px-5 mb-10">
@@ -34,9 +36,7 @@ export default function Projects({
 
         <h1 className="text-2xl font-bold sm:text-4xl mt-12 md:mt-8">
           총 프로젝트:
-          <span className="pl-4 text-orange-500">
-            {projects.results.length}
-          </span>
+          <span className="pl-4 text-orange-500">{projectList.length}</span>
         </h1>
         <p className="pt-10">
           * 개발문서 바로가기: Github가 Private면 개발문서로 이동
@@ -44,7 +44,7 @@ export default function Projects({
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 m-6 py-10 w-full">
-          {projects.results.map((aProject) => (
+          {projectList.map((aProject) => (
             <ProjectItem key={aProject.id} data={aProject} />
           ))}
         </div>
@@ -70,14 +70,39 @@ export const getStaticProps: GetStaticProps<{
     }),
   };
 
-  const res = await fetch(
-    `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
-    options
-  );
-  const projects: ProjectsResponse = await res.json();
+  try {
+    const res = await fetch(
+      `https://api.notion.com/v1/databases/${DATABASE_ID}/query`,
+      options
+    );
 
-  return {
-    props: { projects },
-    revalidate: 1800,
-  };
+    if (!res.ok) {
+      console.error("❌ Notion API 응답 오류:", await res.text());
+      return {
+        props: {
+          projects: { results: [] },
+        },
+        revalidate: 1800,
+      };
+    }
+
+    const json = await res.json();
+
+    const safeProjects: ProjectsResponse = {
+      results: Array.isArray(json.results) ? json.results : [],
+    };
+
+    return {
+      props: { projects: safeProjects },
+      revalidate: 1800,
+    };
+  } catch (error) {
+    console.error("❌ Notion API 호출 실패:", error);
+    return {
+      props: {
+        projects: { results: [] },
+      },
+      revalidate: 1800,
+    };
+  }
 };
