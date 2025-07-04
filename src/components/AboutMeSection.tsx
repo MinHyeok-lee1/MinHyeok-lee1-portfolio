@@ -19,9 +19,7 @@ export default function AboutMeSection() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mt-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              👦🏻 이민혁 Resume
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">이력서 정리</h1>
             <p className="mt-3 text-lg text-gray-600">
               기록하고 성장하는 5년 차 SW Developer
             </p>
@@ -219,7 +217,7 @@ export default function AboutMeSection() {
           <Section title="Quick Links" className="mt-16">
             <div className="flex flex-col md:flex-row gap-8">
               <Link
-                href="/projects"
+                href="/project"
                 className="text-xl font-bold underline text-blue-500"
               >
                 🚀 프로젝트 ←
