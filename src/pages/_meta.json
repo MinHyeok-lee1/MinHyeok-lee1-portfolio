@@ -1,11 +1,7 @@
 {
-  "*": {
-    "type": "page"
-  },
-  "til": {
-    "title": "TIL문서"
-  },
-  "docs": {
-    "title": "문서정리"
-  }
+  "*": { "type": "page" },
+  "index": { "title": "홈" },
+  "project": { "title": "프로젝트" },
+  "til": { "title": "TIL문서" },
+  "docs": { "title": "문서정리" }
 }
