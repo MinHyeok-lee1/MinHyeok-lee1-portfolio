@@ -77,10 +77,6 @@ out-storybook/
 *.tmp
 
 # Secret data (common)
-*.yaml
-*.yml
-*.json
-!_meta.json
 secrets.*.json
 
 # Others
