@@ -80,6 +80,7 @@ out-storybook/
 *.yaml
 *.yml
 *.json
+!_meta.json
 secrets.*.json
 
 # Others
