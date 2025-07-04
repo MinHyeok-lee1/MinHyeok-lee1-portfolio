@@ -42,7 +42,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
 
   const projectTitle = 이름.title?.[0]?.plain_text ?? "제목 없음";
   const githubLink = 깃허브?.url;
-  const documentLink = 개발문서?.url;
+  const documentLink = `docs/${개발문서?.url?.replace(/^\/+/, "")}`;
   const description = 설명.rich_text?.[0]?.plain_text ?? "";
   const imgSrc = data.cover?.file?.url ?? data.cover?.external?.url ?? "";
   const tags = 태그.multi_select ?? [];
@@ -130,7 +130,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
                 position: "relative",
               }}
             >
-              개발문서 바로가기
+              개발문서 ←
             </span>
             <Link
               href={githubLink || documentLink}

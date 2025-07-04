@@ -4,7 +4,7 @@ import Animation from "./animation";
 export default function Hero(): JSX.Element {
   return (
     <>
-      <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mb-10 md:mb-0 lg:ml-20">
+      <div className="max-w-xs w-1/2 md:w-1/3 mb-10 md:mb-0 lg:ml-20">
         <Animation />
       </div>
       <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
@@ -34,10 +34,14 @@ export default function Hero(): JSX.Element {
         </p>
         <div className="flex justify-center">
           <Link href="/project">
-            <button className="btn-project">🗂️ 프로젝트 바로가기</button>
+            <button className="px-4 py-2 bg-orange-400 text-white rounded-lg shadow hover:bg-orange-500 font-semibold transition">
+              🗂️ 프로젝트 ←
+            </button>
           </Link>
-          <Link href="/home">
-            <button className="ml-8 btn-project">📚 문서정리 바로가기</button>
+          <Link href="/docs">
+            <button className="ml-8 px-4 py-2 border border-orange-400 text-orange-400 rounded-lg font-semibold hover:bg-orange-100 transition">
+              📚 문서정리 ←
+            </button>
           </Link>
         </div>
       </div>

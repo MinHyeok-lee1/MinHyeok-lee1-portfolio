@@ -135,7 +135,7 @@ index 페이지가 있는 폴더를 사용하려면 폴더와 동일한 디렉�
 ## \_meta.json
 
 - 파일 이름을 사용하는 대신 각 페이지의 제목을 사용자 정의하는 것이 매우 일반적이다.
-- 예를 들어, "Index"라는 제목의 페이지가 있는 대신 "Home"이라는 제목의 페이지가 있는 것은 의미가 없다.
+- 예를 들어, "Index"라는 제목의 페이지가 있는 대신 "docs"이라는 제목의 페이지가 있는 것은 의미가 없다.
 - 여기서 `_meta.json`이 등장한다.
 - Nextra에서 사이트와 페이지 구조는 함께 위치한 `_meta.json` 파일을 통해 구성할 수 있다.
 
@@ -266,7 +266,7 @@ pages/
 ```json filename="pages/_meta.json"
 {
   "index": {
-    "title": "Home",
+    "title": "docs",
     "type": "page"
   },
   "frameworks": {
@@ -317,7 +317,7 @@ pages/
 ```json filename="pages/_meta.json"
 {
   "index": {
-    "title": "Home",
+    "title": "docs",
     "type": "page"
   },
   "about": {
@@ -343,7 +343,7 @@ pages/
   "*": {
     "type": "page"
   },
-  "index": "Home",
+  "index": "docs",
   "frameworks": "Frameworks",
   "fruits": "Fruits",
   "about": "About"
@@ -379,7 +379,7 @@ pages/
 ```json filename="pages/_meta.json"
 {
   "index": {
-    "title": "Home",
+    "title": "docs",
     "theme": {
       "breadcrumb": false,
       "footer": true,
@@ -405,7 +405,7 @@ pages/
 ```json {5} filename="pages/_meta.json"
 {
   "index": {
-    "title": "Home",
+    "title": "docs",
     "theme": {
       "layout": "raw"
     }
@@ -421,7 +421,7 @@ pages/
 ```json {5} filename="pages/_meta.json"
 {
   "index": {
-    "title": "Home",
+    "title": "docs",
     "theme": {
       "layout": "full"
     }

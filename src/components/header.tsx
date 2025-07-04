@@ -27,8 +27,8 @@ interface MobileMenuProps {
 const navItems: NavItem[] = [
   { href: "/", label: "홈" },
   { href: "/project", label: "프로젝트" },
-  { href: "/aboutMe", label: "이력서" },
-  { href: "/home", label: "문서정리" },
+  { href: "/til", label: "TIL문서" },
+  { href: "/docs", label: "문서정리" },
 ];
 
 export default function Header(): JSX.Element {

@@ -39,7 +39,7 @@ export default function Projects({
           <span className="pl-4 text-orange-500">{projectList.length}</span>
         </h1>
         <p className="pt-10">
-          * 개발문서 바로가기: Github가 Private면 개발문서로 이동
+          * 개발문서 ←: Github가 Private면 개발문서로 이동
           <br />* 새창에서 열리지 않으므로 새창에서 열려면 Ctrl을 누르고 클릭
         </p>
 

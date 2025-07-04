@@ -2,16 +2,10 @@
   "*": {
     "type": "page"
   },
-  "home": {
+  "til": {
+    "title": "TIL문서"
+  },
+  "docs": {
     "title": "문서정리"
-  },
-  "projects": {
-    "title": "프로젝트"
-  },
-  "skills": {
-    "title": "기술문서"
-  },
-  "terminologies": {
-    "title": "용어문서"
   }
 }

@@ -2,6 +2,7 @@
   "index": {
     "display": "hidden"
   },
+  "devEnv": "개발환경 설정",
   "languages": "개발언어",
   "jsframeworks": "JS Frameworks",
   "mobileframeworks": "Mobile",
