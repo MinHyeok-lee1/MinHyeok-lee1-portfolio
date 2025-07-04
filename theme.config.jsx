@@ -8,12 +8,6 @@ export default {
       titleTemplate: "%s – minhyeok.lee1",
     };
   },
-  navigation: [
-    { title: "홈", href: "/" },
-    { title: "프로젝트", href: "/projects" },
-    { title: "TIL문서", href: "/til" },
-    { title: "문서정리", href: "/docs" },
-  ],
   sidebar: {
     toggleButton: true,
   },
