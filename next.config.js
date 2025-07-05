@@ -12,12 +12,6 @@ const baseConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "www.notion.so",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
         hostname: "images.unsplash.com", // ✅ 따옴표 수정
         port: "",
         pathname: "/**",

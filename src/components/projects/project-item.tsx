@@ -66,7 +66,11 @@ export default function ProjectItem({ data }: ProjectItemProps) {
         {imgSrc && !imageError ? (
           <Image
             fill
-            src={imgSrc}
+            src={
+              imgSrc
+                ? `/api/notion-image?url=${encodeURIComponent(imgSrc)}`
+                : ""
+            }
             alt="cover image"
             className="object-contain rounded"
             sizes="auto"
@@ -130,7 +134,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
                 position: "relative",
               }}
             >
-              개발문서 ←
+              개발문서 바로가기
             </span>
             <Link
               href={githubLink || documentLink}
