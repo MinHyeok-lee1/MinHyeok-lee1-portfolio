@@ -5,32 +5,34 @@ import { useTheme } from "next-themes";
 
 interface ProjectItemProps {
   data: {
-    cover: {
-      file?: { url: string };
-      external?: { url: string };
+    cover?: {
+      file?: { url?: string };
+      external?: { url?: string };
     };
-    properties: ProjectItemProperty;
+    properties: Partial<ProjectItemProperty>;
   };
 }
 
+// Notion 속성 - Optional로 정의 (추가 확장 편의성)
 export type ProjectItemProperty = {
-  이름: {
-    title: { plain_text: string }[];
+  이름?: {
+    title?: { plain_text?: string }[];
   };
-  개발문서: { url: string };
-  깃허브: { url: string };
-  설명: {
-    rich_text: { plain_text: string }[];
+  개발문서?: { url?: string };
+  깃허브?: { url?: string };
+  설명?: {
+    rich_text?: { plain_text?: string }[];
   };
-  태그: {
-    multi_select: { id: string; name: string }[];
+  태그?: {
+    multi_select?: { id: string; name: string }[];
   };
-  날짜: {
-    date: {
-      start: string;
-      end: string;
+  날짜?: {
+    date?: {
+      start?: string;
+      end?: string;
     };
   };
+  // 새로운 속성은 여기에 계속 추가!
 };
 
 export default function ProjectItem({ data }: ProjectItemProps) {
@@ -38,26 +40,41 @@ export default function ProjectItem({ data }: ProjectItemProps) {
   const [isHovered, setIsHovered] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
 
-  const { 이름, 개발문서, 깃허브, 설명, 태그, 날짜 } = data.properties;
+  // 안전한 파싱: 값 없으면 기본값
+  const 이름 = data.properties.이름;
+  const 개발문서 = data.properties.개발문서;
+  const 깃허브 = data.properties.깃허브;
+  const 설명 = data.properties.설명;
+  const 태그 = data.properties.태그;
+  const 날짜 = data.properties.날짜;
 
-  const projectTitle = 이름.title?.[0]?.plain_text ?? "제목 없음";
+  const projectTitle = 이름?.title?.[0]?.plain_text ?? "제목 없음";
   const githubLink = 깃허브?.url;
-  const documentLink = `docs/${개발문서?.url?.replace(/^\/+/, "")}`;
-  const description = 설명.rich_text?.[0]?.plain_text ?? "";
+  const documentLink = 개발문서?.url
+    ? `docs/${개발문서.url.replace(/^\/+/, "")}`
+    : "";
+  const description = 설명?.rich_text?.[0]?.plain_text ?? "";
   const imgSrc = data.cover?.file?.url ?? data.cover?.external?.url ?? "";
-  const tags = 태그.multi_select ?? [];
+
+  const tags = 태그?.multi_select ?? [];
   const start = 날짜?.date?.start ?? "";
   const end = 날짜?.date?.end ?? "";
 
+  // 기간 계산도 안전하게
   const calculatePeriod = (start: string, end: string): number => {
     if (!start || !end) return 0;
-    const [sy, sm, sd] = start.split("-").map(Number);
-    const [ey, em, ed] = end.split("-").map(Number);
-    const startDate = new Date(sy, sm - 1, sd);
-    const endDate = new Date(ey, em - 1, ed);
-    return Math.ceil(
-      Math.abs(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    try {
+      const [sy, sm, sd] = start.split("-").map(Number);
+      const [ey, em, ed] = end.split("-").map(Number);
+      const startDate = new Date(sy, sm - 1, sd);
+      const endDate = new Date(ey, em - 1, ed);
+      return Math.ceil(
+        Math.abs(endDate.getTime() - startDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+    } catch {
+      return 0;
+    }
   };
 
   return (
@@ -66,11 +83,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
         {imgSrc && !imageError ? (
           <Image
             fill
-            src={
-              imgSrc
-                ? `/api/notion-image?url=${encodeURIComponent(imgSrc)}`
-                : ""
-            }
+            src={`/api/notion-image?url=${encodeURIComponent(imgSrc)}`}
             alt="cover image"
             className="object-contain rounded"
             sizes="auto"
@@ -102,7 +115,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
             </svg>
           </div>
         ) : (
-          <span className="text-sm text-gray-500">cover image</span>
+          <span className="text-sm text-gray-500">이미지 표시 불가</span>
         )}
       </div>
 
