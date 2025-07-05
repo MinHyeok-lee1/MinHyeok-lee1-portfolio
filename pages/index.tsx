@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Layout from "../components/layout";
-import Hero from "../components/home/hero";
-import AboutMeSection from "../components/AboutMeSection";
+import Layout from "../src/components/layout";
+import Hero from "../src/components/home/hero";
+import AboutMeSection from "../src/components/AboutMeSection";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 

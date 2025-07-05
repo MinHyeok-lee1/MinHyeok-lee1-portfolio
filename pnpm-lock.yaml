@@ -1890,7 +1890,7 @@ packages:
     dependencies:
       cipher-base: 1.0.6
       inherits: 2.0.4
-      ripemd160: 2.0.2
+      ripemd160: 2.0.1
       sha.js: 2.4.12
     dev: false
 
@@ -5422,7 +5422,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.1.0
-      zod: 3.25.73
+      zod: 3.25.74
     dev: false
 
   /nextra@2.13.4(next@14.2.5)(react-dom@18.2.0)(react@18.2.0):
@@ -5461,7 +5461,7 @@ packages:
       title: 3.5.3
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
-      zod: 3.25.73
+      zod: 3.25.74
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -7838,8 +7838,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /zod@3.25.73:
-    resolution: {integrity: sha512-fuIKbQAWQl22Ba5d1quwEETQYjqnpKVyZIWAhbnnHgnDd3a+z4YgEfkI5SZ2xMELnLAXo/Flk2uXgysZNf0uaA==}
+  /zod@3.25.74:
+    resolution: {integrity: sha512-J8poo92VuhKjNknViHRAIuuN6li/EwFbAC8OedzI8uxpEPGiXHGQu9wemIAioIpqgfB4SySaJhdk0mH5Y4ICBg==}
     dev: false
 
   /zwitch@2.0.4:

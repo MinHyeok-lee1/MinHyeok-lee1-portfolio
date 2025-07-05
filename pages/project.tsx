@@ -1,10 +1,10 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import Layout from "../components/layout";
+import Layout from "../src/components/layout";
 import ProjectItem, {
   ProjectItemProperty,
-} from "../components/projects/project-item";
-import { DATABASE_ID, TOKEN } from "../config";
+} from "../src/components/projects/project-item";
+import { DATABASE_ID, TOKEN } from "../src/config";
 
 type Project = {
   id: string;
