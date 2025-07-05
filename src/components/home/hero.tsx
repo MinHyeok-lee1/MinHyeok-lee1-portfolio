@@ -8,7 +8,7 @@ export default function Hero(): JSX.Element {
         <Animation />
       </div>
       <div className="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
-        <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
+        <h1 className="title-font text-3xl md:text-2xl lg:text-3xl mb-4 font-semibold text-gray-900">
           안녕하세요! SW 개발자
           <br className="inline-block" />
           이민혁의 웹사이트입니다.
@@ -25,7 +25,7 @@ export default function Hero(): JSX.Element {
           <br />
           <strong>기록되지 않는 건 기억되지 않는다.</strong>
           <br />
-          <strong>매 순간 배우는 것을 소중히 여기며 기록한다.</strong>
+          <strong>매 순간 배우는 것을 중히 여겨 기록한다.</strong>
           <br />
           <br />
           <strong>중요한 것을 기록해두는 습관, </strong>
