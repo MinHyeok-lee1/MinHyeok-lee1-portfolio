@@ -39,7 +39,7 @@ export default function Home() {
       {showAbout && (
         <section id="aboutme" className="flex justify-center w-full pb-12">
           <div className="max-w-4xl w-full mx-auto px-5">
-            <div className="rounded-2xl bg-white dark:bg-[#1C1F23] shadow-lg p-8 my-8">
+            <div className="rounded-2xl bg-[#1C1F23] shadow-lg p-8 my-8">
               <AboutMeSection />
             </div>
           </div>
