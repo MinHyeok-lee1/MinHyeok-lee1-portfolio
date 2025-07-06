@@ -35,12 +35,12 @@ export default function Hero(): JSX.Element {
         <div className="flex flex-row items-center gap-8 mt-6">
           <Link href="/project">
             <button className="px-4 py-2 bg-orange-400 text-white rounded-lg shadow hover:bg-orange-500 font-semibold transition whitespace-nowrap">
-              🗂️ 프로젝트 ←
+              🗂️ 프로젝트 바로가기
             </button>
           </Link>
           <Link href="/docs">
             <button className="px-4 py-2 border border-orange-400 text-orange-400 rounded-lg font-semibold hover:bg-orange-100 transition whitespace-nowrap">
-              📚 문서정리 ←
+              📚 문서정리 바로가기
             </button>
           </Link>
         </div>

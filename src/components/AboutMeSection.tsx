@@ -220,13 +220,13 @@ export default function AboutMeSection() {
                 href="/project"
                 className="text-xl font-bold underline text-blue-500"
               >
-                🚀 프로젝트 ←
+                🚀 프로젝트 바로가기
               </Link>
               <Link
                 href="/docs"
                 className="text-xl font-bold underline text-blue-500"
               >
-                📚 문서모음 ←
+                📚 문서모음 바로가기
               </Link>
             </div>
           </Section>
