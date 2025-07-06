@@ -50,9 +50,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
 
   const projectTitle = 이름?.title?.[0]?.plain_text ?? "제목 없음";
   const githubLink = 깃허브?.url;
-  const documentLink = 개발문서?.url
-    ? `docs/${개발문서.url.replace(/^\/+/, "")}`
-    : "";
+  const documentLink = 개발문서?.url;
   const description = 설명?.rich_text?.[0]?.plain_text ?? "";
   const imgSrc = data.cover?.file?.url ?? data.cover?.external?.url ?? "";
 
@@ -79,7 +77,7 @@ export default function ProjectItem({ data }: ProjectItemProps) {
 
   return (
     <div className="project-card">
-      <div className="relative w-full h-0 pb-[20%] bg-gray-100 text-center flex items-center justify-center rounded">
+      <div className="relative w-full h-0 pb-[40%] bg-gray-100 text-center flex items-center justify-center rounded">
         {imgSrc && !imageError ? (
           <Image
             fill
