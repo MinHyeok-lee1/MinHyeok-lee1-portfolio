@@ -1,3 +1,16 @@
 {
   "index": "문서개요"
+  ,"bash": "bash 태그"
+  ,"ci_cd": "ci_cd 태그"
+  ,"darkmode": "darkmode 태그"
+  ,"front_end": "front_end 태그"
+  ,"git": "git 태그"
+  ,"github": "github 태그"
+  ,"nextjs": "nextjs 태그"
+  ,"proxy": "proxy 태그"
+  ,"reverse_proxy": "reverse_proxy 태그"
+  ,"samsung_internet": "samsung_internet 태그"
+  ,"ssh": "ssh 태그"
+  ,"template": "template 태그"
+  ,"web_development": "web_development 태그"
 }
