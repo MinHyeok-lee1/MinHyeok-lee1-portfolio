@@ -223,6 +223,12 @@ export default function AboutMeSection() {
                 🚀 프로젝트 바로가기
               </Link>
               <Link
+                href="/til"
+                className="text-xl font-bold underline text-blue-500"
+              >
+                📘 TIL문서 바로가기
+              </Link>
+              <Link
                 href="/docs"
                 className="text-xl font-bold underline text-blue-500"
               >
