@@ -50,3 +50,12 @@ a {
 p {
   @apply text-slate-500 dark:text-slate-400;
 }
+
+html,
+body {
+  background: #fff;
+}
+html.dark,
+body.dark {
+  background: #111111;
+}
