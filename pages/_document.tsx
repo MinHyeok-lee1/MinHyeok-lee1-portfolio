@@ -16,7 +16,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ko">
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/developer.ico" />
         </Head>
         <body>
