@@ -20,7 +20,7 @@ export default function Home() {
       {/* 아래 화살표 + 이력서 버튼 */}
       <div className="flex flex-col items-center mt-24 mb-24">
         <button
-          className="flex items-center gap-2 px-5 py-2 min-w-[160px] text-base bg-orange-400 hover:bg-orange-500 text-white font-bold rounded-full shadow-lg transition sm:px-7 sm:py-3 sm:min-w-[200px] sm:text-lg lg:px-9 lg:py-3 lg:min-w-[240px] lg:text-xl"
+          className="flex items-center gap-2 px-5 py-2 min-w-[160px] text-base border-orange-400 text-orange-400 hover:bg-orange-100  font-bold rounded-full shadow-lg transition sm:px-7 sm:py-3 sm:min-w-[200px] sm:text-lg lg:px-9 lg:py-3 lg:min-w-[240px] lg:text-xl"
           onClick={() => {
             setShowAbout(true);
             setTimeout(() => {

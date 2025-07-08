@@ -215,24 +215,24 @@ export default function AboutMeSection() {
 
           {/* 빠른 링크 */}
           <Section title="Quick Links" className="mt-16">
-            <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex flex-col md:flex-row gap-8 mt-8">
               <Link
                 href="/project"
                 className="text-xl font-bold underline text-blue-500"
               >
-                🚀 프로젝트 바로가기
+                🗂️ 프로젝트 바로가기
               </Link>
               <Link
                 href="/til"
                 className="text-xl font-bold underline text-blue-500"
               >
-                📘 TIL문서 바로가기
+                📘 TIL 문서 바로가기
               </Link>
               <Link
                 href="/docs"
                 className="text-xl font-bold underline text-blue-500"
               >
-                📚 문서모음 바로가기
+                📚 문서정리 바로가기
               </Link>
             </div>
           </Section>

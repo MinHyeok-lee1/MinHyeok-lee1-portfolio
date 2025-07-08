@@ -32,15 +32,23 @@ export default function Hero(): JSX.Element {
           <br />
           <strong>그것이 망각을 축복으로 만들 수 있다.</strong>
         </p>
-        <div className="flex flex-row items-center gap-8 mt-6">
+        <div className="flex flex-wrap md:flex-col items-center justify-center gap-6 mt-6 md:gap-5 md:mt-0">
           <Link href="/project">
-            <button className="px-4 py-2 bg-orange-400 text-white rounded-lg shadow hover:bg-orange-500 font-semibold transition whitespace-nowrap">
-              🗂️ 프로젝트 바로가기
+            <button className="px-4 py-2 bg-orange-600 text-white rounded-lg shadow hover:bg-orange-700 font-semibold transition ">
+              🗂️ 프로젝트
+              <span className="hidden md:inline"> 바로가기</span>
+            </button>
+          </Link>
+          <Link href="/til">
+            <button className="px-4 py-2 bg-orange-400 text-white rounded-lg shadow hover:bg-orange-500 font-semibold transition ">
+              📘 TIL 문서
+              <span className="hidden md:inline"> 바로가기</span>
             </button>
           </Link>
           <Link href="/docs">
-            <button className="px-4 py-2 border border-orange-400 text-orange-400 rounded-lg font-semibold hover:bg-orange-100 transition whitespace-nowrap">
-              📚 문서정리 바로가기
+            <button className="px-4 py-2 border border-orange-400 text-orange-400 rounded-lg font-semibold hover:bg-orange-100 transition ">
+              📚 문서정리
+              <span className="hidden md:inline"> 바로가기</span>
             </button>
           </Link>
         </div>
