@@ -1,0 +1,5 @@
+# 🏷️ template TIL 모음
+
+| 제목 | 요약 | 바로가기 |
+|------|------|----------|
+| GitHub Template 정리 | GitHub의 다양한 템플릿 기능(issue, PR, workflow 등)에 대한 정리 | [Nextra](/til/til- 2025/til-07/03-Template) \| [GitHub](https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/03-Template.md) |

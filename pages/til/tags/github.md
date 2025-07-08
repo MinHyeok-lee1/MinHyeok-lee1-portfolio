@@ -1,0 +1,10 @@
+# 🏷️ github TIL 모음
+
+| 제목 | 요약 | 바로가기 |
+|------|------|----------|
+| bash에서 ssh-agent, ssh-add issue (source와 실행의 차이) | bash 환경에서 ssh-agent/ssh-add 스크립트 실행 시 source를 써야 하는 이유와 실전 예시 | [Nextra](/til/til- 2025/til-07/06-issueBashSsh) \| [GitHub](source와 실행의 차이
+https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/06-issueBashSsh.md) |
+| GitHub Actions 정리 | GitHub Actions의 개념과 왜 사용하는 지에 대한 정리 | [Nextra](/til/til- 2025/til-07/04-GitHubActions) \| [GitHub](https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/04-GitHubActions.md) |
+| GitHub Template 정리 | GitHub의 다양한 템플릿 기능(issue, PR, workflow 등)에 대한 정리 | [Nextra](/til/til- 2025/til-07/03-Template) \| [GitHub](https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/03-Template.md) |
+| Username Repository | 특별 저장소, Username Repository 정리 | [Nextra](/til/til- 2025/til-07/02-UsernameRepository) \| [GitHub](https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/02-UsernameRepository.md) |
+| TIL | TIL이란? | [Nextra](/til/til- 2025/til-07/01-TIL) \| [GitHub](https://github.com/MinHyeok-lee1/TIL/blob/main/2025/07/01-TIL.md) |
