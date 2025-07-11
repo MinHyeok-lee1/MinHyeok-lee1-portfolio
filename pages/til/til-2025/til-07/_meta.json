@@ -9,4 +9,6 @@
   ,"07-issueSamsungInternet": "07-issueSamsungInternet"
   ,"08-yaml": "08-yaml"
   ,"09-buildSystem": "09-buildSystem"
+  ,"10-Makefile": "10-Makefile"
+  ,"11-CMake": "11-CMake"
 }
