@@ -12,4 +12,5 @@
   ,"10-Makefile": "10-Makefile"
   ,"11-CMake": "11-CMake"
   ,"12-CmakeMakefile": "12-CmakeMakefile"
+  ,"13-embeddedBuild": "13-embeddedBuild"
 }
