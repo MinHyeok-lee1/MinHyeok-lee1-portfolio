@@ -13,4 +13,5 @@
   ,"11-CMake": "11-CMake"
   ,"12-CmakeMakefile": "12-CmakeMakefile"
   ,"13-embeddedBuild": "13-embeddedBuild"
+  ,"14-testNinja": "14-testNinja"
 }
