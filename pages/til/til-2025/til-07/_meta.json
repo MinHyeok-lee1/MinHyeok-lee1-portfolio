@@ -15,4 +15,5 @@
   ,"13-embeddedBuild": "13-embeddedBuild"
   ,"14-testNinja": "14-testNinja"
   ,"15-TemplateCMake": "15-TemplateCMake"
+  ,"16-issuePlatformIOCpp": "16-issuePlatformIOCpp"
 }
